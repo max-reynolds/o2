@@ -26,7 +26,7 @@ namespace o2
 	public:
 		enum class Usage
 		{
-			Regular, Vector, Dictionary, StringAccessor
+			Regular, Vector, Dictionary, StringAccessor, Enumeration
 		};
 
 		typedef UInt Id;
@@ -278,14 +278,73 @@ namespace o2
 										   Vector<void*>& passedObjects) const;
 	};
 
+	// ----------------
+	// Enumeration type
+	// ----------------
+	class EnumType: public Type
+	{
+	public:
+		// Constructor
+		EnumType(const String& name, ISampleCreator* creator, int size);
+
+		// Returns type usage
+		Usage GetUsage() const;
+
+		// Returns enum entries
+		const Dictionary<int, String>& GetEntries() const;
+
+	protected:
+		Dictionary<int, String> mEntries;
+
+		friend class Reflection;
+	};
+
 	// --------------------------
 	// Fundamental type container
 	// --------------------------
 	template<typename _type>
-	class FundamentalType
+	class FundamentalTypeContainer
+	{
+	protected:
+		static Type* type;
+
+		template<typename _type, typename _getter>
+		friend const Type& o2::GetTypeOf();
+
+		template<typename T>
+		friend struct RegularTypeGetter;
+
+		template<typename T, typename X>
+		friend struct o2::GetTypeHelper;
+
+		template<typename T>
+		friend struct RegularTypeGetter;
+
+		friend class Reflection;
+	};
+
+	// --------------------------
+	// Enumeration type container
+	// --------------------------
+	template<typename _type>
+	class EnumTypeContainer
 	{
 	public:
-		static Type* type;
+		static const Dictionary<int, String>& GetEntries() { return type->GetEntries(); }
+
+	protected:
+		static EnumType* type;
+
+		template<typename _type, typename _getter>
+		friend const Type& o2::GetTypeOf();
+
+		template<typename T>
+		friend struct RegularTypeGetter;
+
+		template<typename T, typename X>
+		friend struct o2::GetTypeHelper;
+
+		friend class Reflection;
 	};
 
 	// ----------------
@@ -405,7 +464,7 @@ namespace o2
 
 		mGetVectorObjectSizeFunc = [](void* obj) { return ((Vector<_element_type>*)obj)->Count(); };
 
-		mSetVectorObjectSizeFunc = [](void* obj, int size) { 
+		mSetVectorObjectSizeFunc = [](void* obj, int size) {
 			auto vectorObj = ((Vector<_element_type>*)obj);
 			int oldSize = vectorObj->Count();
 			vectorObj->Resize(size);
@@ -534,8 +593,9 @@ namespace o2
 	template<typename _type>
 	FieldInfo& TypeInitializer::RegField(Type* type, const String& name, UInt offset, _type& value, ProtectSection section)
 	{
-		auto valType = &TypeOf(_type);
 		bool isProperty = IsProperty<_type>::value;
+		typedef std::conditional<IsProperty<_type>::value, PropertyTypeGetter<_type>::type, _type>::type valTypeType;
+		auto valType = &TypeOf(valTypeType);
 		bool isPointer = std::is_pointer<_type>::value;
 
 		typedef typename std::conditional<DataNode::IsSupport<_type>::value,
@@ -579,4 +639,4 @@ namespace o2
 
 		return funcInfo;
 	}
-	}
+}
