@@ -8,14 +8,14 @@ namespace o2
 	template<class T> struct IsVectorHelper: std::false_type {};
 	template<class T> struct IsVectorHelper<Vector<T>>: std::true_type {};
 	template<class T> struct IsVector: IsVectorHelper<typename std::remove_cv<T>::type> {};
-	template<class T> struct VectorElementTypeGetter { typedef T type; };
-	template<class T> struct VectorElementTypeGetter<Vector<T>> { typedef T type; };
+	template<class T> struct ExtractVectorElementType { typedef T type; };
+	template<class T> struct ExtractVectorElementType<Vector<T>> { typedef T type; };
 
 	template<class T> struct IsPropertyHelper: std::false_type {};
 	template<class T> struct IsPropertyHelper<Property<T>>: std::true_type {};
 	template<class T> struct IsProperty: IsPropertyHelper<typename std::remove_cv<T>::type> {};
-	template<class T> struct PropertyTypeGetter { typedef T type; };
-	template<class T> struct PropertyTypeGetter<Property<T>> { typedef T type; };
+	template<class T> struct ExtractPropertyValueType { typedef T type; };
+	template<class T> struct ExtractPropertyValueType<Property<T>> { typedef T type; };
 
 	template<class T, class T2> struct IsDictionaryHelper: std::false_type {};
 	template<class T, class T2> struct IsDictionaryHelper<Dictionary<T, T2>, void>: std::true_type {};
@@ -23,17 +23,17 @@ namespace o2
 
 	template<class T, class T2> struct DictionaryKeyTypeGetterHelper { typedef T type; };
 	template<class T, class T2> struct DictionaryKeyTypeGetterHelper<Dictionary<T, T2>, void> { typedef T type; };
-	template<class T> struct DictionaryKeyTypeGetter: DictionaryKeyTypeGetterHelper<typename std::remove_cv<T>::type, void> {};
+	template<class T> struct ExtractDictionaryKeyType: DictionaryKeyTypeGetterHelper<typename std::remove_cv<T>::type, void> {};
 
 	template<class T, class T2> struct DictionaryValueTypeGetterHelper { typedef T2 type; };
 	template<class T, class T2> struct DictionaryValueTypeGetterHelper<Dictionary<T, T2>, void> { typedef T2 type; };
-	template<class T> struct DictionaryValueTypeGetter: DictionaryValueTypeGetterHelper<typename std::remove_cv<T>::type, void> {};
+	template<class T> struct ExtractDictionaryValueType: DictionaryValueTypeGetterHelper<typename std::remove_cv<T>::type, void> {};
 
 	template<class T> struct IsStringAccessorHelper: std::false_type {};
 	template<class T> struct IsStringAccessorHelper<Accessor<T*, const String&>>: std::true_type {};
 	template<class T> struct IsStringAccessor: IsStringAccessorHelper<typename std::remove_cv<T>::type> {};
-	template<class T> struct StringAccessorTypeGetter { typedef T type; };
-	template<class T> struct StringAccessorTypeGetter<Accessor<T*, const String&>> { typedef T type; };
+	template<class T> struct ExtractStringAccessorType { typedef T type; };
+	template<class T> struct ExtractStringAccessorType<Accessor<T*, const String&>> { typedef T type; };
 
     class Reflection;
     
@@ -107,21 +107,26 @@ namespace o2
         static const Type& GetType();
     };
 
-
+    
+    // Returns type of template parameter
     template<typename _type, typename _getter =
-    typename std::conditional<
+    std::conditional<
     /* if */   std::is_pointer<_type>::value,
     /* then */ PointerTypeGetter<_type>,
-    /* else */ typename std::conditional<
+    /* else */ std::conditional<
     /* if */   IsVector<_type>::value,
     /* then */ VectorTypeGetter<_type>,
-    /* else */ typename std::conditional<
+    /* else */ std::conditional<
     /* if */   IsStringAccessor<_type>::value,
     /* then */ AccessorTypeGetter<_type>,
-    /* else */ typename std::conditional<
+    /* else */ std::conditional<
     /* if */   IsDictionary<_type>::value,
     /* then */ DictionaryTypeGetter<_type>,
+    std::conditional<
+    /* if */   IsProperty<_type>::value,
+    /* then */ PropertyTypeGetter<_type>,
     /* else */ RegularTypeGetter<_type>
+    >::type
     >::type
     >::type
     >::type
@@ -136,17 +141,31 @@ namespace o2
 	const Type& PointerTypeGetter<T>::GetType() { return *GetTypeOf<typename std::remove_pointer<T>::type>().GetPointerType(); }
     
 	template<typename T>
-	const Type& VectorTypeGetter<T>::GetType() { return *Reflection::InitializeVectorType<typename VectorElementTypeGetter<T>::type>(); }
-    
-	template<typename T>
-	const Type& DictionaryTypeGetter<T>::GetType() {
-        return *Reflection::InitializeDictionaryType<typename DictionaryKeyTypeGetter<T>::type, typename DictionaryValueTypeGetter<T>::type>();
-    }
+	struct PropertyTypeGetter
+	{
+		static const Type& GetType() { return *Reflection::InitializePropertyType<ExtractPropertyValueType<T>::type>(); }
+	};
 
 	template<typename T>
-	const Type& AccessorTypeGetter<T>::GetType() { return *Reflection::InitializeAccessorType<StringAccessorTypeGetter<T>::type>(); }
-    
-	// Returns type of template parameter
+	struct VectorTypeGetter
+	{
+		static const Type& GetType() { return *Reflection::InitializeVectorType<ExtractVectorElementType<T>::type>(); }
+	};
+
+	template<typename T>
+	struct DictionaryTypeGetter
+	{
+		static const Type& GetType() {
+			return *Reflection::InitializeDictionaryType<ExtractDictionaryKeyType<T>::type, ExtractDictionaryValueType<T>::type>();
+		}
+	};
+
+	template<typename T>
+	struct AccessorTypeGetter
+	{
+		static const Type& GetType() { return *Reflection::InitializeAccessorType<ExtractStringAccessorType<T>::type>(); }
+	};
+
 	template<typename _type, typename _getter>
 	const Type& GetTypeOf()
 	{

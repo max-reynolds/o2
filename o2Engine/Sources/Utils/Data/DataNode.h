@@ -449,7 +449,7 @@ namespace o2
 				}
 			}
 
-			AddNode("Type")->SetValue(value->GetType().Name());
+			AddNode("Type")->SetValue(value->GetType().GetName());
 			AddNode("Value")->SetValue(*value);
 		}
 

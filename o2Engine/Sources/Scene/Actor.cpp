@@ -157,12 +157,12 @@ namespace o2
 
 			componentsMap.Add(component, newComponent);
 
-			for (auto field : newComponent->GetType().Fields())
+			for (auto field : newComponent->GetType().GetFields())
 			{
-				if (field->GetType().IsBasedOn(TypeOf(Component)))
+				if (field->GetType()->IsBasedOn(TypeOf(Component)))
 					componentsPointers.Add((Component**)(field->GetValuePtrStrong(newComponent)));
 
-				if (field->GetType() == TypeOf(Actor))
+				if (*field->GetType() == TypeOf(Actor))
 					actorsPointers.Add((Actor**)(field->GetValuePtrStrong(newComponent)));
 			}
 		}
@@ -572,7 +572,7 @@ namespace o2
 	Component* Actor::GetComponent(const String& typeName)
 	{
 		for (auto comp : mComponents)
-			if (comp->GetType().Name() == typeName)
+			if (comp->GetType().GetName() == typeName)
 				return comp;
 
 		return nullptr;
@@ -716,7 +716,7 @@ namespace o2
 		{
 			auto compNode = componentsNode->AddNode("Component");
 			*compNode->AddNode("Data") = comp->Serialize();
-			*compNode->AddNode("Type") = comp->GetType().Name();
+			*compNode->AddNode("Type") = comp->GetType().GetName();
 		}
 	}
 
@@ -768,7 +768,7 @@ namespace o2
 	{
 		Dictionary<String, Component*> res;
 		for (auto child : mComponents)
-			res.Add(child->GetType().Name(), child);
+			res.Add(child->GetType().GetName(), child);
 
 		return res;
 	}
