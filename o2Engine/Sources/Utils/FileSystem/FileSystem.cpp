@@ -177,7 +177,6 @@ namespace o2
 	{
 		return true;
 	}
-<<<<<<< 3f8558e5d73b71acdd7955fe8e892df7193572d3
 #endif //OSX
 
 #ifdef WINDOWS
@@ -417,61 +416,3 @@ namespace o2
     }
 #endif //WINDOWS
 }
-=======
-
-	String FileSystem::ExtractPathStr(const String& path) const
-	{
-		auto fnd = path.FindLast("/");
-		if (fnd < 0)
-			return "";
-
-		return path.SubStr(0, fnd);
-	}
-
-	String FileSystem::GetFileExtension(const String& filePath)
-	{
-		int dotIdx = filePath.FindLast(".");
-
-		if (dotIdx != -1)
-			return filePath.SubStr(dotIdx + 1);
-
-		return String();
-	}
-
-	String FileSystem::GetFileNameWithoutExtension(const String& filePath)
-	{
-		return filePath.SubStr(0, filePath.FindLast("."));
-	}
-
-	String FileSystem::GetPathWithoutDirectories(const String& path)
-	{
-		return path.SubStr(Math::Max(path.FindLast("/"), path.FindLast("\\")) + 1);
-	}
-
-	String FileSystem::GetParentPath(const String& path)
-	{
-		int idx = Math::Max(path.FindLast("/"), path.FindLast("\\"));
-
-		if (idx == -1)
-			return String();
-
-		return path.SubStr(0, idx);
-	}
-
-	String FileSystem::ReadFile(const String& path)
-	{
-		InFile file(path);
-		if (!file.IsOpened())
-			return String();
-
-		return file.ReadFullData();
-	}
-
-	void FileSystem::WriteFile(const String& path, const String& data)
-	{
-		OutFile file(path);
-		file.WriteData(path.Data(), path.Length());
-	}
-
-}
->>>>>>> assets window WIP: drag and drop

@@ -71,8 +71,8 @@ namespace o2
 		                  /* if */   std::is_enum<T>::value,
 		                  /* then */ EnumTypeContainer<T>,
 		                  /* else */ Type::Dummy
-			              >::typex
-	           >::type
+			              >::type
+    >::type
 	>::type>
 	struct GetTypeHelper
 	{
@@ -108,7 +108,6 @@ namespace o2
     {
         static const Type& GetType();
     };
-
     
     // Returns type of template parameter
     template<typename _type, typename _getter =
@@ -143,31 +142,20 @@ namespace o2
 	const Type& PointerTypeGetter<T>::GetType() { return *GetTypeOf<typename std::remove_pointer<T>::type>().GetPointerType(); }
     
 	template<typename T>
-	struct PropertyTypeGetter
-	{
-		static const Type& GetType() { return *Reflection::InitializePropertyType<ExtractPropertyValueType<T>::type>(); }
-	};
-
+	const Type& VectorTypeGetter<T>::GetType() { return *Reflection::InitializeVectorType<typename VectorElementTypeGetter<T>::type>(); }
+    
 	template<typename T>
-	struct VectorTypeGetter
-	{
-		static const Type& GetType() { return *Reflection::InitializeVectorType<ExtractVectorElementType<T>::type>(); }
-	};
-
-	template<typename T>
-	struct DictionaryTypeGetter
-	{
-		static const Type& GetType() {
-			return *Reflection::InitializeDictionaryType<ExtractDictionaryKeyType<T>::type, ExtractDictionaryValueType<T>::type>();
-		}
-	};
+	const Type& DictionaryTypeGetter<T>::GetType() {
+        return *Reflection::InitializeDictionaryType<typename DictionaryKeyTypeGetter<T>::type, typename DictionaryValueTypeGetter<T>::type>();
+    }
 
 	template<typename T>
 	struct AccessorTypeGetter
 	{
 		static const Type& GetType() { return *Reflection::InitializeAccessorType<ExtractStringAccessorType<T>::type>(); }
 	};
-
+    
+    // Returns type of template parameter
 	template<typename _type, typename _getter>
 	const Type& GetTypeOf()
 	{
