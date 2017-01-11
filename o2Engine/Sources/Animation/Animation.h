@@ -92,19 +92,19 @@ namespace o2
 
 		// Adds key in animated value by path and position
 		template<typename _type>
-		void AddKey(const String& targetPath, float position, typename const AnimatedValue<_type>::Key& key);
+		void AddKey(const String& targetPath, float position, const typename AnimatedValue<_type>::Key& key);
 
 		// Adds key in animated value for target by position
 		template<typename _type>
-		void AddKey(_type* target, float position, typename const AnimatedValue<_type>::Key& key);
+		void AddKey(_type* target, float position, const typename AnimatedValue<_type>::Key& key);
 
 		// Sets keys in animated value by path
 		template<typename _type>
-		void SetKeys(const String& targetPath, typename const AnimatedValue<_type>::KeysVec& key);
+		void SetKeys(const String& targetPath, const typename AnimatedValue<_type>::KeysVec& key);
 
 		// Sets keys in animated value for target 
 		template<typename _type>
-		void SetKeys(_type* target, typename const AnimatedValue<_type>::KeysVec& key);
+		void SetKeys(_type* target, const typename AnimatedValue<_type>::KeysVec& key);
 
 		// Returns animated value keys by path
 		template<typename _type>
@@ -208,7 +208,12 @@ namespace o2
 		friend class Animatable;
 		friend class Animate;
 	};
+}
 
+#include "Animation/AnimatedValue.h"
+
+namespace o2
+{
 	template<typename _type>
 	AnimatedValue<_type>* Animation::FindValue(_type* target)
 	{
@@ -232,7 +237,7 @@ namespace o2
 	template<typename _type>
 	void Animation::RemoveAllKeys(_type* target)
 	{
-		AnimatedValue<_type>> animVal = FindValue<_type*(target);
+		AnimatedValue<_type> animVal = FindValue<_type*>(target);
 		if (animVal)
 			animVal->RemoveAllKeys();
 	}
@@ -240,7 +245,7 @@ namespace o2
 	template<typename _type>
 	void Animation::RemoveAllKeys(const String& targetPath)
 	{
-		AnimatedValue<_type>> animVal = FindValue<_type*(targetPath);
+		AnimatedValue<_type> animVal = FindValue<_type*>(targetPath);
 		if (animVal)
 			animVal->RemoveAllKeys();
 	}
@@ -262,7 +267,7 @@ namespace o2
 								const _type& begin, const _type& end, float duration /*= 1.0f*/)
 	{
 		Animation res(target);
-		*res.AddAnimationValue<_type>(animatingValuePath) = AnimatedValue<_type>::EaseIn(begin, end, duration);
+		*res.AddAnimationValue<_type>(&animatingValue) = AnimatedValue<_type>::EaseIn(begin, end, duration);
 		return res;
 	}
 
@@ -296,7 +301,7 @@ namespace o2
 	template<typename _type>
 	bool Animation::Removekey(_type* target, float position)
 	{
-		AnimatedValue<_type>> animVal = FindValue<_type*(target);
+		AnimatedValue<_type> animVal = FindValue<_type*>(target);
 		if (animVal)
 			return animVal->RemoveKey(position);
 
@@ -306,7 +311,7 @@ namespace o2
 	template<typename _type>
 	bool Animation::Removekey(const String& targetPath, float position)
 	{
-		AnimatedValue<_type>> animVal = FindValue<_type*(targetPath);
+		AnimatedValue<_type> animVal = FindValue<_type*>(targetPath);
 		if (animVal)
 			return animVal->RemoveKey(position);
 
@@ -316,7 +321,7 @@ namespace o2
 	template<typename _type>
 	typename AnimatedValue<_type>::KeysVec Animation::GetKeys(_type* target)
 	{
-		AnimatedValue<_type>> animVal = FindValue<_type*(target);
+		AnimatedValue<_type> animVal = FindValue<_type*>(target);
 		if (animVal)
 			return animVal->GetKeys();
 
@@ -326,7 +331,7 @@ namespace o2
 	template<typename _type>
 	typename AnimatedValue<_type>::KeysVec Animation::GetKeys(const String& path)
 	{
-		AnimatedValue<_type>> animVal = FindValue<_type*(path);
+		AnimatedValue<_type> animVal = FindValue<_type*>(path);
 		if (animVal)
 			return animVal->GetKeys();
 
@@ -334,9 +339,9 @@ namespace o2
 	}
 
 	template<typename _type>
-	void Animation::SetKeys(_type* target, typename const AnimatedValue<_type>::KeysVec& key)
+	void Animation::SetKeys(_type* target, const typename AnimatedValue<_type>::KeysVec& key)
 	{
-		AnimatedValue<_type>> animVal = FindValue<_type*(target);
+		AnimatedValue<_type> animVal = FindValue<_type*>(target);
 		if (!animVal)
 			animVal = AddAnimationValue(target);
 
@@ -344,19 +349,19 @@ namespace o2
 	}
 
 	template<typename _type>
-	void Animation::SetKeys(const String& targetPath, typename const AnimatedValue<_type>::KeysVec& key)
+	void Animation::SetKeys(const String& targetPath, const typename AnimatedValue<_type>::KeysVec& key)
 	{
-		AnimatedValue<_type>> animVal = FindValue<_type*(targetPath);
+		AnimatedValue<_type> animVal = FindValue<_type*>(targetPath);
 		if (!animVal)
-			animVal = AddAnimationValue(targetPath);
+			animVal = AddAnimationValue<_type>(targetPath);
 
 		animVal->SetKeys(key);
 	}
 
 	template<typename _type>
-	void Animation::AddKey(_type* target, float position, typename const AnimatedValue<_type>::Key& key)
+	void Animation::AddKey(_type* target, float position, const typename AnimatedValue<_type>::Key& key)
 	{
-		AnimatedValue<_type>> animVal = FindValue<_type*(target);
+		AnimatedValue<_type> animVal = FindValue<_type*>(target);
 		if (!animVal)
 			animVal = AddAnimationValue(target);
 
@@ -364,9 +369,9 @@ namespace o2
 	}
 
 	template<typename _type>
-	void Animation::AddKey(const String& targetPath, float position, typename const AnimatedValue<_type>::Key& key)
+	void Animation::AddKey(const String& targetPath, float position, const typename AnimatedValue<_type>::Key& key)
 	{
-		AnimatedValue<_type>> animVal = FindValue<_type*(targetPath);
+		AnimatedValue<_type> animVal = FindValue<_type*>(targetPath);
 		if (!animVal)
 			animVal = AddAnimationValue<_type>(targetPath);
 

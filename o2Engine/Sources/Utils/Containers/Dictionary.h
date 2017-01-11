@@ -11,13 +11,15 @@ namespace o2
 	template<typename _key_type, typename _value_type>
 	class Dictionary : public IDictionary<_key_type, _value_type>
 	{
-	public:
+    public:
+        typedef KeyValuePair<_key_type, _value_type> TKeyValue;
+        
 		// --------
 		// Iterator
 		// --------
 		class Iterator
 		{
-			typedef typename Vector<TKeyValue>::Iterator PairIterator;
+            typedef typename Vector<TKeyValue>::Iterator PairIterator;
 
 			Dictionary*  mDictionary; // Owner dictionary
 			PairIterator mPairIt;     // Pair iterator
@@ -573,7 +575,7 @@ namespace o2
 	}
 
 	template<typename _key_type, typename _value_type>
-	typename const Dictionary<_key_type, _value_type>::ConstIterator& Dictionary<_key_type, _value_type>::ConstIterator::operator*()
+	const typename Dictionary<_key_type, _value_type>::ConstIterator& Dictionary<_key_type, _value_type>::ConstIterator::operator*()
 	{
 		return *this;
 	}

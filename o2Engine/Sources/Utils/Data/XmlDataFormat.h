@@ -1,6 +1,7 @@
 #pragma once
 
-#include "dependencies/pugixml/pugixml.hpp"
+#include "pugixml/pugixml.hpp"
+#include "Utils/Reflection/Type.h"
 #include "Utils/Data/DataNode.h"
 #include "Utils/String.h"
 

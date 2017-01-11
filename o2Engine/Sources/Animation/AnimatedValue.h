@@ -436,7 +436,7 @@ namespace o2
 	}
 
 	template<typename _type>
-	typename const AnimatedValue<_type>::KeysVec& AnimatedValue<_type>::GetKeys() const
+	const typename AnimatedValue<_type>::KeysVec& AnimatedValue<_type>::GetKeys() const
 	{
 		return mKeys;
 	}
@@ -727,7 +727,7 @@ namespace o2
 };
  
 META_TEMPLATES(typename _type)
-CLASS_TEMPLATE_META(o2::AnimatedValue<typename _type>)
+CLASS_TEMPLATE_META(o2::AnimatedValue<_type>)
 {
 	BASE_CLASS(o2::IAnimatedValue);
 
@@ -776,7 +776,7 @@ CLASS_TEMPLATE_META(o2::AnimatedValue<typename _type>)
 END_META;
 
 META_TEMPLATES(typename _type)
-CLASS_TEMPLATE_META(o2::AnimatedValue<typename _type>::Key)
+CLASS_TEMPLATE_META(o2::AnimatedValue<_type>::Key)
 {
 	BASE_CLASS(o2::ISerializable);
 

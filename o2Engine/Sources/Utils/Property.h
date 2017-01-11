@@ -42,7 +42,7 @@ namespace o2
 		Getter(_type(*getter)()):
 			Getter()
 		{
-			Initialize(object, getter);
+			Initialize(getter);
 		}
 
 		// Constructor from function
@@ -243,13 +243,13 @@ namespace o2
 	class Property: public Setter<_type>, public Getter<_type>
 	{
 	public:
-		using Setter::Initialize;
-		using Getter::Initialize;
+		using Setter<_type>::Initialize;
+		using Getter<_type>::Initialize;
 
 		// Getting value operator
 		operator _type()
 		{
-			return Get();
+			return Getter<_type>::Get();
 		}
 
 		// Assign operator
@@ -269,65 +269,65 @@ namespace o2
 		// Increment operator
 		Property& operator+=(const _type& value)
 		{
-			Set(Get() + value);
+			Set(Getter<_type>::Get() + value);
 			return *this;
 		}
 
 		// Increment operator
 		_type operator+(const _type& value)
 		{
-			return Get() + value;
+			return Getter<_type>::Get() + value;
 		}
 
 		// Decrement operator
 		Property& operator-=(const _type& value)
 		{
-			Set(Get() - value);
+			Set(Getter<_type>::Get() - value);
 			return *this;
 		}
 
 		// Decrement operator
 		_type operator-(const _type& value)
 		{
-			return Get() - value;
+			return Getter<_type>::Get() - value;
 		}
 
 		// Multiplication operator
 		Property& operator*=(const _type& value)
 		{
-			Set(Get()*value);
+			Set(Getter<_type>::Get()*value);
 			return *this;
 		}
 
 		// Multiplication operator
 		_type operator*(const _type& value)
 		{
-			return Get()*value;
+			return Getter<_type>::Get()*value;
 		}
 
 		// Divide operator
 		Property& operator/=(const _type& value)
 		{
-			Set(Get()/value);
+			Set(Getter<_type>::Get()/value);
 			return *this;
 		}
 
 		// Divide operator
 		_type operator/(const _type& value)
 		{
-			return Get()/value;
+			return Getter<_type>::Get()/value;
 		}
 
 		// Check equals operator
 		bool operator==(const _type& other) const
 		{
-			return Get() == other;
+			return Getter<_type>::Get() == other;
 		}
 
 		// Check not equals operator
 		bool operator!=(const _type& other) const
 		{
-			return Get() != other;
+			return Getter<_type>::Get() != other;
 		}
 	};
 
@@ -371,7 +371,7 @@ namespace o2
 		Accessor(_res_type(*getter)(_key_type)):
 			Accessor()
 		{
-			Initialize(object, getter);
+			Initialize(getter);
 		}
 
 		// Constructor from function

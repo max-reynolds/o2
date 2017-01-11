@@ -2,8 +2,6 @@
 
 #include "Animation/Animatable.h"
 #include "Scene/ActorTransform.h"
-#include "Scene/Component.h"
-#include "Scene/Scene.h"
 #include "Scene/Tags.h"
 #include "Utils/Containers/Vector.h"
 #include "Utils/Singleton.h"
@@ -12,6 +10,8 @@
 
 namespace o2
 {
+    class Scene;
+    
 	// -----------
 	// Scene actor
 	// -----------
@@ -195,7 +195,7 @@ namespace o2
 
 		// Returns all components by type in this and children
 		template<typename _type>
-		Vector<_type>* GetComponentsInChildren() const;
+		Vector<_type*> GetComponentsInChildren() const;
 
 		// Returns all components
 		ComponentsVec GetComponents() const;
@@ -367,12 +367,18 @@ namespace o2
 		friend class Actor;
 		friend class Scene;
 	};
+}
 
+#include "Scene/Scene.h"
+#include "Scene/Component.h"
+
+namespace o2
+{
 	template<typename _type>
-	Vector<_type>* Actor::GetComponentsInChildren() const
+	Vector<_type*> Actor::GetComponentsInChildren() const
 	{
-		Vector < _type >> res = GetComponents < _type*();
-
+		Vector<_type*> res = GetComponents<_type>();
+        
 		for (auto child : mChilds)
 			res.Add(child->GetComponentsInChildren<_type>());
 
@@ -382,7 +388,7 @@ namespace o2
 	template<typename _type>
 	_type* Actor::GetComponentInChildren() const
 	{
-		_type > res = GetComponent < _type*();
+		_type res = GetComponent <_type*>();
 
 		if (res)
 			return res;
@@ -412,7 +418,7 @@ namespace o2
 	template<typename _type>
 	Vector<_type>* Actor::GetComponents() const
 	{
-		Vector<_type>* res;
+		Vector<_type*> res;
 		for (auto comp : mComponents)
 		{
 			if (comp->GetType().IsBasedOn(TypeOf(_type)))

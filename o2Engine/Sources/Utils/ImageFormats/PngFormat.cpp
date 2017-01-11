@@ -1,6 +1,6 @@
 #include "PngFormat.h"
 
-#include "Dependencies/LibPNG/png.h"
+#include "Dependencies/libpng/png.h"
 #include "Utils/Debug.h"
 #include "Utils/FileSystem/File.h"
 #include "Utils/Bitmap.h"

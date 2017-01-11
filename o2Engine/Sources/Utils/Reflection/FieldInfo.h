@@ -136,7 +136,13 @@ namespace o2
 		template<typename _type>
 		friend class StringPointerAccessorType;
 	};
+}
 
+#include "Utils/Data/DataNode.h"
+#include "Utils/Reflection/Type.h"
+
+namespace o2
+{
 	template<typename _attr_type>
 	bool FieldInfo::HaveAttribute() const
 	{

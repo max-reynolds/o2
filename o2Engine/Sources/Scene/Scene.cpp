@@ -92,7 +92,7 @@ namespace o2
 	{
 		if (GetTag(name))
 		{
-			o2Debug.LogError("Can't create new tag with name %s: already exist", name);
+			o2Debug.LogError("Can't create new tag with name " + name + ": already exist");
 			return nullptr;
 		}
 

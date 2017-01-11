@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Utils/IObject.h"
+#include "Utils/UID.h"
+
 namespace o2
 {
 	template<class T> struct IsVectorHelper: std::false_type {};
@@ -32,13 +35,23 @@ namespace o2
 	template<class T> struct StringAccessorTypeGetter { typedef T type; };
 	template<class T> struct StringAccessorTypeGetter<Accessor<T*, const String&>> { typedef T type; };
 
+    class Reflection;
+    
+    template<typename _type>
+    class FundamentalType;
+}
 
+#include "Utils/Reflection/Type.h"
+#include "Utils/Data/DataNode.h"
+#include "Utils/Reflection/Reflection.h"
 
+namespace o2
+{
 	// type trait
 	template<typename T, typename X =
-	/* if */   std::conditional<std::is_base_of<IObject, T>::value,
+	/* if */   typename std::conditional<std::is_base_of<IObject, T>::value,
 	/* then */ T,
-	/* else */ std::conditional<(
+	/* else */ typename std::conditional<(
 		       /* if */   std::is_fundamental<T>::value ||
 					      std::is_same<T, Basis>::value ||
 					      std::is_same<T, Color4>::value ||
@@ -59,62 +72,78 @@ namespace o2
 	{
 		typedef X type;
 	};
+    
+    template<typename T>
+    struct RegularTypeGetter
+    {
+        static const Type& GetType();
+    };
+    
+    template<typename T>
+    struct PointerTypeGetter
+    {
+        static const Type& GetType();
+    };
+    
+    template<typename T>
+    struct VectorTypeGetter
+    {
+        static const Type& GetType();
+    };
+    
+    template<typename T>
+    struct DictionaryTypeGetter
+    {
+        static const Type& GetType();
+    };
+    
+    template<typename T>
+    struct AccessorTypeGetter
+    {
+        static const Type& GetType();
+    };
 
-	template<typename _type, typename _getter>
+
+    template<typename _type, typename _getter =
+    typename std::conditional<
+    /* if */   std::is_pointer<_type>::value,
+    /* then */ PointerTypeGetter<_type>,
+    /* else */ typename std::conditional<
+    /* if */   IsVector<_type>::value,
+    /* then */ VectorTypeGetter<_type>,
+    /* else */ typename std::conditional<
+    /* if */   IsStringAccessor<_type>::value,
+    /* then */ AccessorTypeGetter<_type>,
+    /* else */ typename std::conditional<
+    /* if */   IsDictionary<_type>::value,
+    /* then */ DictionaryTypeGetter<_type>,
+    /* else */ RegularTypeGetter<_type>
+    >::type
+    >::type
+    >::type
+    >::type
+    >
 	const Type& GetTypeOf();
 
 	template<typename T>
-	struct RegularTypeGetter
-	{
-		static const Type& GetType() { return *GetTypeHelper<T>::type::type; }
-	};
+	const Type& RegularTypeGetter<T>::GetType() { return *GetTypeHelper<T>::type::type; }
+    
+	template<typename T>
+	const Type& PointerTypeGetter<T>::GetType() { return *GetTypeOf<typename std::remove_pointer<T>::type>().GetPointerType(); }
+    
+	template<typename T>
+	const Type& VectorTypeGetter<T>::GetType() { return *Reflection::InitializeVectorType<typename VectorElementTypeGetter<T>::type>(); }
+    
+	template<typename T>
+	const Type& DictionaryTypeGetter<T>::GetType() {
+        return *Reflection::InitializeDictionaryType<typename DictionaryKeyTypeGetter<T>::type, typename DictionaryValueTypeGetter<T>::type>();
+    }
 
 	template<typename T>
-	struct PointerTypeGetter
-	{
-		static const Type& GetType() { return *GetTypeOf<std::remove_pointer<T>::type>().GetPointerType(); }
-	};
-
-	template<typename T>
-	struct VectorTypeGetter
-	{
-		static const Type& GetType() { return *Reflection::InitializeVectorType<VectorElementTypeGetter<T>::type>(); }
-	};
-
-	template<typename T>
-	struct DictionaryTypeGetter
-	{
-		static const Type& GetType() {
-			return *Reflection::InitializeDictionaryType<DictionaryKeyTypeGetter<T>::type, DictionaryValueTypeGetter<T>::type>();
-		}
-	};
-
-	template<typename T>
-	struct AccessorTypeGetter
-	{
-		static const Type& GetType() { return *Reflection::InitializeAccessorType<StringAccessorTypeGetter<T>::type>(); }
-	};
-
+	const Type& AccessorTypeGetter<T>::GetType() { return *Reflection::InitializeAccessorType<StringAccessorTypeGetter<T>::type>(); }
+    
 	// Returns type of template parameter
-	template<typename _type, typename _getter = 
-		std::conditional<
-		/* if */   std::is_pointer<_type>::value,
-		/* then */ PointerTypeGetter<_type>,
-		/* else */ std::conditional<
-		           /* if */   IsVector<_type>::value,
-		           /* then */ VectorTypeGetter<_type>,
-		           /* else */ std::conditional<
-		                      /* if */   IsStringAccessor<_type>::value,
-		                      /* then */ AccessorTypeGetter<_type>,
-		                      /* else */ std::conditional<
-		                                 /* if */   IsDictionary<_type>::value,
-		                                 /* then */ DictionaryTypeGetter<_type>,
-		                                 /* else */ RegularTypeGetter<_type>
-							             >::type
-				              >::type
-		           >::type
-		>::type
-	>
+	template<typename _type, typename _getter>
 	const Type& GetTypeOf()
 	{
 		return _getter::GetType();

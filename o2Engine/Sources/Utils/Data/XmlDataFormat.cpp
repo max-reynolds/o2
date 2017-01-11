@@ -1,5 +1,6 @@
 #include "XmlDataFormat.h"
 
+
 namespace o2
 {
 	namespace XmlDataFormat

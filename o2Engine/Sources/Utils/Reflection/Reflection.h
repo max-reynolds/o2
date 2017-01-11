@@ -2,13 +2,21 @@
 
 #include "Utils/Containers/Pair.h"
 #include "Utils/Containers/Vector.h"
-#include "Utils/Reflection/Type.h"
+#include "Utils/Containers/Dictionary.h"
+#include "Utils/String.h"
 
 // Reflection access macros
 #define o2Reflection Reflection::Instance()
 
 namespace o2
 {
+    class Type;
+    class VectorType;    
+    class DictionaryType;
+    
+    template<typename _return_type>
+    class StringPointerAccessorType;
+    
 	// ------------------------------
 	// Reflection in application container
 	// ------------------------------
@@ -28,7 +36,7 @@ namespace o2
 		static void* CreateTypeSample(const String& typeName);
 
 		// Returns type by type id
-		static const Type* GetType(Type::Id id);
+		static const Type* GetType(typename Type::Id id);
 
 		// Returns type by name
 		static const Type* GetType(const String& name);
@@ -114,7 +122,13 @@ namespace o2
 
 #define END_ENUM_META \
     return res; });
+}
 
+#include "Utils/Reflection/Type.h"
+#include "Utils/Reflection/TypeTraits.h"
+
+namespace o2
+{
 	template<typename _type>
 	_type Reflection::GetEnumValue(const String& name)
 	{
@@ -177,7 +191,7 @@ namespace o2
 	{
 		String typeName = "o2::Vector<" + TypeOf(_element_type).Name() + ">";
 
-		if (auto fnd = mInstance->mTypes.FindMatch([&](auto x) { return x->mName == typeName; }))
+		if (auto fnd = mInstance->mTypes.FindMatch([&](Type* x) { return x->mName == typeName; }))
 			return (VectorType*)fnd;
 
 		_element_type* f = nullptr;
@@ -194,7 +208,7 @@ namespace o2
 	{
 		String typeName = "o2::Dictionary<" + TypeOf(_key_type).Name() + ", " + TypeOf(_value_type).Name() + ">";
 
-		if (auto fnd = mInstance->mTypes.FindMatch([&](auto x) { return x->mName == typeName; }))
+		if (auto fnd = mInstance->mTypes.FindMatch([&](Type* x) { return x->mName == typeName; }))
 			return (DictionaryType*)fnd;
 
 		_key_type* x = nullptr;
@@ -213,7 +227,7 @@ namespace o2
 		const Type* type = &TypeOf(_return_type);
 		String typeName = "o2::Accessor<" + type->mName + "*, const o2::String&>";
 
-		if (auto fnd = mInstance->mTypes.FindMatch([&](auto x) { return x->mName == typeName; }))
+		if (auto fnd = mInstance->mTypes.FindMatch([&](Type* x) { return x->mName == typeName; }))
 			return (StringPointerAccessorType<_return_type>*)fnd;
 
 		StringPointerAccessorType<_return_type>* newType = new StringPointerAccessorType<_return_type>();

@@ -178,7 +178,7 @@ namespace o2
 
 				if (!agent)
 				{
-					o2Debug.LogWarning("Can't work with animated value: %s", path);
+					o2Debug.LogWarning("Can't work with animated value: " + path);
 					return;
 				}
 
@@ -197,7 +197,7 @@ namespace o2
 
 		if (!fieldInfo)
 		{
-			o2Debug.LogWarning("Can't animate value %s: can't find field", path);
+			o2Debug.LogWarning("Can't animate value " + path + ": can't find field");
 			return;
 		}
 

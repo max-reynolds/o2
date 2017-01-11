@@ -1,6 +1,8 @@
 #pragma once
 
+#ifdef WINDOWS
 #include <Windows.h>
+#endif
 
 namespace o2
 {
@@ -26,8 +28,11 @@ namespace o2
 		float GetDeltaTime();
 
 	protected:
+        
+#ifdef WINDOWS
 		LONGLONG      mLastElapsedTime;
 		LARGE_INTEGER mFrequency;
 		LARGE_INTEGER mStartTime;
+#endif
 	};
 }

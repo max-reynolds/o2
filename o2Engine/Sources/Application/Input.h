@@ -5,7 +5,10 @@
 #include "Utils/Math/Vector2.h"
 #include "Utils/Property.h"
 #include "Utils/Singleton.h"
+
+#ifdef WINDOWS
 #include <Windows.h>
+#endif
 
 // Input access macros
 #define o2Input Input::Instance()

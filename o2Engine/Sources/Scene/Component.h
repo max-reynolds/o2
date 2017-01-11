@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Scene/Scene.h"
 #include "Utils/Serializable.h"
 
 namespace o2
@@ -63,11 +62,11 @@ namespace o2
 
 		// Returns components with type
 		template<typename _type>
-		Vector<_type>* GetComponents() const;
+		Vector<_type*> GetComponents() const;
 
 		// Returns components with type in children
 		template<typename _type>
-		Vector<_type>* GetComponentsInChildren() const;
+		Vector<_type*> GetComponentsInChildren() const;
 
 		// Returns name of component
 		virtual String GetName() const;
@@ -120,30 +119,35 @@ namespace o2
 		// Checks that type is based on Component type
 		bool CheckType(const Type* type) const;
 	};
+}
 
+#include "Scene/Actor.h"
+
+namespace o2
+{
 	template<typename _type>
-	Vector<_type>* Component::GetComponentsInChildren() const
+	Vector<_type*> Component::GetComponentsInChildren() const
 	{
 		if (mOwner)
-			return mOwner->GetComponentsInChildren();
+			return mOwner->GetComponentsInChildren<_type>();
 
-		return Vector<_type>*();
+		return Vector<_type*>();
 	}
 
 	template<typename _type>
-	Vector<_type>* Component::GetComponents() const
+	Vector<_type*> Component::GetComponents() const
 	{
 		if (mOwner)
 			return mOwner->GetComponents();
 
-		return Vector<_type>*();
+		return Vector<_type*>();
 	}
 
 	template<typename _type>
 	_type* Component::GetComponentInChildren() const
 	{
 		if (mOwner)
-			return mOwner->GetComponentInChildren();
+			return mOwner->GetComponentInChildren<_type>();
 
 		return nullptr;
 	}
@@ -152,7 +156,7 @@ namespace o2
 	_type* Component::GetComponent() const
 	{
 		if (mOwner)
-			return mOwner->GetComponent();
+			return mOwner->GetComponent<_type>();
 
 		return nullptr;
 	}

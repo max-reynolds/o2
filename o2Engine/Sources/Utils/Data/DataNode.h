@@ -4,6 +4,7 @@
 #include "Utils/Containers/Vector.h"
 #include "Utils/String.h"
 #include "Utils/UID.h"
+#include "Utils/IObject.h"
 
 namespace o2
 {
@@ -149,7 +150,7 @@ namespace o2
 		DataNode& SetValue(const UID& value);
 
 		// Sets value from pointer value, only for objects, based on ISerializable
-		template<typename _type, typename X = std::enable_if<std::is_base_of<ISerializable, _type>::value>::type>
+		template<typename _type, typename X = typename std::enable_if<std::is_base_of<ISerializable, _type>::value>::type>
 		DataNode& SetValue(_type* value);
 
 		// Sets value from vector value
@@ -162,8 +163,8 @@ namespace o2
 
 		// Sets value from enum class or IObject based value
 		template<typename _type,
-			typename _conv = std::conditional<std::is_enum<_type>::value, EnumDataConverter<_type>, CustomDataConverter<_type>>::type,
-			typename X = std::enable_if<std::is_enum<_type>::value || std::is_base_of<IObject, _type>::value>::type>
+			typename _conv = typename std::conditional<std::is_enum<_type>::value, EnumDataConverter<_type>, CustomDataConverter<_type>>::type,
+			typename X = typename std::enable_if<std::is_enum<_type>::value || std::is_base_of<IObject, _type>::value>::type>
 		DataNode& SetValue(_type& value);
 
 		// Gets value
@@ -237,7 +238,7 @@ namespace o2
 
 		// Gets value as pointer, only for objects, based on ISerializable
 		template<typename _type,
-			typename X = std::enable_if<std::is_base_of<ISerializable, _type>::value>::type>
+			typename X = typename std::enable_if<std::is_base_of<ISerializable, _type>::value>::type>
 		void GetValue(_type*& value) const;
 
 		// Gets value as vector
@@ -250,8 +251,8 @@ namespace o2
 
 		// Gets value as enum class or IObject
 		template<typename _type,
-			typename _conv = std::conditional<std::is_enum<_type>::value, EnumDataConverter<_type>, CustomDataConverter<_type>>::type,
-			typename X = std::enable_if<std::is_enum<_type>::value || std::is_base_of<IObject, _type>::value>::type>
+			typename _conv = typename std::conditional<std::is_enum<_type>::value, EnumDataConverter<_type>, CustomDataConverter<_type>>::type,
+			typename X = typename std::enable_if<std::is_enum<_type>::value || std::is_base_of<IObject, _type>::value>::type>
 		void GetValue(_type& value) const;
 
 
@@ -378,7 +379,13 @@ namespace o2
 
 		friend class Application;
 	};
+}
 
+#include "Utils/Reflection/Reflection.h"
+#include "Utils/Reflection/Type.h"
+
+namespace o2
+{
 	// Type and type getting forward declaration
 	class Type;
 
@@ -413,7 +420,7 @@ namespace o2
 
 		value = nullptr;
 	}
-
+    
 	template<typename _type>
 	DataNode& DataNode::operator=(const _type& value)
 	{
@@ -478,7 +485,6 @@ namespace o2
 	template<typename _key, typename _value>
 	void DataNode::GetValue(Dictionary<_key, _value>& value) const
 	{
-		int count = mChildNodes.Count();
 		for (auto childNode : mChildNodes)
 		{
 			auto keyNode = childNode->GetNode("Key");

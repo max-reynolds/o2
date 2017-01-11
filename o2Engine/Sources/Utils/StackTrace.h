@@ -1,6 +1,13 @@
 #pragma once
 
+#ifdef WINDOWS
 #include "Dependencies/StackWalker/StackWalker.h"
+#endif
+
+#ifdef OSX
+class StackWalker {};
+#endif
+
 #include "Utils/String.h"
 
 namespace o2
@@ -27,10 +34,12 @@ namespace o2
 		// Default constructor
 		o2StackWalker();
 
+#ifdef WINDOWS
 		// Constructor for process
 		o2StackWalker(DWORD dwProcessId, HANDLE hProcess);
 
 		void OnOutput(LPCSTR szText);
+#endif
 	};
 
 	// Returns stack trace as text

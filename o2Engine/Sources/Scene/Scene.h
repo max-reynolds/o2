@@ -150,7 +150,7 @@ namespace o2
 
 		// Returns all components with type in scene
 		template<typename _type>
-		Vector<_type>* FindAllActorsComponents();
+		Vector<_type*> FindAllActorsComponents();
 
 		// Removes all actors
 		void Clear();
@@ -226,11 +226,16 @@ namespace o2
 		// Checks that type is layer's type
 		bool CheckType(const Type* type) const;
 	};
+}
 
+#include "Scene/Actor.h"
+
+namespace o2
+{
 	template<typename _type>
-	Vector<_type>* Scene::FindAllActorsComponents()
+	Vector<_type*> Scene::FindAllActorsComponents()
 	{
-		Vector<_type>* res;
+		Vector<_type*> res;
 		for (auto actor : mRootActors)
 			res.Add(actor->GetComponentsInChildren<_type>());
 
@@ -242,7 +247,7 @@ namespace o2
 	{
 		for (auto actor : mRootActors)
 		{
-			_type> res = actor->GetComponentInChildren<_type*();
+			_type* res = actor->GetComponentInChildren<_type>();
 			if (res)
 				return res;
 		}

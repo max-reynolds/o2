@@ -5,7 +5,14 @@
 #include "Utils/Property.h"
 #include "Utils/Singleton.h"
 #include "Utils/String.h"
+
+#ifdef WINDOWS
 #include "Application/Windows/ApplicationBase.h"
+#endif
+
+#ifdef OSX
+class ApplicationBase {};
+#endif
 
 // Application access macros
 #define o2Application Application::Instance()

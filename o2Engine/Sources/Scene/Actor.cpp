@@ -1,3 +1,4 @@
+#include "Scene/Scene.h"
 #include "Actor.h"
 
 #include "Scene/Scene.h"

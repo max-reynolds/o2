@@ -2,11 +2,13 @@
 #pragma once
 
 #include "Utils/Containers/Dictionary.h"
-#include "Utils/Data/DataNode.h"
-#include "Utils/IObject.h"
-#include "Utils/Reflection/Reflection.h"
 #include "Utils/String.h"
 #include "Utils/Singleton.h"
+
+#include "Utils/Reflection/Type.h"
+#include "Utils/Data/DataNode.h"
+#include "Utils/Reflection/Reflection.h"
+#include "Utils/IObject.h"
 
 namespace o2
 {
@@ -67,7 +69,7 @@ namespace o2
 private:                                               \
 	static o2::Type* type;							   \
                                                        \
-    template<typename _type, typename _getter>         \
+    template<typename __type, typename _getter>        \
 	friend const o2::Type& o2::GetTypeOf();            \
                                                        \
 	template<typename T>                               \
@@ -76,7 +78,7 @@ private:                                               \
 	template<typename T, typename X>                   \
 	friend struct o2::GetTypeHelper;                   \
                                                        \
-    template<typename _type>                           \
+    template<typename __type>                          \
     friend struct o2::Type::SampleCreator;             \
                                                        \
     friend class o2::TypeInitializer;                  \

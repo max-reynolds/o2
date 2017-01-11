@@ -1,11 +1,17 @@
 #pragma once
 
 #include "Utils/Memory/MemoryManager.h"
-#include "Utils/Reflection/Type.h"
 
 namespace o2
 {
 	class IClassMetaProcessor;
+    class Type;
+    
+    template<typename _type, typename _getter>
+    const Type& GetTypeOf();
+    
+    template<typename T, typename X>
+    struct GetTypeHelper;
 
 	// ----------------------------------------------------
 	// Basic object interface with type information support

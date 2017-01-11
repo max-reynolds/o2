@@ -1,10 +1,20 @@
 #pragma once
 
-#include <windows.h>	
+#ifdef WINDOWS
+#include <windows.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include "Dependencies/OpenGL/glext.h"
 #include "Dependencies/OpenGL/wglext.h"
+#endif
+
+#ifdef OSX
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#include <OpenGL/glext.h>
+#include <OpenGL/wglext.h>
+#endif
+
 
 
 namespace o2

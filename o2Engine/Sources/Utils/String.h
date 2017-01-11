@@ -11,10 +11,10 @@
 namespace o2
 {
 #define TStringEnableType \
-	typename X = std::enable_if<std::is_same<T2, char>::value || \
-	                            std::is_same<T2, wchar_t>::value || \
-		                        std::is_same<T2, const char>::value || \
-		                        std::is_same<T2, const wchar_t>::value>::type
+	typename X = typename std::enable_if<std::is_same<T2, char>::value || \
+	                                     std::is_same<T2, wchar_t>::value || \
+		                                 std::is_same<T2, const char>::value || \
+		                                 std::is_same<T2, const wchar_t>::value>::type
 
 	// -------------------------
 	// Template character string
@@ -1362,8 +1362,6 @@ namespace o2
 
 			if (format.mData[i] == '%')
 			{
-				bool success = true;
-
 				if (format.mData[i + 1] == 'i')
 				{
 					appendStr((TString)va_arg(vlist, int));
@@ -1383,27 +1381,27 @@ namespace o2
 				}
 				else if (format.mData[i + 1] == 'v' && format.mData[i + 2] == 'i')
 				{
-					appendStr((TString)va_arg(vlist, Vec2I));
+					//appendStr((TString)va_arg(vlist, Vec2I));
 					i++;
 				}
 				else if (format.mData[i + 1] == 'v' && format.mData[i + 2] == 'f')
 				{
-					appendStr((TString)va_arg(vlist, Vec2F));
+					//appendStr((TString)va_arg(vlist, Vec2F));
 					i++;
 				}
 				else if (format.mData[i + 1] == 'r' && format.mData[i + 2] == 'i')
 				{
-					appendStr((TString)va_arg(vlist, RectI));
+					//appendStr((TString)va_arg(vlist, RectI));
 					i++;
 				}
 				else if (format.mData[i + 1] == 'r' && format.mData[i + 2] == 'f')
 				{
-					appendStr((TString)va_arg(vlist, RectF));
+					//appendStr((TString)va_arg(vlist, RectF));
 					i++;
 				}
 				else if (format.mData[i + 1] == 'c' && format.mData[i + 2] == 'l')
 				{
-					appendStr((TString)va_arg(vlist, Color4));
+					//appendStr((TString)va_arg(vlist, Color4));
 					i++;
 				}
 				else if (format.mData[i + 1] == 's' && format.mData[i + 2] == 'c')
@@ -1413,20 +1411,20 @@ namespace o2
 				}
 				else if (format.mData[i + 1] == 's' && format.mData[i + 2] == 'w')
 				{
-					appendStr(va_arg(vlist, WString));
+					//appendStr(va_arg(vlist, WString));
 					i++;
 				}
 				else if (format.mData[i + 1] == 's')
 				{
-					appendStr((TString)va_arg(vlist, String));
+					//appendStr((TString)va_arg(vlist, String));
 				}
 				else if (format.mData[i + 1] == 'c')
 				{
-					res.mData[resLen++] = va_arg(vlist, char);
+					res.mData[resLen++] = va_arg(vlist, int);
 				}
 				else if (format.mData[i + 1] == 'b')
 				{
-					appendStr(va_arg(vlist, bool) ? "true" : "false");
+					appendStr(va_arg(vlist, int) == 1 ? "true" : "false");
 					i++;
 				}
 				else

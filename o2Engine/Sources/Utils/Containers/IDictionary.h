@@ -21,9 +21,12 @@ namespace o2
 
 		bool operator==(const KeyValuePair& otherPair);
 		bool operator!=(const KeyValuePair& otherPair);
-
-		_key_type& Key();
-		_value_type& Value();
+        
+        _key_type& Key();
+        _value_type& Value();
+        
+        const _key_type& Key() const;
+        const _value_type& Value() const;
 	};
 
 	// --------------------------
@@ -137,19 +140,31 @@ namespace o2
 	bool KeyValuePair<_key_type, _value_type>::operator!=(const KeyValuePair& otherPair)
 	{
 		return mKey != otherPair.mKey || mValue != otherPair.mValue;
-	}
-
-	template<typename _key_type, typename _value_type>
-	_key_type& KeyValuePair<_key_type, _value_type>::Key()
-	{
-		return mKey;
-	}
-
-	template<typename _key_type, typename _value_type>
-	_value_type& KeyValuePair<_key_type, _value_type>::Value()
-	{
-		return mValue;
-	}
+    }
+    
+    template<typename _key_type, typename _value_type>
+    _key_type& KeyValuePair<_key_type, _value_type>::Key()
+    {
+        return mKey;
+    }
+    
+    template<typename _key_type, typename _value_type>
+    _value_type& KeyValuePair<_key_type, _value_type>::Value()
+    {
+        return mValue;
+    }
+    
+    template<typename _key_type, typename _value_type>
+    const _key_type& KeyValuePair<_key_type, _value_type>::Key() const
+    {
+        return mKey;
+    }
+    
+    template<typename _key_type, typename _value_type>
+    const _value_type& KeyValuePair<_key_type, _value_type>::Value() const
+    {
+        return mValue;
+    }
 
 #pragma endregion KeyValuePair Implementation
 

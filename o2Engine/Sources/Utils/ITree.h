@@ -142,7 +142,7 @@ namespace o2
 	}
 
 	template<typename _type>
-	typename const ITreeNode<_type>::ChildsVec& o2::ITreeNode<_type>::GetChilds() const
+	const typename ITreeNode<_type>::ChildsVec& o2::ITreeNode<_type>::GetChilds() const
 	{
 		return mChilds;
 	}

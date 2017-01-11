@@ -7,9 +7,7 @@
 #include "Utils/Math/Vector2.h"
 #include "Utils/Math/Vertex2.h"
 #include "Utils/Property.h"
-#include "Utils/Reflection/FieldInfo.h"
 #include "Utils/Reflection/FunctionInfo.h"
-#include "Utils/Reflection/TypeTraits.h"
 #include "Utils/String.h"
 #include "Utils/UID.h"
 
@@ -18,6 +16,7 @@
 namespace o2
 {
 	class IObject;
+    class FieldInfo;
 
 	// -----------
 	// Object type
@@ -296,7 +295,7 @@ namespace o2
 	{
 	public:
 		// Adds basic type
-		template<typename _type, typename X = std::conditional<std::is_base_of<IObject, _type>::value, _type, Type::Dummy>::type>
+		template<typename _type, typename X = typename std::conditional<std::is_base_of<IObject, _type>::value, _type, Type::Dummy>::type>
 		static void AddBaseType(Type*& type);
 
 		// Registers field in type
@@ -359,19 +358,26 @@ namespace o2
 #define ATTRIBUTE_SHORT_DEFINITION(X)
 
 #define FUNCTION(PROTECT_SECTION, RETURN_TYPE, NAME, ...) \
-    o2::TypeInitializer::RegFunction<thisclass, RETURN_TYPE, __VA_ARGS__>(type, #NAME, &thisclass::NAME, ProtectSection::PROTECT_SECTION)
+    o2::TypeInitializer::RegFunction<thisclass, RETURN_TYPE, ##__VA_ARGS__>(type, #NAME, &thisclass::NAME, ProtectSection::PROTECT_SECTION)
 
 #define PUBLIC_FUNCTION(RETURN_TYPE, NAME, ...) \
-    o2::TypeInitializer::RegFunction<thisclass, RETURN_TYPE, __VA_ARGS__>(type, #NAME, &thisclass::NAME, ProtectSection::Public)
+    o2::TypeInitializer::RegFunction<thisclass, RETURN_TYPE, ##__VA_ARGS__>(type, #NAME, &thisclass::NAME, ProtectSection::Public)
 
 #define PRIVATE_FUNCTION(RETURN_TYPE, NAME, ...) \
-    o2::TypeInitializer::RegFunction<thisclass, RETURN_TYPE, __VA_ARGS__>(type, #NAME, &thisclass::NAME, ProtectSection::Private)
+    o2::TypeInitializer::RegFunction<thisclass, RETURN_TYPE, ##__VA_ARGS__>(type, #NAME, &thisclass::NAME, ProtectSection::Private)
 
 #define PROTECTED_FUNCTION(RETURN_TYPE, NAME, ...) \
-    o2::TypeInitializer::RegFunction<thisclass, RETURN_TYPE, __VA_ARGS__>(type, #NAME, &thisclass::NAME, ProtectSection::Protected)
+    o2::TypeInitializer::RegFunction<thisclass, RETURN_TYPE, ##__VA_ARGS__>(type, #NAME, &thisclass::NAME, ProtectSection::Protected)
 
 #define END_META }
+    
+}
 
+#include "Utils/Reflection/FieldInfo.h"
+#include "Utils/Reflection/TypeTraits.h"
+
+namespace o2
+{
 	// -------------------
 	// Type implementation
 	// -------------------
@@ -379,7 +385,7 @@ namespace o2
 	template<typename _res_type, typename ... _args>
 	_res_type Type::Invoke(const String& name, void* object, _args ... args)
 	{
-		FunctionInfo* func = GetFunction(name);
+		const FunctionInfo* func = GetFunction(name);
 		if (func)
 			return func->Invoke(object, args ...);
 
@@ -532,9 +538,9 @@ namespace o2
 		bool isProperty = IsProperty<_type>::value;
 		bool isPointer = std::is_pointer<_type>::value;
 
-		typedef std::conditional<DataNode::IsSupport<_type>::value,
-			FieldInfo::FieldSerializer<_type>,
-			FieldInfo::IFieldSerializer>::type serializerType;
+		typedef typename std::conditional<DataNode::IsSupport<_type>::value,
+			                              FieldInfo::FieldSerializer<_type>,
+			                              FieldInfo::IFieldSerializer>::type serializerType;
 
 		type->mFields.Add(new FieldInfo(name, offset, isProperty, isPointer, valType, section, new serializerType()));
 		return *type->mFields.Last();

@@ -263,7 +263,7 @@ namespace o2
 	template<typename T>
 	void Rect<T>::Normalize()
 	{
-		T _left = left, _right = right, _top = top, _bottom - bottom;
+		T _left = left, _right = right, _top = top, _bottom = bottom;
 		left = Math::Min(_left, _right);
 		right = Math::Max(_left, _right);
 		top = Math::Max(_top, _bottom);
@@ -274,7 +274,7 @@ namespace o2
 	void Rect<T>::SetPosition(const Vec2<T>& position)
 	{
 		T dx = position.x - left, dy = position.y - top;
-		left += dx; righ += dx;
+		left += dx; right += dx;
 		top += dy; bottom += dy;
 	}
 

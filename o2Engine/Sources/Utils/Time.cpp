@@ -6,8 +6,6 @@
 
 namespace o2
 {
-	//TimeStuff& Time = TimeStuff::Instance();
-
 	DECLARE_SINGLETON(Time);
 
 	Time::Time():
@@ -74,28 +72,12 @@ namespace o2
 	{
 		return mInstance->mFPS;
 	}
-
-	TimeStamp Time::CurrentTime() const
-	{
-		SYSTEMTIME tm;
-		GetSystemTime(&tm);
-
-		return TimeStamp(tm.wSecond, tm.wMinute, tm.wHour, tm.wDay, tm.wMonth, tm.wYear);
-	}
-
-	bool TimeStamp::operator!=(const TimeStamp& wt) const
-	{
-		return !(*this == wt);
-	}
-
-	bool TimeStamp::operator==(const TimeStamp& wt) const
-	{
-		return mSecond == wt.mSecond && mMinute == wt.mMinute && mHour == wt.mHour && mDay == wt.mDay && mMonth == wt.mMonth &&
-			mYear == wt.mYear;
-	}
-
-	TimeStamp::TimeStamp(int seconds /*= 0*/, int minutes /*= 0*/, int hours /*= 0*/, int days /*= 0*/, int months /*= 0*/, int years /*= 0*/):
-		mYear(years), mMonth(months), mDay(days), mHour(hours), mMinute(minutes), mSecond(seconds)
-	{}
-
+    
+    TimeStamp Time::CurrentTime() const
+    {
+        SYSTEMTIME tm;
+        GetSystemTime(&tm);
+        
+        return TimeStamp(tm.wSecond, tm.wMinute, tm.wHour, tm.wDay, tm.wMonth, tm.wYear);
+    }
 }
