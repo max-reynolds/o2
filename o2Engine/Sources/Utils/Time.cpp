@@ -1,6 +1,8 @@
 #include "Time.h"
 
+#ifdef WINDOWS
 #include <Windows.h>
+#endif
 
 #include "Utils/Reflection/Reflection.h"
 
@@ -71,8 +73,9 @@ namespace o2
 	float Time::GetFPS() const
 	{
 		return mInstance->mFPS;
-	}
+    }
     
+#ifdef WINDOWS
     TimeStamp Time::CurrentTime() const
     {
         SYSTEMTIME tm;
@@ -80,4 +83,12 @@ namespace o2
         
         return TimeStamp(tm.wSecond, tm.wMinute, tm.wHour, tm.wDay, tm.wMonth, tm.wYear);
     }
+#endif
+    
+#ifdef OSX
+    TimeStamp Time::CurrentTime() const
+    {
+        return TimeStamp();
+    }
+#endif
 }

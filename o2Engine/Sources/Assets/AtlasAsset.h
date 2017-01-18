@@ -119,7 +119,7 @@ namespace o2
 
 		public:
 			// Returns asset type id
-			Type::Id GetAssetType() const;
+			TypeId GetAssetType() const;
 
 			// Returns true if other meta is equal to this
 			bool IsEqual(IMetaInfo* other) const;

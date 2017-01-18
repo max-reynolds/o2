@@ -14,6 +14,8 @@ namespace o2
 	typedef int                CursorId;
 
 	typedef char               UnknownType;
+    
+    typedef unsigned int       TypeId;
 
 	enum class BaseCorner { Left, Right, Top, Bottom, Center, LeftBottom, LeftTop, RightBottom, RightTop };
 

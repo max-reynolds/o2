@@ -27,7 +27,7 @@ namespace o2
 
 		if (res.status != pugi::status_ok)
 		{
-			o2Render.mLog->Error("Failed to load Bitmap Font file: %s", fileName);
+			o2Render.mLog->Error("Failed to load Bitmap Font file: " + fileName);
 			return false;
 		}
 
@@ -45,13 +45,12 @@ namespace o2
 		}
 		else
 		{
-			o2Render.mLog->Error("Failed to get common info in font: %s. Bad file format", fileName);
+			o2Render.mLog->Error("Failed to get common info in font: " + fileName + ". Bad file format");
 			return false;
 		}
 
 		if (pugi::xml_node charsNode = root.child(L"chars"))
 		{
-			int i = 0;
 			Vec2F texOffs = mTextureSrcRect.LeftBottom();
 			for (pugi::xml_node charNode = charsNode.child(L"char"); charNode; charNode = charNode.next_sibling(L"char"))
 			{
@@ -75,7 +74,7 @@ namespace o2
 		}
 		else
 		{
-			o2Render.mLog->Error("Failed to get characters node in BMFont file: %s. Bad file format", fileName);
+			o2Render.mLog->Error("Failed to get characters node in BMFont file: " + fileName + ". Bad file format");
 			return false;
 		}
 

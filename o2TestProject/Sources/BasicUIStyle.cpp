@@ -1169,7 +1169,7 @@ namespace o2
 	{
 		o2UI.ClearStyle();
 
-		for (auto func : GetType().Functions())
+		for (auto func : GetType().GetFunctions())
 		{
 			if (func->GetName() == "RebuildBasicUIStyle")
 				continue;

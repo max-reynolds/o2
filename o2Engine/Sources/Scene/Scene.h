@@ -11,10 +11,15 @@
 
 namespace o2
 {
-	class Actor;
-	class ActorAsset;
-	class DrawableComponent;
-	class Tag;
+    class ActorAsset;
+    class DrawableComponent;
+    class Tag;
+    
+    class Actor;
+    typedef Vector<Actor*> ActorsVec;
+    
+    class SceneLayer;
+    typedef Vector<SceneLayer*> SceneLayersVec;
 
 	// ----------
 	// Scene host
@@ -22,61 +27,9 @@ namespace o2
 	class Scene: public Singleton<Scene>
 	{
 	public:
-		typedef Vector<Actor*> ActorsVec;
-		typedef Vector<DrawableComponent*> DrawCompsVec;
 		typedef Vector<ActorAsset*> ActorsAssetsVec;
 		typedef Vector<String> StringsVec;
 		typedef Vector<Tag*> TagsVec;
-
-		// -----------
-		// Scene layer
-		// -----------
-		class Layer: public ISerializable
-		{
-		public:
-			String name; // Name of layer @SERIALIZABLE
-
-			// Returns all actors in layer
-			const ActorsVec& GetActors() const;
-
-			// Returns enabled actors in layer
-			const ActorsVec& GetEnabledActors() const;
-
-			// Returns all drawable components of actors in layer
-			const DrawCompsVec& GetDrawableComponents() const;
-
-			// Returns enabled drawable components of actors in layer
-			const DrawCompsVec& GetEnabledDrawableComponents() const;
-
-			SERIALIZABLE(Layer);
-
-		protected:
-			ActorsVec    mActors;           // Actors in layer
-			ActorsVec    mEnabledActors;    // Enabled actors
-			DrawCompsVec mDrawables;        // Drawable components in layer
-			DrawCompsVec mEnabledDrawables; // Enabled drawable components in layer
-
-		protected:
-			// Registers drawable component
-			void RegDrawableComponent(DrawableComponent* component);
-
-			// Unregisters drawable component
-			void UnregDrawableComponent(DrawableComponent* component);
-
-			// Calls when drawable component depth was changed and sorts all drawable component
-			void ComponentDepthChanged(DrawableComponent* component);
-
-			// Calls when component was enabled
-			void ComponentEnabled(DrawableComponent* component);
-
-			// Calls when component was enabled
-			void ComponentDisabled(DrawableComponent* component);
-
-			friend class DrawableComponent;
-			friend class Scene;
-			friend class Actor;
-		};
-		typedef Vector<Layer*> LayersVec;
 
 	public:
 		Function<void(Actor*)> onActorCreated;       // Actor creation event
@@ -91,22 +44,22 @@ namespace o2
 #endif
 
 		// Returns layer by name
-		Layer* GetLayer(const String& name) const;
+		SceneLayer* GetLayer(const String& name) const;
 
 		// Returns default layer
-		Layer* GetDefaultLayer() const;
+		SceneLayer* GetDefaultLayer() const;
 
 		// Adds layer with name
-		Layer* AddLayer(const String& name);
+		SceneLayer* AddLayer(const String& name);
 
 		// Removes layer
-		void RemoveLayer(Layer* layer, bool removeActors = true);
+		void RemoveLayer(SceneLayer* layer, bool removeActors = true);
 
 		// Removes layer by name
 		void RemoveLayer(const String& name, bool removeActors = true);
 
 		// Returns layers array
-		LayersVec& GetLayers();
+		SceneLayersVec& GetLayers();
 
 		// Returns tag with name
 		Tag* GetTag(const String& name) const;
@@ -184,9 +137,9 @@ namespace o2
 	protected:
 		ActorsVec       mRootActors;    // Scene root actors		
 		ActorsVec       mAllActors;     // All scene actors
-		LayersVec       mLayers;        // Scene layers
+		SceneLayersVec  mLayers;        // Scene layers
 		TagsVec         mTags;          // Scene tags
-		Layer*          mDefaultLayer;  // Default scene layer
+		SceneLayer*     mDefaultLayer;  // Default scene layer
 		ActorsAssetsVec mCache;         // Cached actors assets
 				  
 #if IS_EDITOR	  
@@ -210,6 +163,58 @@ namespace o2
 		friend class Application;
 		friend class DrawableComponent;
 	};
+    
+    // -----------
+    // Scene layer
+    // -----------
+    class SceneLayer: public ISerializable
+    {
+    public:
+        typedef Vector<DrawableComponent*> DrawCompsVec;
+        
+    public:
+        String name; // Name of layer @SERIALIZABLE
+        
+        // Returns all actors in layer
+        const ActorsVec& GetActors() const;
+        
+        // Returns enabled actors in layer
+        const ActorsVec& GetEnabledActors() const;
+        
+        // Returns all drawable components of actors in layer
+        const DrawCompsVec& GetDrawableComponents() const;
+        
+        // Returns enabled drawable components of actors in layer
+        const DrawCompsVec& GetEnabledDrawableComponents() const;
+        
+        SERIALIZABLE(SceneLayer);
+        
+    protected:
+        ActorsVec    mActors;           // Actors in layer
+        ActorsVec    mEnabledActors;    // Enabled actors
+        DrawCompsVec mDrawables;        // Drawable components in layer
+        DrawCompsVec mEnabledDrawables; // Enabled drawable components in layer
+        
+    protected:
+        // Registers drawable component
+        void RegDrawableComponent(DrawableComponent* component);
+        
+        // Unregisters drawable component
+        void UnregDrawableComponent(DrawableComponent* component);
+        
+        // Calls when drawable component depth was changed and sorts all drawable component
+        void ComponentDepthChanged(DrawableComponent* component);
+        
+        // Calls when component was enabled
+        void ComponentEnabled(DrawableComponent* component);
+        
+        // Calls when component was enabled
+        void ComponentDisabled(DrawableComponent* component);
+        
+        friend class DrawableComponent;
+        friend class Scene;
+        friend class Actor;
+    };
 
 	// -------------------------
 	// Layer data node converter

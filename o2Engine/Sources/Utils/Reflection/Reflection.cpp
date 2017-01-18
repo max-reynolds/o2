@@ -61,7 +61,7 @@ namespace o2
 		return nullptr;
 	}
 
-	const Type* Reflection::GetType(Type::Id id)
+	const Type* Reflection::GetType(TypeId id)
 	{
 		for (auto type : mInstance->mTypes)
 		{
@@ -88,7 +88,9 @@ namespace o2
 
 		return nullptr;
 	}
-
+    
+    template<> Type* FundamentalTypeContainer<void>::type = new Type("void", nullptr, 0);
+    
 	void Reflection::InitializeFundamentalTypes()
 	{
 		IObject::type->mId = mInstance->mLastGivenTypeId++;
@@ -116,7 +118,6 @@ namespace o2
 	
 	Reflection* Reflection::mInstance;
 
-	Type* FundamentalTypeContainer<void>::type = new Type("void", nullptr, 0);
 	Type* IObject::type = new Type("IObject", nullptr, 0);
 	Type* Type::Dummy::type = new Type("Unknown", nullptr, 0);
 

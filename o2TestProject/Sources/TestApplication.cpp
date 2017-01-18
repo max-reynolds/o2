@@ -2,14 +2,14 @@
 
 #include "ft2build.h"
 #include FT_FREETYPE_H
-#include "Assets\VectorFontAsset.h"
+#include "Assets/VectorFontAsset.h"
 #include "MainTestScreen.h"
-#include "Render\Camera.h"
-#include "Render\Render.h"
-#include "Render\VectorFontEffects.h"
+#include "Render/Camera.h"
+#include "Render/Render.h"
+#include "Render/VectorFontEffects.h"
 #include "TextTestScreen.h"
 #include "UITestScreen.h"
-#include "UI\UIManager.h"
+#include "UI/UIManager.h"
 
 #undef DrawText
 
@@ -64,7 +64,7 @@ void TestApplication::OnDraw()
 
 void TestApplication::GoToScreen(const String& id)
 {
-	mNextCurrentScreen = mTestScreens.FindMatch([&](auto x) { return x->GetId() == id; });
+	mNextCurrentScreen = mTestScreens.FindMatch([&](ITestScreen* x) { return x->GetId() == id; });
 }
 
 void TestApplication::CheckArialFontEffects()

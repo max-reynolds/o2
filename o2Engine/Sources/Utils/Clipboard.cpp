@@ -1,11 +1,14 @@
 #include "Clipboard.h"
 
+#ifdef WINDOWS
 #include <Windows.h>
 #include <shlobj.h>
+#endif
 
 namespace o2
 {
 
+#ifdef WINDOWS
 	void Clipboard::SetText(const WString& text)
 	{
 		if (OpenClipboard(NULL))
@@ -130,5 +133,31 @@ namespace o2
 
 		return res;
 	}
-
+#endif //WINDOWS
+    
+#ifdef OSX
+    void Clipboard::SetText(const WString& text)
+    {
+    }
+    
+    WString Clipboard::GetText()
+    {
+        WString res;
+        return res;
+    }
+    
+    void Clipboard::CopyFile(const WString& path)
+    {
+    }
+    
+    void Clipboard::CopyFiles(const Vector<WString>& paths)
+    {
+    }
+    
+    Vector<WString> Clipboard::GetCopyFiles()
+    {
+        Vector<WString> res;
+        return res;
+    }
+#endif // OSX
 }

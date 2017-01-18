@@ -1,7 +1,7 @@
 #include "TextTestScreen.h"
 
 #include "TestApplication.h"
-#include "Render\Render.h"
+#include "Render/Render.h"
 
 TextTestScreen::TextTestScreen(TestApplication* application):
 	ITestScreen(application)

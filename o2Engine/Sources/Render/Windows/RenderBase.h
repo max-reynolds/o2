@@ -12,8 +12,10 @@ namespace o2
 	class RenderBase
 	{
 	protected:
+#ifdef WINDOWS
 		HGLRC        mGLContext;                // OpenGL context
 		HDC          mHDC;                      // Windows frame device context
+#endif
 
 		UInt8*       mVertexData;               // Vertex data buffer
 		UInt16*      mVertexIndexData;          // Index data buffer
@@ -21,7 +23,7 @@ namespace o2
 		UInt         mIndexBufferSize = 6000*3; // Maximum size of index buffer
 		GLenum       mCurrentPrimitiveType;     // Type of drawing primitives for next DIP
 				     
-		Texture* mLastDrawTexture;          // Stored texture ptr from last DIP
+		Texture*     mLastDrawTexture;          // Stored texture ptr from last DIP
 		UInt         mLastDrawVertex;           // Last vertex idx for next DIP
 		UInt         mLastDrawIdx;              // Last vertex index for next DIP
 		UInt         mTrianglesCount;           // Triangles count for next DIP

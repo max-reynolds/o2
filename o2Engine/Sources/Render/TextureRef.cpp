@@ -65,7 +65,7 @@ namespace o2
 		UID atlasAssetId = o2Assets.GetAssetId(atlasAssetName);
 		if (atlasAssetId == 0)
 		{
-			o2Render.mLog->Error("Can't load texture for atlas %s and page %i: atlas isn't exist", atlasAssetName, page);
+			o2Render.mLog->Error("Can't load texture for atlas " + atlasAssetName + " and page " + page + ": atlas isn't exist");
 			mTexture = nullptr;
 			return;
 		}

@@ -84,7 +84,7 @@ namespace o2
 			~MetaInfo();
 
 			// Returns asset type id
-			Type::Id GetAssetType() const;
+			TypeId GetAssetType() const;
 
 			// Returns true if other meta is equal to this
 			bool IsEqual(IMetaInfo* other) const;

@@ -231,7 +231,7 @@ namespace o2
 	protected:
 		typedef Vector<Mesh*> MeshesVec;
 
-		static char* mBasicSymbolsPreset;
+		static const char* mBasicSymbolsPreset;
 		const UInt mMeshMaxPolyCount = 4096;
 
 		WString    mText;              // Wide char string, containing rendering text @SERIALIZABLE

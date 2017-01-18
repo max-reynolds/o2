@@ -255,7 +255,7 @@ namespace o2
 		// Assign operator
 		Property& operator=(const _type& value)
 		{
-			Set(value);
+			this->Set(value);
 			return *this;
 		}
 
@@ -269,7 +269,7 @@ namespace o2
 		// Increment operator
 		Property& operator+=(const _type& value)
 		{
-			Set(Getter<_type>::Get() + value);
+			this->Set(Getter<_type>::Get() + value);
 			return *this;
 		}
 

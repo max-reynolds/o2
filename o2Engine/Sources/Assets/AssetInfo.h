@@ -12,7 +12,7 @@ namespace o2
 	struct AssetInfo: public virtual ISerializable
 	{
 	public:
-		Type::Id mType; // Type of asset @SERIALIZABLE
+		TypeId mType; // Type of asset @SERIALIZABLE
 		String   mPath; // Path of asset @SERIALIZABLE
 		UID      mId;   // Id of asset @SERIALIZABLE
 
@@ -21,7 +21,7 @@ namespace o2
 		AssetInfo();
 
 		// Constructor
-		AssetInfo(const String& path, UID id, Type::Id type);
+		AssetInfo(const String& path, UID id, TypeId type);
 
 		// Check equal operator
 		bool operator==(const AssetInfo& other) const;

@@ -601,9 +601,9 @@ namespace o2
 		return mComponents;
 	}
 
-	void Actor::SetLayer(Scene::Layer* layer)
+	void Actor::SetLayer(SceneLayer* layer)
 	{
-		Scene::Layer* lastLayer = mLayer;
+		SceneLayer* lastLayer = mLayer;
 		if (layer == nullptr)
 			layer = o2Scene.GetDefaultLayer();
 
@@ -633,7 +633,7 @@ namespace o2
 		SetLayer(o2Scene.GetLayer(layerName));
 	}
 
-	Scene::Layer* Actor::GetLayer() const
+	SceneLayer* Actor::GetLayer() const
 	{
 		return mLayer;
 	}
@@ -1070,9 +1070,9 @@ CLASS_META(o2::Actor)
 	PUBLIC_FUNCTION(Component*, GetComponent, const Type*);
 	PUBLIC_FUNCTION(Component*, GetComponent, UInt64);
 	PUBLIC_FUNCTION(ComponentsVec, GetComponents);
-	PUBLIC_FUNCTION(void, SetLayer, Scene::Layer*);
+	PUBLIC_FUNCTION(void, SetLayer, SceneLayer*);
 	PUBLIC_FUNCTION(void, SetLayer, const String&);
-	PUBLIC_FUNCTION(Scene::Layer*, GetLayer);
+	PUBLIC_FUNCTION(SceneLayer*, GetLayer);
 	PUBLIC_FUNCTION(String, GetLayerName);
 	PROTECTED_FUNCTION(void, OnTransformChanged);
 	PROTECTED_FUNCTION(void, ProcessCopying, Actor*, const Actor*, Vector<Actor**>&, Vector<Component**>&, _tmp1, _tmp2);

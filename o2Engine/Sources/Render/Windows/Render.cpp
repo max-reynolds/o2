@@ -32,6 +32,7 @@ namespace o2
 		mResolution = o2Application.GetContentSize();
 
 		GLuint pixelFormat;
+#ifdef WINDOWS
 		static	PIXELFORMATDESCRIPTOR pfd = // pfd Tells Windows How We Want Things To Be
 		{
 			sizeof(PIXELFORMATDESCRIPTOR), // Size Of This Pixel Format Descriptor
@@ -86,6 +87,7 @@ namespace o2
 			mLog->Error("Can't Activate The GL Rendering Context.\n");
 			return;
 		}
+#endif
 
 		// Get OpenGL extensions
 		GetGLExtensions(mLog);
@@ -119,14 +121,16 @@ namespace o2
 
 		GL_CHECK_ERROR(mLog);
 
-		mLog->Out("GL_VENDOR: %s", (String)(char*)glGetString(GL_VENDOR));
-		mLog->Out("GL_RENDERER: %s", (String)(char*)glGetString(GL_RENDERER));
-		mLog->Out("GL_VERSION: %s", (String)(char*)glGetString(GL_VERSION));
+		mLog->Out("GL_VENDOR: " + (String)(char*)glGetString(GL_VENDOR));
+		mLog->Out("GL_RENDERER: " + (String)(char*)glGetString(GL_RENDERER));
+		mLog->Out("GL_VERSION: " + (String)(char*)glGetString(GL_VERSION));
 
+#ifdef WINDOWS
 		HDC dc = GetDC(0);
 		mDPI.x = GetDeviceCaps(dc, LOGPIXELSX);
 		mDPI.y = GetDeviceCaps(dc, LOGPIXELSY);
 		ReleaseDC(0, dc);
+#endif
 
 		InitializeFreeType();
 
@@ -163,24 +167,21 @@ namespace o2
 		if (IS_DEV_MODE)
 			o2Assets.onAssetsRebuilded -= Function<void(const Vector<UID>&)>(this, &Render::OnAssetsRebuilded);
 
-		if (mGLContext)
-		{
-			auto fonts = mFonts;
-			for (auto font : fonts)
-				delete font;
+		auto fonts = mFonts;
+		for (auto font : fonts)
+			delete font;
 
-			auto textures = mTextures;
-			for (auto texture : textures)
-				delete texture;
+		auto textures = mTextures;
+		for (auto texture : textures)
+			delete texture;
 
-			if (!wglMakeCurrent(NULL, NULL))
-				mLog->Error("Release ff DC And RC Failed.\n");
+#ifdef WINDOWS
+		if (!wglMakeCurrent(NULL, NULL))
+			mLog->Error("Release DC And RC Failed.\n");
 
-			if (!wglDeleteContext(mGLContext))
-				mLog->Error("Release Rendering Context Failed.\n");
-
-			mGLContext = NULL;
-		}
+		if (!wglDeleteContext(mGLContext))
+            mLog->Error("Release Rendering Context Failed.\n");
+#endif
 
 		DeinitializeFreeType();
 
@@ -190,7 +191,7 @@ namespace o2
 	void Render::CheckCompatibles()
 	{
 		//check render targets available
-		char* extensions[] = { "GL_ARB_framebuffer_object", "GL_EXT_framebuffer_object", "GL_EXT_framebuffer_blit",
+		const char* extensions[] = { "GL_ARB_framebuffer_object", "GL_EXT_framebuffer_object", "GL_EXT_framebuffer_blit",
 			"GL_EXT_packed_depth_stencil" };
 
 		mRenderTargetsAvailable = true;
@@ -265,7 +266,10 @@ namespace o2
 			return;
 
 		DrawPrimitives();
+        
+#ifdef WINDOWS
 		SwapBuffers(mHDC);
+#endif
 
 		GL_CHECK_ERROR(mLog);
 
@@ -838,7 +842,7 @@ namespace o2
 
 		mStackScissors.Add(ScissorStackItem(RectI(), RectI(), true));
 
-		glBindFramebufferEXT(GL_FRAMEBUFFER, renderTarget->mFrameBuffer);
+		glBindFramebuffer(GL_FRAMEBUFFER, renderTarget->mFrameBuffer);
 		GL_CHECK_ERROR(mLog);
 
 		SetupViewMatrix(renderTarget->GetSize());
@@ -853,7 +857,7 @@ namespace o2
 
 		DrawPrimitives();
 
-		glBindFramebufferEXT(GL_FRAMEBUFFER, 0);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		GL_CHECK_ERROR(mLog);
 
 		SetupViewMatrix(mResolution);

@@ -92,7 +92,7 @@ namespace o2
 			if (LoadPngImage(fileName, this, false))
 				return true;
 
-			o2Debug.LogError("Can't load image '%s': unknown format", fileName);
+			o2Debug.LogError("Can't load image '" + fileName + "': unknown format");
 		}
 
 		mFilename = "";
@@ -107,7 +107,7 @@ namespace o2
 			return SavePngImage(fileName, this);
 		}
 
-		o2Debug.LogError("Can't save image to '%s': unknown format specified", fileName);
+		o2Debug.LogError("Can't save image to '" + fileName + "': unknown format specified");
 
 		return false;
 	}

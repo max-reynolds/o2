@@ -325,7 +325,7 @@ namespace o2
 			SetMode(image.GetMeta()->mDefaultMode);
 			SetSize(mTextureSrcRect.Size());
 		}
-		else o2Debug.LogWarning("Can't load sprite from image by path (%s): image isn't exist", imagePath);
+		else o2Debug.LogWarning("Can't load sprite from image by path (" + imagePath + "): image isn't exist");
 	}
 
 	void Sprite::LoadFromImage(UID imageId)
@@ -342,7 +342,7 @@ namespace o2
 			SetMode(image.GetMeta()->mDefaultMode);
 			SetSize(mTextureSrcRect.Size());
 		}
-		else o2Debug.LogWarning("Can't create sprite from image by id (%i): image isn't exist", imageId);
+		else o2Debug.LogWarning("Can't create sprite from image by id (" + imageId + "): image isn't exist");
 	}
 
 	void Sprite::LoadMonoColor(const Color4& color)
@@ -1074,7 +1074,7 @@ namespace o2
 		}
 		else
 		{
-			mImageAssetId = (UID)*imageAssedIdNode;
+            imageAssedIdNode->GetValue(mImageAssetId);
 			LoadFromImage(mImageAssetId);
 		}
 

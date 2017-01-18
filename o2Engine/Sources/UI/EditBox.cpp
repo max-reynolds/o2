@@ -1091,6 +1091,7 @@ namespace o2
 
 	UInt16 GetUnicodeFromVirtualCode(KeyboardKey code)
 	{
+#ifdef WINDOWS
 		HKL layout = GetKeyboardLayout(0);
 
 		BYTE allKeys[256];
@@ -1100,6 +1101,9 @@ namespace o2
 		ToUnicodeEx(code, 0, allKeys, reinterpret_cast<wchar_t*>(&unicode), 1, 0, layout);
 
 		return unicode;
+#endif
+        
+        return 0;
 	}
 
 	void UIEditBox::CheckCharacterTyping(KeyboardKey key)

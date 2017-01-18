@@ -5,6 +5,7 @@
 namespace o2
 {
 	class Actor;
+    class SceneLayer;
 
 	// ---------------------------
 	// Actor's component interface
@@ -81,7 +82,7 @@ namespace o2
 
 	protected:
 		// Calls when actor changed layer
-		virtual void OnLayerChanged(Scene::Layer* oldLayer, Scene::Layer* newLayer) {}
+		virtual void OnLayerChanged(SceneLayer* oldLayer, SceneLayer* newLayer) {}
 
 		// Updates component enable
 		virtual void UpdateEnabled();
@@ -102,6 +103,7 @@ namespace o2
 		void InitializeProperties();
 
 		friend class Actor;
+        friend class SceneLayer;
 	};
 
 	// ------------------------

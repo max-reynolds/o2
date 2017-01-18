@@ -40,28 +40,28 @@ namespace o2
 		}
 	}
 
-	Scene::Layer* Scene::GetLayer(const String& name) const
+	SceneLayer* Scene::GetLayer(const String& name) const
 	{
 		return mLayers.FindMatch([&](auto x) { return x->name == name; });
 	}
 
-	Scene::Layer* Scene::GetDefaultLayer() const
+	SceneLayer* Scene::GetDefaultLayer() const
 	{
 		return mDefaultLayer;
 	}
 
-	Scene::Layer* Scene::AddLayer(const String& name)
+	SceneLayer* Scene::AddLayer(const String& name)
 	{
 		if (GetLayer(name))
 			return AddLayer(name + "_");
 
-		Layer* newLayer = mnew Layer();
+		SceneLayer* newLayer = mnew SceneLayer();
 		newLayer->name = name;
 		mLayers.Add(newLayer);
 		return newLayer;
 	}
 
-	void Scene::RemoveLayer(Layer* layer, bool removeActors /*= true*/)
+	void Scene::RemoveLayer(SceneLayer* layer, bool removeActors /*= true*/)
 	{
 		if (layer == mDefaultLayer)
 			return;
@@ -117,7 +117,7 @@ namespace o2
 		RemoveTag(GetTag(name));
 	}
 
-	Scene::LayersVec& Scene::GetLayers()
+	SceneLayersVec& Scene::GetLayers()
 	{
 		return mLayers;
 	}
@@ -127,22 +127,22 @@ namespace o2
 		return mTags;
 	}
 
-	const Scene::ActorsVec& Scene::GetRootActors() const
+	const ActorsVec& Scene::GetRootActors() const
 	{
 		return mRootActors;
 	}
 
-	Scene::ActorsVec& Scene::GetRootActors()
+	ActorsVec& Scene::GetRootActors()
 	{
 		return mRootActors;
 	}
 
-	const Scene::ActorsVec& Scene::GetAllActors() const
+	const ActorsVec& Scene::GetAllActors() const
 	{
 		return mAllActors;
 	}
 
-	Scene::ActorsVec& Scene::GetAllActors()
+	ActorsVec& Scene::GetAllActors()
 	{
 		return mAllActors;
 	}
@@ -228,7 +228,7 @@ namespace o2
 		auto layersNode = data.GetNode("Layers");
 		for (auto layerNode : *layersNode)
 		{
-			auto layer = mnew Layer();
+			auto layer = mnew SceneLayer();
 			layer->Deserialize(*layerNode);
 			mLayers.Add(layer);
 		}
@@ -339,27 +339,27 @@ namespace o2
 			OnActorChanged(prevActor);
 	}
 
-	const Scene::ActorsVec& Scene::Layer::GetActors() const
+	const ActorsVec& SceneLayer::GetActors() const
 	{
 		return mActors;
 	}
 
-	const Scene::ActorsVec& Scene::Layer::GetEnabledActors() const
+	const ActorsVec& SceneLayer::GetEnabledActors() const
 	{
 		return mEnabledActors;
 	}
 
-	const Scene::DrawCompsVec& Scene::Layer::GetDrawableComponents() const
+    const SceneLayer::DrawCompsVec& SceneLayer::GetDrawableComponents() const
 	{
 		return mDrawables;
 	}
 
-	const Scene::DrawCompsVec& Scene::Layer::GetEnabledDrawableComponents() const
+	const SceneLayer::DrawCompsVec& SceneLayer::GetEnabledDrawableComponents() const
 	{
 		return mEnabledDrawables;
 	}
 
-	void Scene::Layer::RegDrawableComponent(DrawableComponent* component)
+	void SceneLayer::RegDrawableComponent(DrawableComponent* component)
 	{
 		mDrawables.Add(component);
 
@@ -367,7 +367,7 @@ namespace o2
 			ComponentEnabled(component);
 	}
 
-	void Scene::Layer::UnregDrawableComponent(DrawableComponent* component)
+	void SceneLayer::UnregDrawableComponent(DrawableComponent* component)
 	{
 		if (component->mResEnabled)
 			ComponentDisabled(component);
@@ -375,13 +375,13 @@ namespace o2
 		mDrawables.Remove(component);
 	}
 
-	void Scene::Layer::ComponentDepthChanged(DrawableComponent* component)
+	void SceneLayer::ComponentDepthChanged(DrawableComponent* component)
 	{
 		ComponentDisabled(component);
 		ComponentEnabled(component);
 	}
 
-	void Scene::Layer::ComponentEnabled(DrawableComponent* component)
+	void SceneLayer::ComponentEnabled(DrawableComponent* component)
 	{
 		const int binSearchRangeSizeStop = 5;
 		int rangeMin = 0, rangeMax = mEnabledDrawables.Count();
@@ -417,7 +417,7 @@ namespace o2
 		mEnabledDrawables.Insert(component, position);
 	}
 
-	void Scene::Layer::ComponentDisabled(DrawableComponent* component)
+	void SceneLayer::ComponentDisabled(DrawableComponent* component)
 	{
 		mEnabledDrawables.Remove(component);
 	}
@@ -438,7 +438,7 @@ namespace o2
 		}
 	}
 
-	const Scene::ActorsVec& Scene::GetChangedActors() const
+	const ActorsVec& Scene::GetChangedActors() const
 	{
 		return mChangedActors;
 	}
@@ -449,25 +449,25 @@ namespace o2
 	{
 		if (object)
 		{
-			Scene::Layer* value = (Scene::Layer*)object;
+			SceneLayer* value = (SceneLayer*)object;
 			data = value->name;
 		}
 	}
 
 	void LayerDataNodeConverter::FromData(void* object, const DataNode& data)
 	{
-		Scene::Layer*& value = *(Scene::Layer**)object;
+		SceneLayer*& value = *(SceneLayer**)object;
 		value = o2Scene.GetLayer(data);
 	}
 
 	bool LayerDataNodeConverter::CheckType(const Type* type) const
 	{
-		return type->IsBasedOn(*TypeOf(Scene::Layer).GetPointerType());
+		return type->IsBasedOn(*TypeOf(SceneLayer).GetPointerType());
 	}
 
 }
  
-CLASS_META(o2::Scene::Layer)
+CLASS_META(o2::SceneLayer)
 {
 	BASE_CLASS(o2::ISerializable);
 

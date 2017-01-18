@@ -37,8 +37,7 @@ namespace o2
 		mBuildedAssetsPath = dataAssetsPath;
 
 		mLog->OutStr("===================================");
-		mLog->Out("Started assets building \n        from: %s\n        to: %s",
-				  assetsPath, dataAssetsPath);
+		mLog->Out("Started assets building \n        from: " + assetsPath + "\n        to: " + dataAssetsPath);
 		mLog->OutStr("===================================\n");
 
 		Timer timer;
@@ -59,8 +58,7 @@ namespace o2
 		res.Add(ConvertersPostProcess());
 
 		mLog->OutStr("===================================");
-		mLog->Out("Completed assets building \n        from: %s\n        to: %s\n        for %f seconds",
-				  assetsPath, dataAssetsPath, timer.GetDeltaTime());
+		mLog->Out("Completed assets building \n        from: " + assetsPath + "\n        to: " + dataAssetsPath + "\n        for " + timer.GetDeltaTime() + " seconds");
 		mLog->OutStr("===================================\n");
 
 		return res;
@@ -118,7 +116,7 @@ namespace o2
 					o2FileSystem.IsFolderExist(assetForMeta);
 				if (!isExistAssetForMeta)
 				{
-					mLog->Warning("Missing asset for meta: %s - removing meta", fileInfo.mPath);
+					mLog->Warning("Missing asset for meta: " + fileInfo.mPath + " - removing meta");
 					o2FileSystem.FileDelete(metaFullPath);
 				}
 			}
@@ -153,7 +151,7 @@ namespace o2
 	AssetsBuilder::AssetsIdsVec AssetsBuilder::ProcessRemovedAssets()
 	{
 		AssetsIdsVec res;
-		Type::Id folderTypeId = TypeOf(FolderAsset).ID();
+		TypeId folderTypeId = TypeOf(FolderAsset).ID();
 
 		// in first pass skipping folders (only files), in second - files
 		for (int pass = 0; pass < 2; pass++)
@@ -216,7 +214,7 @@ namespace o2
 	AssetsBuilder::AssetsIdsVec AssetsBuilder::ProcessModifiedAssets()
 	{
 		AssetsIdsVec res;
-		Type::Id folderTypeId = TypeOf(FolderAsset).ID();
+		TypeId folderTypeId = TypeOf(FolderAsset).ID();
 
 		// in first pass skipping files (only folders), in second - folders
 		for (int pass = 0; pass < 2; pass++)
@@ -248,7 +246,7 @@ namespace o2
 
 								mModifiedAssets.Add(buildedAssetInfo);
 
-								mLog->Out("Modified asset: %s", srcAssetInfo->mPath);
+								mLog->Out("Modified asset: " + srcAssetInfo->mPath);
 							}
 						}
 						else
@@ -267,7 +265,7 @@ namespace o2
 								buildedAssetInfo->mId = buildedAssetInfo->mMeta->ID();
 
 								GetAssetConverter(srcAssetInfo->mType)->ConvertAsset(*srcAssetInfo);
-								mLog->Out("Modified and moved to %s asset: %s", srcAssetInfo->mPath, buildedAssetInfo->mPath);
+								mLog->Out("Modified and moved to " + srcAssetInfo->mPath + " asset: " + buildedAssetInfo->mPath);
 
 								res.Add(srcAssetInfo->mId);
 
@@ -279,7 +277,7 @@ namespace o2
 							{
 								GetAssetConverter(srcAssetInfo->mType)->MoveAsset(*buildedAssetInfo, *srcAssetInfo);
 								res.Add(srcAssetInfo->mId);
-								mLog->Out("Moved asset: %s to %s", buildedAssetInfo->mPath, srcAssetInfo->mPath);
+								mLog->Out("Moved asset: " + buildedAssetInfo->mPath + " to %s" + srcAssetInfo->mPath);
 
 								mBuildedAssetsTree.RemoveAsset(buildedAssetInfo, false);
 
@@ -304,7 +302,7 @@ namespace o2
 	AssetsBuilder::AssetsIdsVec AssetsBuilder::ProcessNewAssets()
 	{
 		AssetsIdsVec res;
-		Type::Id folderTypeId = TypeOf(FolderAsset).ID();
+		TypeId folderTypeId = TypeOf(FolderAsset).ID();
 
 		// in first pass skipping files (only folders), in second - folders
 		for (int pass = 0; pass < 2; pass++)
@@ -335,7 +333,7 @@ namespace o2
 
 				res.Add((*srcAssetInfoIt)->mId);
 
-				mLog->Out("New asset: %s", (*srcAssetInfoIt)->mPath);
+				mLog->Out("New asset: " + (*srcAssetInfoIt)->mPath);
 
 				AssetTree::AssetNode* newBuildedAsset = mnew AssetTree::AssetNode();
 				newBuildedAsset->mPath = (*srcAssetInfoIt)->mPath;
@@ -377,7 +375,7 @@ namespace o2
 		delete assetTypeSample;
 	}
 
-	IAssetConverter* AssetsBuilder::GetAssetConverter(Type::Id assetTypeId)
+	IAssetConverter* AssetsBuilder::GetAssetConverter(TypeId assetTypeId)
 	{
 		if (mAssetConverters.ContainsKey(assetTypeId))
 			return mAssetConverters[assetTypeId];

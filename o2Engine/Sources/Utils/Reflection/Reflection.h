@@ -4,6 +4,7 @@
 #include "Utils/Containers/Vector.h"
 #include "Utils/Containers/Dictionary.h"
 #include "Utils/String.h"
+#include "Utils/CommonTYpes.h"
 
 // Reflection access macros
 #define o2Reflection Reflection::Instance()
@@ -11,6 +12,8 @@
 namespace o2
 {
     class Type;
+    class EnumType;
+    class PropertyType;
     class VectorType;    
     class DictionaryType;
     
@@ -36,7 +39,7 @@ namespace o2
 		static void* CreateTypeSample(const String& typeName);
 
 		// Returns type by type id
-		static const Type* GetType(typename Type::Id id);
+		static const Type* GetType(TypeId id);
 
 		// Returns type by name
 		static const Type* GetType(const String& name);
@@ -99,19 +102,19 @@ namespace o2
 	};
 
 #define REG_TYPE(CLASS) \
-	o2::Type* CLASS::type = o2::Reflection::InitializeType<CLASS>(#CLASS)
+	template<> o2::Type* CLASS::type = o2::Reflection::InitializeType<CLASS>(#CLASS)
 
 #define REG_FUNDAMENTAL_TYPE(TYPE) \
-	o2::Type* o2::FundamentalTypeContainer<TYPE>::type = o2::Reflection::InitializeFundamentalType<TYPE>(#TYPE)
+	template<> o2::Type* o2::FundamentalTypeContainer<TYPE>::type = o2::Reflection::InitializeFundamentalType<TYPE>(#TYPE)
 
-#define ENUM_META(NAME)                                                                                  \
-    o2::EnumType* o2::EnumTypeContainer<NAME>::type = o2::Reflection::InitializeEnum<NAME>(#NAME, []() { \
-    typedef NAME EnumName;                                                                               \
+#define ENUM_META(NAME)                                                                                             \
+    template<> o2::EnumType* o2::EnumTypeContainer<NAME>::type = o2::Reflection::InitializeEnum<NAME>(#NAME, []() { \
+    typedef NAME EnumName;                                                                                          \
     o2::Dictionary<int, o2::String> res;    
 
-#define ENUM_META_(NAME, U)                                                                              \
-    o2::EnumType* o2::EnumTypeContainer<NAME>::type = o2::Reflection::InitializeEnum<NAME>(#NAME, []() { \
-    typedef NAME EnumName;                                                                               \
+#define ENUM_META_(NAME, U)                                                                                         \
+    template<> o2::EnumType* o2::EnumTypeContainer<NAME>::type = o2::Reflection::InitializeEnum<NAME>(#NAME, []() { \
+    typedef NAME EnumName;                                                                                          \
     o2::Dictionary<int, o2::String> res;                                        
 
 #define ENUM_ENTRY(NAME) \
@@ -129,7 +132,7 @@ namespace o2
 	template<typename _type>
 	_type Reflection::GetEnumValue(const String& name)
 	{
-		EnumType* type = (EnumType*)(&TypeOf(_type));
+		EnumType* type = (EnumType*)(&GetTypeOf<_type>());
 		auto& entries = type->GetEntries();
 
 		if (entries.ContainsValue(name))
@@ -143,7 +146,7 @@ namespace o2
 	{
 		String res;
 
-		EnumType* type = (EnumType*)(&TypeOf(_type));
+		EnumType* type = (EnumType*)(&GetTypeOf<_type>());
 		auto& entries = type->GetEntries();
 
 		entries.TryGetValue((int)value, res);
@@ -196,7 +199,7 @@ namespace o2
 	{
 		String typeName = "o2::Property<" + TypeOf(_value_type).GetName() + ">";
 
-		if (auto fnd = mInstance->mTypes.FindMatch([&](auto x) { return x->mName == typeName; }))
+		if (auto fnd = mInstance->mTypes.FindMatch([&](Type* x) { return x->mName == typeName; }))
 			return (PropertyType*)fnd;
 
 		TPropertyType<_value_type>* newType = new TPropertyType<_value_type>();

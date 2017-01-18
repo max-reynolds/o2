@@ -226,7 +226,7 @@ namespace o2
 			WString subMenu = targetPath.SubStr(0, slashPos);
 
 			UIWidget* subChild = targetContext->mItemsLayout->mChilds.FindMatch([&](auto x) {
-				if (auto text = x->GetLayerDrawable<Text>("caption"))
+				if (auto text = x->template GetLayerDrawable<Text>("caption"))
 					return text->text == subMenu;
 
 				return false;
@@ -467,7 +467,7 @@ namespace o2
 			WString subMenu = targetPath.SubStr(0, slashPos);
 
 			UIWidget* subChild = targetContext->mItemsLayout->mChilds.FindMatch([&](auto x) {
-				if (auto text = x->GetLayerDrawable<Text>("caption"))
+				if (auto text = x->template GetLayerDrawable<Text>("caption"))
 					return text->text == subMenu;
 
 				return false;
@@ -475,14 +475,14 @@ namespace o2
 
 			if (!subChild)
 			{
-				o2Debug.LogError("Failed to remove context item %s", path);
+				o2Debug.LogError("Failed to remove context item " + path);
 				return;
 			}
 
 			UIContextMenu* subContext = subChild->FindChild<UIContextMenu>();
 			if (!subContext)
 			{
-				o2Debug.LogError("Failed to remove context item %s", path);
+				o2Debug.LogError("Failed to remove context item " + path);
 				return;
 			}
 
@@ -491,7 +491,7 @@ namespace o2
 		}
 
 		UIWidget* removingItem = targetContext->mItemsLayout->mChilds.FindMatch([&](auto x) {
-			if (auto text = x->GetLayerDrawable<Text>("caption"))
+			if (auto text = x->template GetLayerDrawable<Text>("caption"))
 				return text->text == targetPath;
 
 			return false;
@@ -499,7 +499,7 @@ namespace o2
 
 		if (!removingItem)
 		{
-			o2Debug.LogError("Failed to remove context item %s", path);
+			o2Debug.LogError("Failed to remove context item " + path);
 			return;
 		}
 

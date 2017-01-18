@@ -63,7 +63,7 @@ namespace o2
 			return;
 
 		if (mUsage == Usage::RenderTarget)
-			glDeleteFramebuffersEXT(1, &mFrameBuffer);
+			glDeleteFramebuffers(1, &mFrameBuffer);
 
 		glDeleteTextures(1, &mHandle);
 	}
@@ -73,7 +73,7 @@ namespace o2
 		if (mReady)
 		{
 			if (mUsage == Usage::RenderTarget)
-				glDeleteFramebuffersEXT(1, &mFrameBuffer);
+				glDeleteFramebuffers(1, &mFrameBuffer);
 
 			glDeleteTextures(1, &mHandle);
 		}
@@ -100,15 +100,15 @@ namespace o2
 
 		if (mUsage == Usage::RenderTarget)
 		{
-			glGenFramebuffersEXT(1, &mFrameBuffer);
-			glBindFramebufferEXT(GL_FRAMEBUFFER, mFrameBuffer);
+			glGenFramebuffers(1, &mFrameBuffer);
+			glBindFramebuffer(GL_FRAMEBUFFER, mFrameBuffer);
 
 			glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mHandle, 0);
 
 			GLenum DrawBuffers[2] ={GL_COLOR_ATTACHMENT0};
 			glDrawBuffers(1, DrawBuffers);
 
-			if (glCheckFramebufferStatusEXT(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+			if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 			{
 				GLenum glError = glGetError();
 
@@ -121,7 +121,7 @@ namespace o2
 
 			mReady = true;
 
-			glBindFramebufferEXT(GL_FRAMEBUFFER, 0);
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		}
 
 		mReady = true;
@@ -145,7 +145,7 @@ namespace o2
 		if (mReady)
 		{
 			if (mUsage == Usage::RenderTarget)
-				glDeleteFramebuffersEXT(1, &mFrameBuffer);
+				glDeleteFramebuffers(1, &mFrameBuffer);
 
 			glDeleteTextures(1, &mHandle);
 		}
@@ -192,7 +192,7 @@ namespace o2
 
 			mReady = true;
 		}
-		else o2Render.mLog->Error("Failed to load atlas texture with id %i and page %i", atlasAssetId, page);
+		else o2Render.mLog->Error("Failed to load atlas texture with id " + atlasAssetId + " and page " + page);
 	}
 
 	void Texture::Create(const String& atlasAssetName, int page)
@@ -206,7 +206,7 @@ namespace o2
 
 			mReady = true;
 		}
-		else o2Render.mLog->Error("Failed to load atlas texture with %s and page %i", atlasAssetName, page);
+		else o2Render.mLog->Error("Failed to load atlas texture with " + atlasAssetName + " and page " + page);
 	}
 
 	void Texture::Reload()

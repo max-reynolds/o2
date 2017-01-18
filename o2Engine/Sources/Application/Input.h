@@ -10,6 +10,10 @@
 #include <Windows.h>
 #endif
 
+#ifdef OSX
+#include "Application/OSX/VKCodes.h"
+#endif
+
 // Input access macros
 #define o2Input Input::Instance()
 

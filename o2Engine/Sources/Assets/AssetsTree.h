@@ -28,7 +28,7 @@ namespace o2
 			AssetNode();
 
 			// Constructor
-			AssetNode(const String& path, UID id, Type::Id type);
+			AssetNode(const String& path, UID id, TypeId type);
 
 			// Destructor
 			~AssetNode();

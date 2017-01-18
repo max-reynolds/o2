@@ -9,9 +9,9 @@
 
 namespace o2
 {
-	Vector<Type::Id> AtlasAssetConverter::GetProcessingAssetsTypes() const
+	Vector<TypeId> AtlasAssetConverter::GetProcessingAssetsTypes() const
 	{
-		Vector<Type::Id> res;
+		Vector<TypeId> res;
 		res.Add(TypeOf(AtlasAsset).ID());
 		return res;
 	}
@@ -75,8 +75,8 @@ namespace o2
 
 	void AtlasAssetConverter::CheckBasicAtlas()
 	{
-		Type::Id imageTypeId = TypeOf(ImageAsset).ID();
-		Type::Id atlasTypeId = TypeOf(AtlasAsset).ID();
+		TypeId imageTypeId = TypeOf(ImageAsset).ID();
+		TypeId atlasTypeId = TypeOf(AtlasAsset).ID();
 
 		AssetTree::AssetNode* basicAtlasInfo = nullptr;
 
@@ -107,7 +107,7 @@ namespace o2
 	Vector<UID> AtlasAssetConverter::CheckRebuildingAtlases()
 	{
 		Vector<UID> res;
-		Type::Id atlasAssetTypeId = TypeOf(AtlasAsset).ID();
+		TypeId atlasAssetTypeId = TypeOf(AtlasAsset).ID();
 
 		for (auto info : mAssetsBuilder->mBuildedAssetsTree.mAllAssets)
 		{
@@ -128,7 +128,7 @@ namespace o2
 		lastImages = atlasData["AllImages"];
 
 		ImagesVec currentImages;
-		Type::Id imageTypeId = TypeOf(ImageAsset).ID();
+		TypeId imageTypeId = TypeOf(ImageAsset).ID();
 		UID atlasId = atlasInfo->mMeta->ID();
 		for (auto assetInfo : mAssetsBuilder->mBuildedAssetsTree.mAllAssets)
 		{
@@ -205,7 +205,7 @@ namespace o2
 
 			if (!imgInfo)
 			{
-				mAssetsBuilder->mLog->Error("Can't find asset info by id: %i", img.mId);
+				mAssetsBuilder->mLog->Error("Can't find asset info by id: " + img.mId);
 				continue;
 			}
 
@@ -215,7 +215,7 @@ namespace o2
 			Bitmap* bitmap = mnew Bitmap();
 			if (!bitmap->Load(assetFullPath))
 			{
-				mAssetsBuilder->mLog->Error("Can't load bitmap for image asset: %s", imgInfo->mPath);
+				mAssetsBuilder->mLog->Error("Can't load bitmap for image asset: " + imgInfo->mPath);
 				delete bitmap;
 				continue;
 			}
@@ -235,11 +235,11 @@ namespace o2
 		// Try to pack
 		if (!packer.Pack())
 		{
-			mAssetsBuilder->mLog->Error("Atlas %s packing failed", atlasInfo->mPath);
+			mAssetsBuilder->mLog->Error("Atlas " + atlasInfo->mPath + " packing failed");
 			return;
 		}
 		else
-			mAssetsBuilder->mLog->Out("Atlas %s successfully packed", atlasInfo->mPath);
+			mAssetsBuilder->mLog->Out("Atlas " + atlasInfo->mPath + " successfully packed");
 
 		// Initialize bitmaps and pages
 		int pagesCount = packer.GetPagesCount();
@@ -333,7 +333,7 @@ CLASS_META(o2::AtlasAssetConverter)
 	BASE_CLASS(o2::IAssetConverter);
 
 
-	PUBLIC_FUNCTION(Vector<Type::Id>, GetProcessingAssetsTypes);
+	PUBLIC_FUNCTION(Vector<TypeId>, GetProcessingAssetsTypes);
 	PUBLIC_FUNCTION(void, ConvertAsset, const AssetTree::AssetNode&);
 	PUBLIC_FUNCTION(void, RemoveAsset, const AssetTree::AssetNode&);
 	PUBLIC_FUNCTION(void, MoveAsset, const AssetTree::AssetNode&, const AssetTree::AssetNode&);

@@ -48,7 +48,7 @@ namespace o2
 		FT_Error error = FT_New_Face(o2Render.mFreeTypeLib, fileName.Data(), 0, &mFreeTypeFace);
 		if (error)
 		{
-			o2Render.mLog->Error("Failed to load vector font: %s, error: %i", fileName, error);
+			o2Render.mLog->Error("Failed to load vector font: " + fileName + ", error: " + error);
 			return false;
 		}
 

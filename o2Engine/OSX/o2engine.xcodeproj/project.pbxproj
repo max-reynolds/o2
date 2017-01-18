@@ -29,8 +29,6 @@
 		3E57F75B1DFB0F6800D9E189 /* Application.h in Headers */ = {isa = PBXBuildFile; fileRef = 3E57F62D1DFB0F6800D9E189 /* Application.h */; };
 		3E57F75C1DFB0F6800D9E189 /* Input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3E57F62E1DFB0F6800D9E189 /* Input.cpp */; };
 		3E57F75D1DFB0F6800D9E189 /* Input.h in Headers */ = {isa = PBXBuildFile; fileRef = 3E57F62F1DFB0F6800D9E189 /* Input.h */; };
-		3E57F75E1DFB0F6800D9E189 /* Application.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3E57F6311DFB0F6800D9E189 /* Application.cpp */; };
-		3E57F75F1DFB0F6800D9E189 /* ApplicationBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 3E57F6321DFB0F6800D9E189 /* ApplicationBase.h */; };
 		3E57F7601DFB0F6800D9E189 /* ActorAsset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3E57F6341DFB0F6800D9E189 /* ActorAsset.cpp */; };
 		3E57F7611DFB0F6800D9E189 /* ActorAsset.h in Headers */ = {isa = PBXBuildFile; fileRef = 3E57F6351DFB0F6800D9E189 /* ActorAsset.h */; };
 		3E57F7621DFB0F6800D9E189 /* AnimationAsset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3E57F6361DFB0F6800D9E189 /* AnimationAsset.cpp */; };
@@ -311,6 +309,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3E53B8C11E2F6FD80035EEF7 /* VKCodes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = VKCodes.h; path = OSX/VKCodes.h; sourceTree = "<group>"; };
+		3E53B8C21E2F710D0035EEF7 /* ApplicationBase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ApplicationBase.h; path = OSX/ApplicationBase.h; sourceTree = "<group>"; };
 		3E57EDEF1DFB0E0C00D9E189 /* dependencies.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = dependencies.xcodeproj; sourceTree = "<group>"; };
 		3E57F6191DFB0F6800D9E189 /* Animatable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Animatable.cpp; sourceTree = "<group>"; };
 		3E57F61A1DFB0F6800D9E189 /* Animatable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Animatable.h; sourceTree = "<group>"; };
@@ -334,8 +334,6 @@
 		3E57F62D1DFB0F6800D9E189 /* Application.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Application.h; sourceTree = "<group>"; };
 		3E57F62E1DFB0F6800D9E189 /* Input.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Input.cpp; sourceTree = "<group>"; };
 		3E57F62F1DFB0F6800D9E189 /* Input.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Input.h; sourceTree = "<group>"; };
-		3E57F6311DFB0F6800D9E189 /* Application.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Application.cpp; sourceTree = "<group>"; };
-		3E57F6321DFB0F6800D9E189 /* ApplicationBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplicationBase.h; sourceTree = "<group>"; };
 		3E57F6341DFB0F6800D9E189 /* ActorAsset.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ActorAsset.cpp; sourceTree = "<group>"; };
 		3E57F6351DFB0F6800D9E189 /* ActorAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActorAsset.h; sourceTree = "<group>"; };
 		3E57F6361DFB0F6800D9E189 /* AnimationAsset.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AnimationAsset.cpp; sourceTree = "<group>"; };
@@ -613,6 +611,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3E53B8C01E2F6FB10035EEF7 /* OSX */ = {
+			isa = PBXGroup;
+			children = (
+				3E53B8C11E2F6FD80035EEF7 /* VKCodes.h */,
+				3E53B8C21E2F710D0035EEF7 /* ApplicationBase.h */,
+			);
+			name = OSX;
+			sourceTree = "<group>";
+		};
 		3E57EDF01DFB0E0C00D9E189 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -670,21 +677,12 @@
 		3E57F62C1DFB0F6800D9E189 /* Application */ = {
 			isa = PBXGroup;
 			children = (
+				3E53B8C01E2F6FB10035EEF7 /* OSX */,
 				3E57F62D1DFB0F6800D9E189 /* Application.h */,
 				3E57F62E1DFB0F6800D9E189 /* Input.cpp */,
 				3E57F62F1DFB0F6800D9E189 /* Input.h */,
-				3E57F6301DFB0F6800D9E189 /* Windows */,
 			);
 			path = Application;
-			sourceTree = "<group>";
-		};
-		3E57F6301DFB0F6800D9E189 /* Windows */ = {
-			isa = PBXGroup;
-			children = (
-				3E57F6311DFB0F6800D9E189 /* Application.cpp */,
-				3E57F6321DFB0F6800D9E189 /* ApplicationBase.h */,
-			);
-			path = Windows;
 			sourceTree = "<group>";
 		};
 		3E57F6331DFB0F6800D9E189 /* Assets */ = {
@@ -1171,7 +1169,6 @@
 				3E57F77D1DFB0F6800D9E189 /* StdAssetConverter.h in Headers */,
 				3E57F7F71DFB0F6800D9E189 /* WidgetLayer.h in Headers */,
 				3E57F8201DFB0F6800D9E189 /* FileSystem.h in Headers */,
-				3E57F75F1DFB0F6800D9E189 /* ApplicationBase.h in Headers */,
 				3E57F75B1DFB0F6800D9E189 /* Application.h in Headers */,
 				3E57F77F1DFB0F6800D9E189 /* DataAsset.h in Headers */,
 				3E57F81A1DFB0F6800D9E189 /* DragHandle.h in Headers */,
@@ -1397,7 +1394,6 @@
 				3E57F7E41DFB0F6800D9E189 /* ScrollArea.cpp in Sources */,
 				3E57F82E1DFB0F6800D9E189 /* Curve.cpp in Sources */,
 				3E57F7661DFB0F6800D9E189 /* AssetInfo.cpp in Sources */,
-				3E57F75E1DFB0F6800D9E189 /* Application.cpp in Sources */,
 				3E57F7CC1DFB0F6800D9E189 /* CustomList.cpp in Sources */,
 				3E57F7911DFB0F6800D9E189 /* KeyboardEventsListener.cpp in Sources */,
 				3E57F8321DFB0F6800D9E189 /* Layout.cpp in Sources */,
@@ -1593,6 +1589,7 @@
 					../Sources/,
 					FreeType/include/,
 					../dependencies/,
+					../,
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1619,6 +1616,7 @@
 					../Sources/,
 					FreeType/include/,
 					../dependencies/,
+					../,
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",

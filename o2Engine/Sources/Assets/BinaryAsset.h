@@ -66,7 +66,7 @@ namespace o2
 		{
 		public:
 			// Returns asset type id
-			Type::Id GetAssetType() const;
+			TypeId GetAssetType() const;
 
 			SERIALIZABLE(MetaInfo);
 		};

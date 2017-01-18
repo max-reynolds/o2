@@ -3,6 +3,7 @@
 #include "Utils/Log/LogStream.h"
 
 // Returns address of function
+#ifdef WINDOWS
 PROC GetSafeWGLProcAddress(const char* id, o2::LogStream* log)
 {
 	PROC res = wglGetProcAddress(id);
@@ -11,9 +12,11 @@ PROC GetSafeWGLProcAddress(const char* id, o2::LogStream* log)
 
 	return res;
 }
+#endif
 
 void GetGLExtensions(o2::LogStream* log /*= nullptr*/)
 {
+#ifdef WINDOWS
 	glGenFramebuffersEXT        = (PFNGLGENFRAMEBUFFERSEXTPROC)GetSafeWGLProcAddress("glGenFramebuffersEXT", log);
 	glBindFramebufferEXT        = (PFNGLBINDFRAMEBUFFEREXTPROC)GetSafeWGLProcAddress("glBindFramebufferEXT", log);
 	glFramebufferTexture        = (PFNGLFRAMEBUFFERTEXTUREPROC)GetSafeWGLProcAddress("glFramebufferTexture", log);
@@ -21,6 +24,7 @@ void GetGLExtensions(o2::LogStream* log /*= nullptr*/)
 	glDeleteBuffers             = (PFNGLDELETEBUFFERSPROC)GetSafeWGLProcAddress("glDeleteBuffers", log);
 	glDeleteFramebuffersEXT     = (PFNGLDELETEFRAMEBUFFERSPROC)GetSafeWGLProcAddress("glDeleteFramebuffersEXT", log);
 	glCheckFramebufferStatusEXT = (PFNGLCHECKFRAMEBUFFERSTATUSEXTPROC)GetSafeWGLProcAddress("glCheckFramebufferStatusEXT", log);
+#endif
 
 }
 
@@ -69,7 +73,7 @@ const char* GetGLErrorDesc(GLenum errorId)
 	if (errorId == GL_INVALID_ENUM) return "GL_INVALID_ENUM";
 	if (errorId == GL_INVALID_VALUE) return "GL_INVALID_VALUE";
 	if (errorId == GL_INVALID_OPERATION) return "GL_INVALID_OPERATION";
-	if (errorId == GL_INVALID_FRAMEBUFFER_OPERATION) return "GL_INVALID_FRAMEBUFFER_OPERATION";
+	//if (errorId == GL_INVALID_FRAMEBUFFER_OPERATION) return "GL_INVALID_FRAMEBUFFER_OPERATION";
 	if (errorId == GL_OUT_OF_MEMORY) return "GL_OUT_OF_MEMORY";
 	if (errorId == GL_STACK_UNDERFLOW) return "GL_STACK_UNDERFLOW";
 	if (errorId == GL_STACK_OVERFLOW) return "GL_STACK_OVERFLOW";
@@ -82,11 +86,12 @@ void glCheckError(o2::LogStream* log, const char* filename /*= nullptr*/, unsign
 	GLenum errId = glGetError();
 	if (errId != GL_NO_ERROR)
 	{
-		log->Out("OpenGL ERROR %i: %s at file: %s line: %i", errId, (o2::String)GetGLErrorDesc(errId),
-			(o2::String)(filename ? filename : "unknown"), line);
+        log->Out((o2::String)"OpenGL ERROR " + (int)errId + ": " + (o2::String)GetGLErrorDesc(errId )+ " at file: " +
+                 (o2::String)(filename ? filename : "unknown") + " line: " + line);
 	}
 }
 
+#ifdef WINDOWS
 extern PFNGLGENFRAMEBUFFERSEXTPROC        glGenFramebuffersEXT        = NULL;
 extern PFNGLBINDFRAMEBUFFEREXTPROC        glBindFramebufferEXT        = NULL;
 extern PFNGLFRAMEBUFFERTEXTUREPROC        glFramebufferTexture        = NULL;
@@ -94,3 +99,4 @@ extern PFNGLDRAWBUFFERSPROC               glDrawBuffers               = NULL;
 extern PFNGLDELETEBUFFERSPROC             glDeleteBuffers             = NULL;
 extern PFNGLDELETEFRAMEBUFFERSPROC        glDeleteFramebuffersEXT     = NULL;
 extern PFNGLCHECKFRAMEBUFFERSTATUSEXTPROC glCheckFramebufferStatusEXT = NULL;
+#endif

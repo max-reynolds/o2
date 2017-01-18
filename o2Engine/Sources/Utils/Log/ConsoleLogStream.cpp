@@ -1,7 +1,10 @@
 #include "ConsoleLogStream.h"
 
 #include <iostream>
+
+#ifdef WINDOWS
 #include <io.h>
+#endif
 
 // TODO: Can't include <wincon.h> - compiler throws many stupid errors from GDI
 

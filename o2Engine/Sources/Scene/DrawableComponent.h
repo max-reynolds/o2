@@ -40,7 +40,7 @@ namespace o2
 
 	protected:
 		// Calls when actor changed layer
-		void OnLayerChanged(Scene::Layer* oldLayer, Scene::Layer* newLayer);
+		void OnLayerChanged(SceneLayer* oldLayer, SceneLayer* newLayer);
 
 		// Updates component enable
 		void UpdateEnabled();
@@ -56,7 +56,8 @@ namespace o2
 
 		// Initializes property
 		void InitializeProperties();
-
-		friend class Scene;
+        
+        friend class Scene;
+        friend class SceneLayer;
 	};
 }

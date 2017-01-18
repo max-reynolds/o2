@@ -2,6 +2,13 @@
 
 #include "Utils/IObject.h"
 #include "Utils/UID.h"
+#include "Utils/Property.h"
+#include "Utils/Math/Basis.h"
+#include "Utils/Math/Vector2.h"
+#include "Utils/Math/Vertex2.h"
+#include "Utils/Math/Rect.h"
+#include "Utils/Math/Color.h"
+#include "Utils/UID.h"
 
 namespace o2
 {
@@ -38,7 +45,7 @@ namespace o2
     class Reflection;
     
     template<typename _type>
-    class FundamentalType;
+    class FundamentalTypeContainer;
 }
 
 #include "Utils/Reflection/Type.h"
@@ -133,8 +140,8 @@ namespace o2
     >::type
     >::type
     >
-	const Type& GetTypeOf();
-
+    const Type& GetTypeOf();
+    
 	template<typename T>
 	const Type& RegularTypeGetter<T>::GetType() { return *GetTypeHelper<T>::type::type; }
     
@@ -142,18 +149,14 @@ namespace o2
 	const Type& PointerTypeGetter<T>::GetType() { return *GetTypeOf<typename std::remove_pointer<T>::type>().GetPointerType(); }
     
 	template<typename T>
-	const Type& VectorTypeGetter<T>::GetType() { return *Reflection::InitializeVectorType<typename VectorElementTypeGetter<T>::type>(); }
+	const Type& VectorTypeGetter<T>::GetType() { return *Reflection::InitializeVectorType<typename ExtractVectorElementType<T>::type>(); }
     
 	template<typename T>
 	const Type& DictionaryTypeGetter<T>::GetType() {
-        return *Reflection::InitializeDictionaryType<typename DictionaryKeyTypeGetter<T>::type, typename DictionaryValueTypeGetter<T>::type>();
+        return *Reflection::InitializeDictionaryType<typename ExtractDictionaryKeyType<T>::type, typename ExtractDictionaryValueType<T>::type>();
     }
-
-	template<typename T>
-	struct AccessorTypeGetter
-	{
-		static const Type& GetType() { return *Reflection::InitializeAccessorType<ExtractStringAccessorType<T>::type>(); }
-	};
+    
+	const Type& AccessorTypeGetter<T>::GetType() { return *Reflection::InitializeAccessorType<typename ExtractStringAccessorType<T>::type>(); }
     
     // Returns type of template parameter
 	template<typename _type, typename _getter>

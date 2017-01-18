@@ -32,7 +32,7 @@ namespace o2
 		return mName;
 	}
 
-	Type::Id Type::ID() const
+    TypeId Type::ID() const
 	{
 		return mId;
 	}

@@ -1,15 +1,8 @@
 #pragma once
 
-#include "Utils/Delegates.h"
-#include "Utils/Math/Basis.h"
-#include "Utils/Math/Color.h"
-#include "Utils/Math/Rect.h"
-#include "Utils/Math/Vector2.h"
-#include "Utils/Math/Vertex2.h"
-#include "Utils/Property.h"
-#include "Utils/Reflection/FunctionInfo.h"
+#include "Utils/Containers/Vector.h"
+#include "Utils/Containers/Dictionary.h"
 #include "Utils/String.h"
-#include "Utils/UID.h"
 
 #define TypeOf(TYPE) GetTypeOf<TYPE>()
 
@@ -17,6 +10,7 @@ namespace o2
 {
 	class IObject;
     class FieldInfo;
+    class FunctionInfo;
 
 	// -----------
 	// Object type
@@ -29,7 +23,6 @@ namespace o2
 			Regular, Vector, Dictionary, StringAccessor, Enumeration, Pointer, Property
 		};
 
-		typedef UInt Id;
 		typedef Vector<FieldInfo*> FieldInfosVec;
 		typedef Vector<FunctionInfo*> FunctionsInfosVec;
 		typedef Vector<Type*> TypesVec;
@@ -53,7 +46,7 @@ namespace o2
 		const String& GetName() const;
 
 		// Returns id of type
-		Id ID() const;
+		TypeId ID() const;
 
 		// Returns size of type in bytes
 		int GetSize() const;
@@ -130,7 +123,7 @@ namespace o2
 		};
 
 	protected:
-		Id                mId;            // Id of type
+		TypeId            mId;            // Id of type
 		String            mName;          // Name of object type
 		TypesVec          mBaseTypes;     // Base types ids
 		FieldInfosVec     mFields;        // Fields information
@@ -364,14 +357,14 @@ namespace o2
 	protected:
 		static Type* type;
 
-		template<typename _type, typename _getter>
-		friend const Type& o2::GetTypeOf();
+		template<typename _type_, typename _getter>
+		friend const Type& GetTypeOf();
 
 		template<typename T>
 		friend struct RegularTypeGetter;
 
 		template<typename T, typename X>
-		friend struct o2::GetTypeHelper;
+		friend struct GetTypeHelper;
 
 		template<typename T>
 		friend struct RegularTypeGetter;
@@ -391,14 +384,14 @@ namespace o2
 	protected:
 		static EnumType* type;
 
-		template<typename _type, typename _getter>
-		friend const Type& o2::GetTypeOf();
+		template<typename _type_, typename _getter>
+		friend const Type& GetTypeOf();
 
 		template<typename T>
 		friend struct RegularTypeGetter;
 
 		template<typename T, typename X>
-		friend struct o2::GetTypeHelper;
+		friend struct GetTypeHelper;
 
 		friend class Reflection;
 	};
@@ -436,7 +429,7 @@ namespace o2
 	{                                                                   \
 	    typedef NAME thisclass;                                         \
 	    thisclass::type = type;                                         \
-	    thisclass* __this = 0;      
+	    thisclass* __this; __this = 0;
 
 #define META_TEMPLATES(...) \
     template<__VA_ARGS__>
@@ -446,7 +439,7 @@ namespace o2
 	{                                                                   \
 	    typedef NAME thisclass;                                         \
 	    thisclass::type = type;                                         \
-	    thisclass* __this = 0;                                          
+	    thisclass* __this; __this = 0;                                          
 
 #define BASE_CLASS(NAME) \
     o2::TypeInitializer::AddBaseType<NAME>(type)
@@ -490,6 +483,7 @@ namespace o2
 
 #include "Utils/Reflection/FieldInfo.h"
 #include "Utils/Reflection/TypeTraits.h"
+#include "Utils/Reflection/FunctionInfo.h"
 
 namespace o2
 {

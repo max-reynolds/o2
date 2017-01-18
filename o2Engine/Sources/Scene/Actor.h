@@ -11,6 +11,7 @@
 namespace o2
 {
     class Scene;
+    class SceneLayer;
     
 	// -----------
 	// Scene actor
@@ -33,7 +34,7 @@ namespace o2
 		Property<bool>                      locked;                  // Is actor locked property
 		Getter<bool>                        lockedInHierarchy;       // Is actor locked in hierarchy getter
 		Property<Actor*>                    parent;                  // Parent actor property
-		Property<Scene::Layer*>             layer;                   // Layer property
+		Property<SceneLayer*>               layer;                   // Layer property
 		Property<String>                    layerName;               // Layer name property
 		Getter<ActorsVec>                   childs;                  // Children array getter
 		Accessor<Actor*, const String&>     child;                   // Children accessor
@@ -201,13 +202,13 @@ namespace o2
 		ComponentsVec GetComponents() const;
 
 		// Sets layer
-		void SetLayer(Scene::Layer* layer);
+		void SetLayer(SceneLayer* layer);
 
 		// Sets layer by name
 		void SetLayer(const String& layerName);
 
 		// Returns layer
-		Scene::Layer* GetLayer() const;
+		SceneLayer* GetLayer() const;
 
 		// Returns layer name
 		String GetLayerName() const;
@@ -221,7 +222,7 @@ namespace o2
 		Actor*         mParent;      // Parent actor
 		ActorsVec      mChilds;      // Children actors 
 		ComponentsVec  mComponents;  // Components vector 
-		Scene::Layer*  mLayer;       // Scene layer
+		SceneLayer*    mLayer;       // Scene layer
 
 		bool           mEnabled;     // Is actor enabled @SERIALIZABLE
 		bool           mResEnabled;  // Is actor enabled in hierarchy

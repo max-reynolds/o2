@@ -11,7 +11,7 @@
 #endif
 
 #ifdef OSX
-class ApplicationBase {};
+#include "Application/OSX/ApplicationBase.h"
 #endif
 
 // Application access macros

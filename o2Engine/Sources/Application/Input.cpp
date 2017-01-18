@@ -54,7 +54,7 @@ namespace o2
 	bool Input::IsKeyRepeating(KeyboardKey key, float delay /*= 0.1f*/, float beginDelay /*= 0.5f*/) const
 	{
 		float time = GetKeyPressingTime(key) - beginDelay;
-		float repeatTime = Math::Max(floor(time/delay)*delay, 0.0f);
+        float repeatTime = Math::Max(Math::Floor(time/delay)*delay, 0.0f);
 
 		return time - o2Time.GetDeltaTime() < repeatTime && time > repeatTime;
 	}

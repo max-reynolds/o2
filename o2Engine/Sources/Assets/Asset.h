@@ -98,7 +98,7 @@ namespace o2
 			virtual ~IMetaInfo();
 
 			// Returns asset type id
-			virtual Type::Id GetAssetType() const;
+			virtual TypeId GetAssetType() const;
 
 			// Returns true if other meta is equal to this
 			virtual bool IsEqual(IMetaInfo* other) const;

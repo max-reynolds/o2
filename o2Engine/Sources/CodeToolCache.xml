@@ -713,7 +713,7 @@
 							<sections />
 							<typedefs>
 								<typedef what="Vector&lt;UID&gt;" newDef="AssetsIdsVec" />
-								<typedef what="Dictionary&lt;Type::Id, IAssetConverter*&gt;" newDef="ConvertersDict" />
+								<typedef what="Dictionary&lt;TypeId, IAssetConverter*&gt;" newDef="ConvertersDict" />
 							</typedefs>
 							<usings />
 							<baseClasses />

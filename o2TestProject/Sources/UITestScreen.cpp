@@ -65,7 +65,7 @@ void UITestScreen::Load()
 	for (int i = 0; i < 15; i++)
 	{
 		WString itemName = WString::Format("Item #%i", i + 1);
-		buttonContext->AddItem(UIContextMenu::Item(itemName, [=]() { o2Debug.Log("Pressed %sw", itemName); }));
+		buttonContext->AddItem(UIContextMenu::Item(itemName, [=]() { o2Debug.Log("Pressed " + itemName); }));
 	}
 
 	buttonContext->AddItem(

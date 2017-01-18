@@ -15,7 +15,7 @@ namespace o2
 	{
 	public:
 		// Returns vector of processing assets types
-		Vector<Type::Id> GetProcessingAssetsTypes() const;
+		Vector<TypeId> GetProcessingAssetsTypes() const;
 
 		// Converts atlas by path
 		void ConvertAsset(const AssetTree::AssetNode& node);

@@ -2,6 +2,7 @@
 
 #include "Utils/Containers/IDictionary.h"
 #include "Utils/Containers/Vector.h"
+#include "Utils/Assert.h"
 
 namespace o2
 {

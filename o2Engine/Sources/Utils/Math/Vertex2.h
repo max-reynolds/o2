@@ -28,7 +28,6 @@ namespace o2
 		inline void SetUV(const Vec2F& uv);
 
 		inline Vertex2 operator=(const Vec2F& vec);
-		inline operator Vec2F() const;
 	};
 	
 	Vertex2::Vertex2():
@@ -91,10 +90,5 @@ namespace o2
 	{
 		x = vec.x; y = vec.y;
 		return *this;
-	}
-
-	Vertex2::operator Vec2F() const
-	{
-		return Vec2F(x, y);
 	}
 }
