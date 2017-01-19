@@ -1,3 +1,4 @@
+
 #pragma once
 
 #include "Utils/IObject.h"
@@ -58,7 +59,7 @@ namespace o2
 	template<typename T, typename X =
 	/* if */   typename std::conditional<std::is_base_of<IObject, T>::value,
 	/* then */ T,
-	/* else */ std::conditional<(
+	/* else */ typename std::conditional<(
 	           /* if */   std::is_fundamental<T>::value ||
 		                  std::is_same<T, Basis>::value ||
 		                  std::is_same<T, Color4>::value ||
@@ -74,7 +75,7 @@ namespace o2
 		                  std::is_same<T, UID>::value ||
 		                  std::is_same<T, DataNode>::value) && !std::is_const<T>::value,
 		       /* then */ FundamentalTypeContainer<T>,
-		       /* else */ std::conditional<
+		       /* else */ typename std::conditional<
 		                  /* if */   std::is_enum<T>::value,
 		                  /* then */ EnumTypeContainer<T>,
 		                  /* else */ Type::Dummy
@@ -116,30 +117,36 @@ namespace o2
         static const Type& GetType();
     };
     
+    template<typename T>
+    struct PropertyTypeGetter
+    {
+        static const Type& GetType();
+    };
+
+    
     // Returns type of template parameter
     template<typename _type, typename _getter =
-    std::conditional<
+    typename std::conditional<
     /* if */   std::is_pointer<_type>::value,
     /* then */ PointerTypeGetter<_type>,
-    /* else */ std::conditional<
-    /* if */   IsVector<_type>::value,
-    /* then */ VectorTypeGetter<_type>,
-    /* else */ std::conditional<
-    /* if */   IsStringAccessor<_type>::value,
-    /* then */ AccessorTypeGetter<_type>,
-    /* else */ std::conditional<
-    /* if */   IsDictionary<_type>::value,
-    /* then */ DictionaryTypeGetter<_type>,
-    std::conditional<
-    /* if */   IsProperty<_type>::value,
-    /* then */ PropertyTypeGetter<_type>,
-    /* else */ RegularTypeGetter<_type>
-    >::type
-    >::type
-    >::type
-    >::type
-    >::type
-    >
+    /* else */ typename std::conditional<
+               /* if */   IsVector<_type>::value,
+               /* then */ VectorTypeGetter<_type>,
+               /* else */ typename std::conditional<
+                          /* if */   IsStringAccessor<_type>::value,
+                          /* then */ AccessorTypeGetter<_type>,
+                          /* else */ typename std::conditional<
+                                     /* if */   IsDictionary<_type>::value,
+                                     /* then */ DictionaryTypeGetter<_type>,
+                                     /* else */ typename std::conditional<
+                                                /* if */   IsProperty<_type>::value,
+                                                /* then */ PropertyTypeGetter<_type>,
+                                                /* else */ RegularTypeGetter<_type>
+                                                >::type
+                                     >::type
+                          >::type
+               >::type
+    >::type >
     const Type& GetTypeOf();
     
 	template<typename T>
@@ -156,7 +163,11 @@ namespace o2
         return *Reflection::InitializeDictionaryType<typename ExtractDictionaryKeyType<T>::type, typename ExtractDictionaryValueType<T>::type>();
     }
     
+    template<typename T>
 	const Type& AccessorTypeGetter<T>::GetType() { return *Reflection::InitializeAccessorType<typename ExtractStringAccessorType<T>::type>(); }
+    
+    template<typename T>
+    const Type& PropertyTypeGetter<T>::GetType() { return *Reflection::InitializePropertyType<typename ExtractPropertyValueType<T>::type>(); }
     
     // Returns type of template parameter
 	template<typename _type, typename _getter>

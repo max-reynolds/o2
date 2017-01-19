@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3E5378131E30B00000EE05B8 /* Application.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3E5378121E30B00000EE05B8 /* Application.cpp */; };
 		3E57F7481DFB0F6800D9E189 /* Animatable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3E57F6191DFB0F6800D9E189 /* Animatable.cpp */; };
 		3E57F7491DFB0F6800D9E189 /* Animatable.h in Headers */ = {isa = PBXBuildFile; fileRef = 3E57F61A1DFB0F6800D9E189 /* Animatable.h */; };
 		3E57F74A1DFB0F6800D9E189 /* Animate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3E57F61B1DFB0F6800D9E189 /* Animate.cpp */; };
@@ -309,6 +310,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3E5378121E30B00000EE05B8 /* Application.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Application.cpp; sourceTree = "<group>"; };
 		3E53B8C11E2F6FD80035EEF7 /* VKCodes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = VKCodes.h; path = OSX/VKCodes.h; sourceTree = "<group>"; };
 		3E53B8C21E2F710D0035EEF7 /* ApplicationBase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ApplicationBase.h; path = OSX/ApplicationBase.h; sourceTree = "<group>"; };
 		3E57EDEF1DFB0E0C00D9E189 /* dependencies.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = dependencies.xcodeproj; sourceTree = "<group>"; };
@@ -679,6 +681,7 @@
 			children = (
 				3E53B8C01E2F6FB10035EEF7 /* OSX */,
 				3E57F62D1DFB0F6800D9E189 /* Application.h */,
+				3E5378121E30B00000EE05B8 /* Application.cpp */,
 				3E57F62E1DFB0F6800D9E189 /* Input.cpp */,
 				3E57F62F1DFB0F6800D9E189 /* Input.h */,
 			);
@@ -1450,6 +1453,7 @@
 				3E57F7601DFB0F6800D9E189 /* ActorAsset.cpp in Sources */,
 				3E57F8141DFB0F6800D9E189 /* Debug.cpp in Sources */,
 				3E57F8341DFB0F6800D9E189 /* Math.cpp in Sources */,
+				3E5378131E30B00000EE05B8 /* Application.cpp in Sources */,
 				3E57F8191DFB0F6800D9E189 /* DragHandle.cpp in Sources */,
 				3E57F7501DFB0F6800D9E189 /* AnimatedVector.cpp in Sources */,
 				3E57F8281DFB0F6800D9E189 /* FileLogStream.cpp in Sources */,
