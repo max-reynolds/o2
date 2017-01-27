@@ -1,3 +1,4 @@
+
 #include "MainTestScreen.h"
 
 #include "TestApplication.h"
@@ -17,7 +18,7 @@ MainTestScreen::~MainTestScreen()
 void MainTestScreen::Load()
 {
 	auto root = o2UI.AddWidget();
-	root->layout.size = Vec2F(200, 400);
+    root->layout.size = o2::Vec2F(200, 400);
 
 	auto textTest = o2UI.CreateButton("Text");
 	textTest->name = "TextTestBtn";
@@ -52,7 +53,7 @@ void MainTestScreen::Draw()
 {
 }
 
-String MainTestScreen::GetId() const
+o2::String MainTestScreen::GetId() const
 {
 	return "MainTestScreen";
 }

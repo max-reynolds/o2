@@ -51,7 +51,7 @@ namespace o2
 		{
 		public:
 			static void ToData(_type& object, DataNode& data);
-			static void FromData(_type& object, const DataNode& data);
+			static void FromData(_type* object, const DataNode& data);
 		};
 
 		// -----------------------------------
@@ -62,7 +62,7 @@ namespace o2
 		{
 		public:
 			static void ToData(_type& object, DataNode& data);
-			static void FromData(_type& object, const DataNode& data);
+			static void FromData(_type* object, const DataNode& data);
 		};
 
 	public:
@@ -425,7 +425,7 @@ namespace o2
 			if (auto valueNode = GetNode("Value"))
 			{
 				value = static_cast<_type*>(Reflection::CreateTypeSample(type));
-				if (value)
+                if (value)
 					valueNode->GetValue(*value);
 
 				return;
@@ -536,13 +536,13 @@ namespace o2
 	template<typename _type, typename _conv, typename X>
 	void DataNode::GetValue(_type& value) const
 	{
-		_conv::FromData(value, *this);
+		_conv::FromData(&value, *this);
 	}
 
 	template<typename _type>
-	void DataNode::EnumDataConverter<_type>::FromData(_type& object, const DataNode& data)
+	void DataNode::EnumDataConverter<_type>::FromData(_type* object, const DataNode& data)
 	{
-		object = Reflection::GetEnumValue<_type>(data);
+		*object = Reflection::GetEnumValue<_type>(data);
 	}
 
 	template<typename _type>
@@ -552,18 +552,18 @@ namespace o2
 	}
 
 	template<typename _type>
-	void DataNode::CustomDataConverter<_type>::FromData(_type& object, const DataNode& data)
+	void DataNode::CustomDataConverter<_type>::FromData(_type* object, const DataNode& data)
 	{
 		for (auto conv : mDataConverters)
 		{
 			if (conv->CheckType(&GetTypeOf<_type>()))
 			{
-				conv->FromData(&object, data);
+				conv->FromData(object, data);
 				return;
 			}
 		}
 
-		object.Deserialize(data);
+		object->Deserialize(data);
 	}
 
 	template<typename _type>

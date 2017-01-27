@@ -13,5 +13,5 @@ public:
 
 	void Update(float dt);
 	void Draw();
-	String GetId() const;
+	o2::String GetId() const;
 };

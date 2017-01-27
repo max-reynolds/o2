@@ -10,12 +10,11 @@
 		3E53B8D91E2FAA770035EEF7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3E53B8D81E2FAA770035EEF7 /* Assets.xcassets */; };
 		3E53B8DC1E2FAA770035EEF7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3E53B8DA1E2FAA770035EEF7 /* Main.storyboard */; };
 		3E53B93C1E2FB0D90035EEF7 /* BasicUIStyle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3E53B9271E2FB0D90035EEF7 /* BasicUIStyle.cpp */; };
-		3E53B93D1E2FB0D90035EEF7 /* CodeToolCache.xml in Resources */ = {isa = PBXBuildFile; fileRef = 3E53B9291E2FB0D90035EEF7 /* CodeToolCache.xml */; };
 		3E53B93E1E2FB0D90035EEF7 /* ITestScreen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3E53B92A1E2FB0D90035EEF7 /* ITestScreen.cpp */; };
 		3E53B93F1E2FB0D90035EEF7 /* MainTestScreen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3E53B92C1E2FB0D90035EEF7 /* MainTestScreen.cpp */; };
 		3E53B9401E2FB0D90035EEF7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E53B9301E2FB0D90035EEF7 /* AppDelegate.m */; };
-		3E53B9411E2FB0D90035EEF7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E53B9311E2FB0D90035EEF7 /* main.m */; };
-		3E53B9421E2FB0D90035EEF7 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E53B9331E2FB0D90035EEF7 /* ViewController.m */; };
+		3E53B9411E2FB0D90035EEF7 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3E53B9311E2FB0D90035EEF7 /* main.mm */; };
+		3E53B9421E2FB0D90035EEF7 /* ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3E53B9331E2FB0D90035EEF7 /* ViewController.mm */; };
 		3E53B9431E2FB0D90035EEF7 /* TestApplication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3E53B9341E2FB0D90035EEF7 /* TestApplication.cpp */; };
 		3E53B9441E2FB0D90035EEF7 /* TextTestScreen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3E53B9361E2FB0D90035EEF7 /* TextTestScreen.cpp */; };
 		3E53B9451E2FB0D90035EEF7 /* UITestScreen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3E53B9381E2FB0D90035EEF7 /* UITestScreen.cpp */; };
@@ -63,16 +62,15 @@
 		3E53B8ED1E2FAA770035EEF7 /* o2TestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = o2TestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3E53B9271E2FB0D90035EEF7 /* BasicUIStyle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BasicUIStyle.cpp; sourceTree = "<group>"; };
 		3E53B9281E2FB0D90035EEF7 /* BasicUIStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BasicUIStyle.h; sourceTree = "<group>"; };
-		3E53B9291E2FB0D90035EEF7 /* CodeToolCache.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = CodeToolCache.xml; sourceTree = "<group>"; };
 		3E53B92A1E2FB0D90035EEF7 /* ITestScreen.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ITestScreen.cpp; sourceTree = "<group>"; };
 		3E53B92B1E2FB0D90035EEF7 /* ITestScreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ITestScreen.h; sourceTree = "<group>"; };
 		3E53B92C1E2FB0D90035EEF7 /* MainTestScreen.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MainTestScreen.cpp; sourceTree = "<group>"; };
 		3E53B92D1E2FB0D90035EEF7 /* MainTestScreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainTestScreen.h; sourceTree = "<group>"; };
 		3E53B92F1E2FB0D90035EEF7 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		3E53B9301E2FB0D90035EEF7 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		3E53B9311E2FB0D90035EEF7 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		3E53B9311E2FB0D90035EEF7 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
 		3E53B9321E2FB0D90035EEF7 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		3E53B9331E2FB0D90035EEF7 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		3E53B9331E2FB0D90035EEF7 /* ViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ViewController.mm; sourceTree = "<group>"; };
 		3E53B9341E2FB0D90035EEF7 /* TestApplication.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestApplication.cpp; sourceTree = "<group>"; };
 		3E53B9351E2FB0D90035EEF7 /* TestApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestApplication.h; sourceTree = "<group>"; };
 		3E53B9361E2FB0D90035EEF7 /* TextTestScreen.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextTestScreen.cpp; sourceTree = "<group>"; };
@@ -146,7 +144,6 @@
 			children = (
 				3E53B9271E2FB0D90035EEF7 /* BasicUIStyle.cpp */,
 				3E53B9281E2FB0D90035EEF7 /* BasicUIStyle.h */,
-				3E53B9291E2FB0D90035EEF7 /* CodeToolCache.xml */,
 				3E53B92A1E2FB0D90035EEF7 /* ITestScreen.cpp */,
 				3E53B92B1E2FB0D90035EEF7 /* ITestScreen.h */,
 				3E53B92C1E2FB0D90035EEF7 /* MainTestScreen.cpp */,
@@ -168,9 +165,9 @@
 			children = (
 				3E53B92F1E2FB0D90035EEF7 /* AppDelegate.h */,
 				3E53B9301E2FB0D90035EEF7 /* AppDelegate.m */,
-				3E53B9311E2FB0D90035EEF7 /* main.m */,
+				3E53B9311E2FB0D90035EEF7 /* main.mm */,
 				3E53B9321E2FB0D90035EEF7 /* ViewController.h */,
-				3E53B9331E2FB0D90035EEF7 /* ViewController.m */,
+				3E53B9331E2FB0D90035EEF7 /* ViewController.mm */,
 			);
 			path = OSX;
 			sourceTree = "<group>";
@@ -314,7 +311,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3E53B93D1E2FB0D90035EEF7 /* CodeToolCache.xml in Resources */,
 				3E53B8D91E2FAA770035EEF7 /* Assets.xcassets in Resources */,
 				3E53B8DC1E2FAA770035EEF7 /* Main.storyboard in Resources */,
 			);
@@ -342,8 +338,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				3E53B9441E2FB0D90035EEF7 /* TextTestScreen.cpp in Sources */,
-				3E53B9421E2FB0D90035EEF7 /* ViewController.m in Sources */,
-				3E53B9411E2FB0D90035EEF7 /* main.m in Sources */,
+				3E53B9421E2FB0D90035EEF7 /* ViewController.mm in Sources */,
+				3E53B9411E2FB0D90035EEF7 /* main.mm in Sources */,
 				3E53B9431E2FB0D90035EEF7 /* TestApplication.cpp in Sources */,
 				3E53B9401E2FB0D90035EEF7 /* AppDelegate.m in Sources */,
 				3E53B93F1E2FB0D90035EEF7 /* MainTestScreen.cpp in Sources */,
@@ -492,6 +488,8 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)";
+				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -500,11 +498,17 @@
 				HEADER_SEARCH_PATHS = (
 					"~/o2/o2Engine/Sources/",
 					"~/o2/o2Engine/OSX/FreeType/include/",
+					"$(PROJECT_DIR)/../../Sources/",
 				);
 				INFOPLIST_FILE = o2Test/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				OTHER_LDFLAGS = (
+					"-force_load",
+					"$(PROJECT_DIR)/../../../o2Engine/OSX/build/Debug/o2engine.a",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = o2.o2Test;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SYMROOT = Bin/;
 				USE_HEADERMAP = NO;
 			};
 			name = Debug;
@@ -515,15 +519,22 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)";
 				GCC_PREPROCESSOR_DEFINITIONS = OSX;
 				HEADER_SEARCH_PATHS = (
 					"~/o2/o2Engine/Sources/",
 					"~/o2/o2Engine/OSX/FreeType/include/",
+					"$(PROJECT_DIR)/../../Sources/",
 				);
 				INFOPLIST_FILE = o2Test/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				OTHER_LDFLAGS = (
+					"-force_load",
+					"$(PROJECT_DIR)/../../../o2Engine/OSX/build/Debug/o2engine.a",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = o2.o2Test;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SYMROOT = Bin/;
 				USE_HEADERMAP = NO;
 			};
 			name = Release;

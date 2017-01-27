@@ -3,11 +3,9 @@
 #include "Utils/IObject.h"
 #include "Utils/Reflection/Reflection.h"
 
-using namespace o2;
-
 class TestApplication;
 
-class Test: public IObject
+class Test: public o2::IObject
 {
 public:
 	IOBJECT(Test);
@@ -24,9 +22,9 @@ public:
 
 	virtual void Update(float dt) = 0;
 	virtual void Draw() = 0;
-	virtual String GetId() const = 0;
+	virtual o2::String GetId() const = 0;
 
 protected:
 	TestApplication* mApplication;
 };
-typedef Vector<ITestScreen*> TestScreensVec;
+typedef o2::Vector<ITestScreen*> TestScreensVec;

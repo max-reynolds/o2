@@ -1,11 +1,3 @@
-//
-//  AppDelegate.m
-//  o2Test
-//
-//  Created by Зенкович Андрей Николаевич on 18/01/2017.
-//  Copyright © 2017 o2. All rights reserved.
-//
-
 #import "AppDelegate.h"
 
 @interface AppDelegate ()
@@ -23,5 +15,8 @@
     // Insert code here to tear down your application
 }
 
+- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication {
+    return YES;
+}
 
 @end

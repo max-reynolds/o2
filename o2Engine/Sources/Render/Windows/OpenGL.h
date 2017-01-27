@@ -1,19 +1,10 @@
 #pragma once
 
-#ifdef WINDOWS
 #include <windows.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include "Dependencies/OpenGL/glext.h"
 #include "Dependencies/OpenGL/wglext.h"
-#endif
-
-#ifdef OSX
-#define GL_GLEXT_LEGACY
-#include <OpenGL/gl.h>
-#include <OpenGL/gl3.h>
-#endif
-
 
 namespace o2
 {
@@ -38,7 +29,6 @@ void glCheckError(o2::LogStream* log, const char* filename = nullptr, unsigned i
 #	define GL_CHECK_ERROR(log) 
 #endif
 
-#ifdef WINDOWS
 extern PFNGLGENFRAMEBUFFERSEXTPROC        glGenFramebuffersEXT;
 extern PFNGLBINDFRAMEBUFFEREXTPROC        glBindFramebufferEXT;
 extern PFNGLFRAMEBUFFERTEXTUREPROC        glFramebufferTexture;
@@ -46,4 +36,3 @@ extern PFNGLDRAWBUFFERSPROC               glDrawBuffers;
 extern PFNGLDELETEBUFFERSPROC             glDeleteBuffers;
 extern PFNGLDELETEFRAMEBUFFERSPROC        glDeleteFramebuffersEXT;
 extern PFNGLCHECKFRAMEBUFFERSTATUSEXTPROC glCheckFramebufferStatusEXT;
-#endif

@@ -3,9 +3,7 @@
 #include "ITestScreen.h"
 #include "Application/Application.h"
 
-using namespace o2;
-
-class TestApplication: public Application
+class TestApplication: public o2::Application
 {
 protected:
 	// Calls when application is starting
@@ -19,7 +17,7 @@ protected:
 
 public:
 	// Turns on test screen with id
-	void GoToScreen(const String& id);
+	void GoToScreen(const o2::String& id);
 
 protected:
 	TestScreensVec mTestScreens;

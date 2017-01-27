@@ -13,134 +13,104 @@
 namespace o2
 {
 	DECLARE_SINGLETON(Render);
-
-	Render::Render():
-		mReady(false), mStencilDrawing(false), mStencilTest(false), mClippingEverything(false)
-	{
-		mVertexBufferSize = USHRT_MAX;
-		mIndexBufferSize = USHRT_MAX;
-
-		InitializeProperties();
-
-		// Create log stream
-		mLog = mnew LogStream("Render");
-		o2Debug.GetLog()->BindStream(mLog);
-
-		// Initialize OpenGL
-		mLog->Out("Initializing OpenGL render..");
-
-		mResolution = o2Application.GetContentSize();
-
-		GLuint pixelFormat;
-#ifdef WINDOWS
-		static	PIXELFORMATDESCRIPTOR pfd = // pfd Tells Windows How We Want Things To Be
-		{
-			sizeof(PIXELFORMATDESCRIPTOR), // Size Of This Pixel Format Descriptor
-			1,							   // Version Number
-			PFD_DRAW_TO_WINDOW |		   // Format Must Support Window
-			PFD_SUPPORT_OPENGL |		   // Format Must Support OpenGL
-			PFD_DOUBLEBUFFER,			   // Must Support Double Buffering
-			PFD_TYPE_RGBA,				   // Request An RGBA Format
-			32,  						   // Select Our Color Depth
-			0, 0, 0, 0, 0, 0,			   // Color Bits Ignored
-			0,							   // No Alpha Buffer
-			0,							   // Shift Bit Ignored
-			0,							   // No Accumulation Buffer
-			0, 0, 0, 0,					   // Accumulation Bits Ignored
-			16,							   // 16Bit Z-Buffer (Depth Buffer)  
-			1,							   // No Stencil Buffer
-			0,							   // No Auxiliary Buffer
-			PFD_MAIN_PLANE,				   // Main Drawing Layer
-			0,							   // Reserved
-			0, 0, 0						   // Layer Masks Ignored
-		};
-
-		mHDC = GetDC(o2Application.mHWnd);
-		if (!mHDC)
-		{
-			mLog->Error("Can't Create A GL Device Context.\n");
-			return;
-		}
-
-		pixelFormat = ChoosePixelFormat(mHDC, &pfd);
-		if (!pixelFormat)
-		{
-			mLog->Error("Can't Find A Suitable PixelFormat.\n");
-			return;
-		}
-
-		if (!SetPixelFormat(mHDC, pixelFormat, &pfd))
-		{
-			mLog->Error("Can't Set The PixelFormat.\n");
-			return;
-		}
-
-		mGLContext = wglCreateContext(mHDC);
-		if (!mGLContext)
-		{
-			mLog->Error("Can't Create A GL Rendering Context.\n");
-			return;
-		}
-
-		if (!wglMakeCurrent(mHDC, mGLContext))
-		{
-			mLog->Error("Can't Activate The GL Rendering Context.\n");
-			return;
-		}
-#endif
-
-		// Get OpenGL extensions
-		GetGLExtensions(mLog);
-
-		GL_CHECK_ERROR(mLog);
-
-		// Check compatibles
-		CheckCompatibles();
-
-		// Initialize buffers
-		mVertexData = new UInt8[mVertexBufferSize*sizeof(Vertex2)];
-
-		mVertexIndexData = new UInt16[mIndexBufferSize];
-		mLastDrawVertex = 0;
-		mTrianglesCount = 0;
-		mCurrentPrimitiveType = GL_TRIANGLES;
-
-		// Configure OpenGL
-		glEnableClientState(GL_COLOR_ARRAY);
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		glEnableClientState(GL_VERTEX_ARRAY);
-
-		glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(Vertex2), mVertexData + sizeof(float) * 3);
-		glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex2), mVertexData + sizeof(float) * 3 + sizeof(unsigned long));
-		glVertexPointer(3, GL_FLOAT, sizeof(Vertex2), mVertexData + 0);
-
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		glLineWidth(1.0f);
-
-		GL_CHECK_ERROR(mLog);
-
-		mLog->Out("GL_VENDOR: " + (String)(char*)glGetString(GL_VENDOR));
-		mLog->Out("GL_RENDERER: " + (String)(char*)glGetString(GL_RENDERER));
-		mLog->Out("GL_VERSION: " + (String)(char*)glGetString(GL_VERSION));
-
-#ifdef WINDOWS
-		HDC dc = GetDC(0);
-		mDPI.x = GetDeviceCaps(dc, LOGPIXELSX);
-		mDPI.y = GetDeviceCaps(dc, LOGPIXELSY);
-		ReleaseDC(0, dc);
-#endif
-
-		InitializeFreeType();
-
-		mCurrentRenderTarget = TextureRef();
-
-		if (IS_DEV_MODE)
-			o2Assets.onAssetsRebuilded += Function<void(const Vector<UID>&)>(this, &Render::OnAssetsRebuilded);
-
-		mReady = true;
-	}
+    
+    void Render::Initialize()
+    {
+        mVertexBufferSize = USHRT_MAX;
+        mIndexBufferSize = USHRT_MAX;
+        
+        InitializeProperties();
+        
+        // Create log stream
+        mLog = mnew LogStream("Render");
+        o2Debug.GetLog()->BindStream(mLog);
+        
+        // Initialize OpenGL
+        mLog->Out("Initializing OpenGL render..");
+        
+        mResolution = o2Application.GetContentSize();
+        
+        // Check compatibles
+        CheckCompatibles();
+        
+        // Initialize buffers
+        mVertexData = new UInt8[mVertexBufferSize*sizeof(Vertex2)];
+        
+        mVertexIndexData = new UInt16[mIndexBufferSize];
+        mLastDrawVertex = 0;
+        mTrianglesCount = 0;
+        mCurrentPrimitiveType = GL_TRIANGLES;
+        
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                
+        glLineWidth(1.0f);
+        
+        GL_CHECK_ERROR(mLog);
+        
+        mLog->Out("GL_VENDOR: " + (String)(char*)glGetString(GL_VENDOR));
+        mLog->Out("GL_RENDERER: " + (String)(char*)glGetString(GL_RENDERER));
+        mLog->Out("GL_VERSION: " + (String)(char*)glGetString(GL_VERSION));
+        
+        InitializeFreeType();
+        
+        mCurrentRenderTarget = TextureRef();
+        
+        if (IS_DEV_MODE)
+            o2Assets.onAssetsRebuilded += Function<void(const Vector<UID>&)>(this, &Render::OnAssetsRebuilded);
+        
+        GL_CHECK_ERROR(mLog);
+        
+        InitializeStdShader();
+        
+        mReady = true;
+    }
+    
+    void Render::InitializeStdShader()
+    {
+        const char* fragShader = "                                              \n \
+        #if __VERSION__ >= 140                                             \n \
+        in vec2      varTexcoord;                                          \n \
+        out vec4     fragColor;                                            \n \
+        #else                                                              \n \
+        varying vec2 varTexcoord;                                          \n \
+        #endif                                                             \n \
+                                                                           \n \
+        uniform sampler2D diffuseTexture;                                  \n \
+                                                                           \n \
+                                                                           \n \
+        void main (void)                                                   \n \
+        {                                                                  \n \
+        #if __VERSION__ >= 140                                             \n \
+            fragColor = texture(diffuseTexture, varTexcoord.st, 0.0);      \n \
+        #else                                                              \n \
+            gl_FragColor = texture2D(diffuseTexture, varTexcoord.st, 0.0); \n \
+        #endif                                                             \n \
+        }";
+        
+        const char* vtxShader = "                                      \n \
+        uniform mat4 modelViewProjectionMatrix;                   \n \
+                                                                  \n \
+        #if __VERSION__ >= 140                                    \n \
+        in vec4  inPosition;                                      \n \
+        in vec2  inTexcoord;                                      \n \
+        out vec2 varTexcoord;                                     \n \
+        #else                                                     \n \
+        attribute vec4 inPosition;                                \n \
+        attribute vec2 inTexcoord;                                \n \
+        varying vec2 varTexcoord;                                 \n \
+        #endif                                                    \n \
+                                                                  \n \
+        void main (void)                                          \n \
+        {                                                         \n \
+            gl_Position	= modelViewProjectionMatrix * inPosition; \n \
+            varTexcoord = inTexcoord;                             \n \
+        }                                                         \n \
+        ";
+        
+        mStdShader = BuildShaderProgram(vtxShader, fragShader);
+        mStdShaderMvpUniformIdx = glGetUniformLocation(mStdShader, "modelViewProjectionMatrix");
+    }
 
 	void Render::OnFrameResized()
 	{
@@ -158,35 +128,27 @@ namespace o2
 	{
 		FT_Done_FreeType(mFreeTypeLib);
 	}
-
-	Render::~Render()
-	{
-		if (!mReady)
-			return;
-
-		if (IS_DEV_MODE)
-			o2Assets.onAssetsRebuilded -= Function<void(const Vector<UID>&)>(this, &Render::OnAssetsRebuilded);
-
-		auto fonts = mFonts;
-		for (auto font : fonts)
-			delete font;
-
-		auto textures = mTextures;
-		for (auto texture : textures)
-			delete texture;
-
-#ifdef WINDOWS
-		if (!wglMakeCurrent(NULL, NULL))
-			mLog->Error("Release DC And RC Failed.\n");
-
-		if (!wglDeleteContext(mGLContext))
-            mLog->Error("Release Rendering Context Failed.\n");
-#endif
-
-		DeinitializeFreeType();
-
-		mReady = false;
-	}
+    
+    void Render::Deinitialize()
+    {
+        if (!mReady)
+            return;
+        
+        if (IS_DEV_MODE)
+            o2Assets.onAssetsRebuilded -= Function<void(const Vector<UID>&)>(this, &Render::OnAssetsRebuilded);
+        
+        auto fonts = mFonts;
+        for (auto font : fonts)
+            delete font;
+        
+        auto textures = mTextures;
+        for (auto texture : textures)
+            delete texture;
+        
+        DeinitializeFreeType();
+        
+        mReady = false;
+    }
 
 	void Render::CheckCompatibles()
 	{
@@ -226,11 +188,15 @@ namespace o2
 		mStackScissors.Clear();
 
 		mClippingEverything = false;
+        
+        glUseProgram(mStdShader);
 
 		// Reset view matrices
 		SetupViewMatrix(mResolution);
 
 		UpdateCameraTransforms();
+        
+        GL_CHECK_ERROR(mLog);
 	}
 
 	void Render::DrawPrimitives()
@@ -250,13 +216,14 @@ namespace o2
 
 	void Render::SetupViewMatrix(const Vec2I& viewSize)
 	{
-		mCurrentResolution = viewSize;
-		float projMat[16];
-		Math::OrthoProjMatrix(projMat, 0.0f, (float)viewSize.x, (float)viewSize.y, 0.0f, 0.0f, 10.0f);
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glViewport(0, 0, viewSize.x, viewSize.y);
-		glLoadMatrixf(projMat);
+//		mCurrentResolution = viewSize;
+//		float projMat[16];
+//		Math::OrthoProjMatrix(projMat, 0.0f, (float)viewSize.x, (float)viewSize.y, 0.0f, 0.0f, 10.0f);
+//		//glMatrixMode(GL_PROJECTION);
+//		//glLoadIdentity();
+//		glViewport(0, 0, viewSize.x, viewSize.y);
+//		//glLoadMatrixf(projMat);
+        
 		UpdateCameraTransforms();
 	}
 
@@ -315,14 +282,45 @@ namespace o2
 	{
 		return mCamera;
 	}
+    
+    void mtxMultiply(float* ret, const float* lhs, const float* rhs)
+    {
+        // [ 0 4  8 12 ]   [ 0 4  8 12 ]
+        // [ 1 5  9 13 ] x [ 1 5  9 13 ]
+        // [ 2 6 10 14 ]   [ 2 6 10 14 ]
+        // [ 3 7 11 15 ]   [ 3 7 11 15 ]
+        ret[ 0] = lhs[ 0]*rhs[ 0] + lhs[ 4]*rhs[ 1] + lhs[ 8]*rhs[ 2] + lhs[12]*rhs[ 3];
+        ret[ 1] = lhs[ 1]*rhs[ 0] + lhs[ 5]*rhs[ 1] + lhs[ 9]*rhs[ 2] + lhs[13]*rhs[ 3];
+        ret[ 2] = lhs[ 2]*rhs[ 0] + lhs[ 6]*rhs[ 1] + lhs[10]*rhs[ 2] + lhs[14]*rhs[ 3];
+        ret[ 3] = lhs[ 3]*rhs[ 0] + lhs[ 7]*rhs[ 1] + lhs[11]*rhs[ 2] + lhs[15]*rhs[ 3];
+        
+        ret[ 4] = lhs[ 0]*rhs[ 4] + lhs[ 4]*rhs[ 5] + lhs[ 8]*rhs[ 6] + lhs[12]*rhs[ 7];
+        ret[ 5] = lhs[ 1]*rhs[ 4] + lhs[ 5]*rhs[ 5] + lhs[ 9]*rhs[ 6] + lhs[13]*rhs[ 7];
+        ret[ 6] = lhs[ 2]*rhs[ 4] + lhs[ 6]*rhs[ 5] + lhs[10]*rhs[ 6] + lhs[14]*rhs[ 7];
+        ret[ 7] = lhs[ 3]*rhs[ 4] + lhs[ 7]*rhs[ 5] + lhs[11]*rhs[ 6] + lhs[15]*rhs[ 7];
+        
+        ret[ 8] = lhs[ 0]*rhs[ 8] + lhs[ 4]*rhs[ 9] + lhs[ 8]*rhs[10] + lhs[12]*rhs[11];
+        ret[ 9] = lhs[ 1]*rhs[ 8] + lhs[ 5]*rhs[ 9] + lhs[ 9]*rhs[10] + lhs[13]*rhs[11];
+        ret[10] = lhs[ 2]*rhs[ 8] + lhs[ 6]*rhs[ 9] + lhs[10]*rhs[10] + lhs[14]*rhs[11];
+        ret[11] = lhs[ 3]*rhs[ 8] + lhs[ 7]*rhs[ 9] + lhs[11]*rhs[10] + lhs[15]*rhs[11];
+        
+        ret[12] = lhs[ 0]*rhs[12] + lhs[ 4]*rhs[13] + lhs[ 8]*rhs[14] + lhs[12]*rhs[15];
+        ret[13] = lhs[ 1]*rhs[12] + lhs[ 5]*rhs[13] + lhs[ 9]*rhs[14] + lhs[13]*rhs[15];
+        ret[14] = lhs[ 2]*rhs[12] + lhs[ 6]*rhs[13] + lhs[10]*rhs[14] + lhs[14]*rhs[15];
+        ret[15] = lhs[ 3]*rhs[12] + lhs[ 7]*rhs[13] + lhs[11]*rhs[14] + lhs[15]*rhs[15];
+    }
 
 	void Render::UpdateCameraTransforms()
 	{
 		DrawPrimitives();
 
 		Vec2F resf = (Vec2F)mCurrentResolution;
+        
+        mCurrentResolution = resf;
+        float projMat[16];
+        Math::OrthoProjMatrix(projMat, 0.0f, (float)resf.x, (float)resf.y, 0.0f, 0.0f, 10.0f);
+        glViewport(0, 0, resf.x, resf.y);
 
-		glMatrixMode(GL_MODELVIEW);
 		float modelMatrix[16] =
 		{
 			1,           0,            0, 0,
@@ -330,8 +328,6 @@ namespace o2
 			0,           0,            1, 0,
 			Math::Round(resf.x*0.5f), Math::Round(resf.y*0.5f), -1, 1
 		};
-
-		glLoadMatrixf(modelMatrix);
 
 		Basis defaultCameraBasis((Vec2F)mCurrentResolution*-0.5f, Vec2F::Right()*resf.x, Vec2F().Up()*resf.y);
 		Basis camTransf = mCamera.GetBasis().Inverted()*defaultCameraBasis;
@@ -344,8 +340,14 @@ namespace o2
 			camTransf.offs.x, camTransf.offs.y, 0, 1
 		};
 
-		glMultMatrixf(camTransfMatr);
-
+        float mvp[16];
+        float pp[16];
+        mtxMultiply(pp, modelMatrix, camTransfMatr);
+        mtxMultiply(mvp, projMat, pp);
+        
+        glUniformMatrix4fv(mStdShaderMvpUniformIdx, 1, GL_FALSE, mvp);
+        
+        GL_CHECK_ERROR(mLog);
 	}
 
 	void Render::CheckTexturesUnloading()
@@ -879,6 +881,127 @@ namespace o2
 					  (int)clipRect.Height());
 		}
 	}
+    
+
+    GLuint Render::BuildShaderProgram(const char* vertexSource, const char* fragmentSource)
+    {
+        GLuint prgName;
+        GLint logLength, status;
+        GLchar* sourceString = NULL;
+        
+        float  glLanguageVersion;
+        sscanf((char *)glGetString(GL_SHADING_LANGUAGE_VERSION), "%f", &glLanguageVersion);
+        
+        GLuint version = 100 * glLanguageVersion;
+        const GLsizei versionStringSize = sizeof("#version 123\n");
+        
+        prgName = glCreateProgram();
+        
+        glBindAttribLocation(prgName, 0, "inPosition");
+        glBindAttribLocation(prgName, 1, "inTexcoord");
+        
+        sourceString = (GLchar*)malloc(strlen(vertexSource) + versionStringSize);
+        
+        sprintf(sourceString, "#version %d\n%s", version, vertexSource);
+        
+        GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+        glShaderSource(vertexShader, 1, (const GLchar **)&(sourceString), NULL);
+        glCompileShader(vertexShader);
+        glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &logLength);
+        
+        if (logLength > 0)
+        {
+            GLchar *log = (GLchar*) malloc(logLength);
+            glGetShaderInfoLog(vertexShader, logLength, &logLength, log);
+            mLog->Out((String)"Vtx Shader compile log:\n" + log);
+            free(log);
+        }
+        
+        glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &status);
+        if (status == 0)
+        {
+            mLog->Error((String)"Failed to compile vtx shader:\n" + sourceString);
+            return 0;
+        }
+        
+        free(sourceString);
+        sourceString = NULL;
+        
+        glAttachShader(prgName, vertexShader);
+        glDeleteShader(vertexShader);
+        
+        // fragment
+        sourceString = (GLchar*)malloc(strlen(fragmentSource) + versionStringSize);
+        sprintf(sourceString, "#version %d\n%s", version, fragmentSource);
+        
+        GLuint fragShader = glCreateShader(GL_FRAGMENT_SHADER);
+        glShaderSource(fragShader, 1, (const GLchar **)&(sourceString), NULL);
+        glCompileShader(fragShader);
+        glGetShaderiv(fragShader, GL_INFO_LOG_LENGTH, &logLength);
+        if (logLength > 0)
+        {
+            GLchar *log = (GLchar*)malloc(logLength);
+            glGetShaderInfoLog(fragShader, logLength, &logLength, log);
+            mLog->Out((String)"Frag Shader compile log:\n" + log);
+            free(log);
+        }
+        
+        glGetShaderiv(fragShader, GL_COMPILE_STATUS, &status);
+        if (status == 0)
+        {
+            mLog->Error((String)"Failed to compile frag shader:\n" + sourceString);
+            return 0;
+        }
+        
+        free(sourceString);
+        sourceString = NULL;
+        
+        glAttachShader(prgName, fragShader);
+        glDeleteShader(fragShader);
+        
+        glLinkProgram(prgName);
+        glGetProgramiv(prgName, GL_INFO_LOG_LENGTH, &logLength);
+        if (logLength > 0)
+        {
+            GLchar *log = (GLchar*)malloc(logLength);
+            glGetProgramInfoLog(prgName, logLength, &logLength, log);
+            mLog->Out((String)"Program link log:\n" + log);
+            free(log);
+        }
+        
+        glGetProgramiv(prgName, GL_LINK_STATUS, &status);
+        if (status == 0)
+        {
+            mLog->Error("Failed to link program");
+            return 0;
+        }
+        
+        glValidateProgram(prgName);
+        
+        glGetProgramiv(prgName, GL_VALIDATE_STATUS, &status);
+        if (status == 0)
+            mLog->Error("Program cannot run with current OpenGL State");
+        
+        glGetProgramiv(prgName, GL_INFO_LOG_LENGTH, &logLength);
+        if (logLength > 0)
+        {
+            GLchar *log = (GLchar*)malloc(logLength);
+            glGetProgramInfoLog(prgName, logLength, &logLength, log);
+            mLog->Out((String)"Program validate log:\n" + log);
+            free(log);
+        }
+        
+        glUseProgram(prgName);
+        
+        GLint samplerLoc = glGetUniformLocation(prgName, "diffuseTexture");
+        
+        GLint unit = 0;
+        glUniform1i(samplerLoc, unit);
+        
+        GL_CHECK_ERROR(mLog);
+        
+        return prgName;
+    }
 
 	TextureRef Render::GetRenderTexture() const
 	{

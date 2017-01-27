@@ -170,6 +170,10 @@ namespace o2
 		friend class CursorEventsListener;
 		friend class DragableObject;
 		friend class KeyboardEventsListener;
-		friend class WndProcFunc;
+        friend class WndProcFunc;
+        
+#ifdef OSX
+        friend class IApplicationOSXBridge;
+#endif
 	};
 }

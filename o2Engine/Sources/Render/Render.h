@@ -5,9 +5,16 @@
 
 #include "Render/Camera.h"
 #include "Render/TextureRef.h"
-#include "Render/Windows/RenderBase.h"
 #include "Utils/Math/Vertex2.h"
 #include "Utils/Singleton.h"
+
+#ifdef WINDOWS
+#include "Render/Windows/RenderBase.h"
+#endif
+
+#ifdef OSX
+#include "Render/OSX/RenderBase.h"
+#endif
 
 // Render access macros
 #define o2Render o2::Render::Instance()
@@ -201,43 +208,68 @@ namespace o2
 		typedef Vector<Texture*> TexturesVec;
 		typedef Vector<Font*> FontsVec;
 		typedef Vector<Sprite*> SpritesVec;
+        
+        GLuint            mStdShader;                      // Standard shader program
+        GLint             mStdShaderMvpUniformIdx;         // Standard shader matrix input parameter
+        
+        UInt8*            mVertexData = nullptr;           // Vertex data buffer
+        UInt16*           mVertexIndexData = nullptr;      // Index data buffer
+        UInt              mVertexBufferSize = 6000;        // Maximum size of vertex buffer
+        UInt              mIndexBufferSize = 6000*3;       // Maximum size of index buffer
+        GLenum            mCurrentPrimitiveType;           // Type of drawing primitives for next DIP
+        
+        Texture*          mLastDrawTexture = nullptr;      // Stored texture ptr from last DIP
+        UInt              mLastDrawVertex;                 // Last vertex idx for next DIP
+        UInt              mLastDrawIdx;                    // Last vertex index for next DIP
+        UInt              mTrianglesCount;                 // Triangles count for next DIP
+        UInt              mFrameTrianglesCount;            // Total triangles at current frame
+        UInt              mDIPCount;                       // DrawIndexedPrimitives calls count
 
-		LogStream*        mLog;                    // Render log stream
+		LogStream*        mLog;                            // Render log stream
 						  
-		TexturesVec       mTextures;               // Loaded textures
-		FontsVec          mFonts;                  // Loaded fonts
+		TexturesVec       mTextures;                       // Loaded textures
+		FontsVec          mFonts;                          // Loaded fonts
 						  
-		Camera            mCamera;                 // Camera transformation
-		Vec2I             mResolution;             // Primary back buffer size
-		Vec2I             mCurrentResolution;      // Current back buffer size
-		Vec2I             mDPI;                    // Current device screen DPI
+		Camera            mCamera;                         // Camera transformation
+		Vec2I             mResolution;                     // Primary back buffer size
+		Vec2I             mCurrentResolution;              // Current back buffer size
+		Vec2I             mDPI;                            // Current device screen DPI
 						  
-		bool              mRenderTargetsAvailable; // True, if render targets is available
-		Vec2I             mMaxTextureSize;         // Max texture size
+		bool              mRenderTargetsAvailable = false; // True, if render targets is available
+		Vec2I             mMaxTextureSize;                 // Max texture size
 						  
-		bool              mStencilDrawing;         // True, if drawing in stencil buffer
-		bool              mStencilTest;            // True, if drawing with stencil test
+		bool              mStencilDrawing = false;         // True, if drawing in stencil buffer
+		bool              mStencilTest = false;            // True, if drawing with stencil test
 						  
-		ScissorInfosVec   mScissorInfos;           // Scissor clipping depth infos vector
-		StackScissorVec   mStackScissors;          // Stack of scissors clippings
-		bool              mClippingEverything;     // Is everything clipped
+		ScissorInfosVec   mScissorInfos;                   // Scissor clipping depth infos vector
+		StackScissorVec   mStackScissors;                  // Stack of scissors clippings
+		bool              mClippingEverything = false;     // Is everything clipped
 						  
-		TextureRef        mCurrentRenderTarget;    // Current render target. NULL if rendering in back buffer
+		TextureRef        mCurrentRenderTarget;            // Current render target. NULL if rendering in back buffer
 						  
-		float             mDrawingDepth;           // Current drawing depth, increments after each drawing drawables
+		float             mDrawingDepth;                   // Current drawing depth, increments after each drawing drawables
 						  
-		FT_Library        mFreeTypeLib;            // FreeType library, for rendering fonts
+		FT_Library        mFreeTypeLib;                    // FreeType library, for rendering fonts
 
-		SpritesVec        mSprites;                // All sprites
+		SpritesVec        mSprites;                        // All sprites
 						  
-		bool              mReady;                  // True, if render system initialized
+		bool              mReady = false;                  // True, if render system initialized
 
 	protected:
 		// Don't copy
 		Render(const Render& other);
 
 		// Don't copy
-		Render& operator=(const Render& other);
+        Render& operator=(const Render& other);
+        
+        // Initializes render
+        void Initialize();
+        
+        // Initializes standard shader
+        void InitializeStdShader();
+        
+        // Deinitializes render
+        void Deinitialize();
 
 		// Calls when target frame or window was resized
 		void OnFrameResized();
@@ -256,6 +288,9 @@ namespace o2
 
 		// Updates render transformations for camera
 		void UpdateCameraTransforms();
+        
+        // Builds vertex and fragmest shaders
+        GLuint BuildShaderProgram(const char* vertexSource, const char* fragmentSource);
 
 		// Checks render compatibles
 		void CheckCompatibles();
@@ -281,6 +316,10 @@ namespace o2
 		friend class TextureRef;
 		friend class VectorFont;
 		friend class VectorFontAsset;
-		friend class WndProcFunc;
+        friend class WndProcFunc;
+        
+#ifdef OSX
+        friend class IApplicationOSXBridge;
+#endif
 	};
 }

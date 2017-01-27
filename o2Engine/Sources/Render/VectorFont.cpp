@@ -1,7 +1,5 @@
 #include "VectorFont.h"
 
-#include "Render/Windows/OpenGL.h"
-
 #include "Application/Application.h"
 #include "Render/Render.h"
 #include "Utils/Bitmap.h"

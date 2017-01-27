@@ -11,6 +11,8 @@
 #include "Utils/Log/LogStream.h"
 #include "Utils/Timer.h"
 
+#include "Assets/ImageAsset.h"
+
 namespace o2
 {
 	AssetsBuilder::AssetsBuilder()

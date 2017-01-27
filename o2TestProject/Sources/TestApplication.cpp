@@ -28,8 +28,8 @@ void TestApplication::OnStarted()
 
 void TestApplication::OnUpdate(float dt)
 {
-	o2Application.windowCaption = String::Format("FPS: %i dt: %f (%vi) DC: %i", (int)o2Time.GetFPS(), o2Time.GetDeltaTime(),
-												 (Vec2I)o2Input.GetCursorPos(), o2Render.GetDrawCallsCount());
+	o2Application.windowCaption = o2::String::Format("FPS: %i dt: %f (%vi) DC: %i", (int)o2Time.GetFPS(), o2Time.GetDeltaTime(),
+												     (o2::Vec2I)o2Input.GetCursorPos(), o2Render.GetDrawCallsCount());
 
 	/*if (o2Input.IsKeyPressed('Z'))
 	{
@@ -56,13 +56,13 @@ void TestApplication::OnUpdate(float dt)
 void TestApplication::OnDraw()
 {
 	o2Render.Clear();
-	o2Render.camera = Camera::Default();
+	o2Render.camera = o2::Camera::Default();
 
 	if (mCurrentScreen)
 		mCurrentScreen->Draw();
 }
 
-void TestApplication::GoToScreen(const String& id)
+void TestApplication::GoToScreen(const o2::String& id)
 {
 	mNextCurrentScreen = mTestScreens.FindMatch([&](ITestScreen* x) { return x->GetId() == id; });
 }

@@ -15,28 +15,28 @@ TextTestScreen::~TextTestScreen()
 void TextTestScreen::Load()
 {
 	mBackground.LoadFromImage("ui/UI_Background.png");
-	mBackground.size = (Vec2I)o2Render.resolution;
+	mBackground.size = (o2::Vec2I)o2Render.resolution;
 
 	mFakeWindow.LoadFromImage("ui/UI_window_frame_regular.png");
-	mFakeWindow.size = Vec2F(400, 400);
+    mFakeWindow.size = o2::Vec2F(400, 400);
 
-	mText.font = FontRef("stdFont.ttf");
+	mText.font = o2::FontRef("stdFont.ttf");
 	//mText.font = FontRef("myriad.xml");
 	mText.text = "Hello, I'm text\nmulti line\nand many symbols\nha h a h ah\n1 2 3 4 5 6 7 8 9 0";
 	//mText.ctext = "abcdefghklmnopqrstuvxyz12345";
 
-	mHandleMin.regularSprite = mnew Sprite("ui/UI_Radio_bk.png");
-	mHandleMin.hoverSprite = mnew Sprite("ui/UI_Radio_bk_select.png");
-	mHandleMin.pressedSprite = mnew Sprite("ui/UI_Radio_bk_pressed.png");
-	mHandleMin.onChangedPos += Function<void(const Vec2F&)>(this, &TextTestScreen::OnHandleMoved);
+	mHandleMin.regularSprite = mnew o2::Sprite("ui/UI_Radio_bk.png");
+	mHandleMin.hoverSprite = mnew o2::Sprite("ui/UI_Radio_bk_select.png");
+	mHandleMin.pressedSprite = mnew o2::Sprite("ui/UI_Radio_bk_pressed.png");
+	mHandleMin.onChangedPos += o2::Function<void(const o2::Vec2F&)>(this, &TextTestScreen::OnHandleMoved);
 
-	mHandleMax.regularSprite = mnew Sprite("ui/UI_Radio_bk.png");
-	mHandleMax.hoverSprite = mnew Sprite("ui/UI_Radio_bk_select.png");
-	mHandleMax.pressedSprite = mnew Sprite("ui/UI_Radio_bk_pressed.png");
-	mHandleMax.onChangedPos += Function<void(const Vec2F&)>(this, &TextTestScreen::OnHandleMoved);
+	mHandleMax.regularSprite = mnew o2::Sprite("ui/UI_Radio_bk.png");
+	mHandleMax.hoverSprite = mnew o2::Sprite("ui/UI_Radio_bk_select.png");
+	mHandleMax.pressedSprite = mnew o2::Sprite("ui/UI_Radio_bk_pressed.png");
+	mHandleMax.onChangedPos += o2::Function<void(const o2::Vec2F&)>(this, &TextTestScreen::OnHandleMoved);
 
-	mHandleMin.position = Vec2F(-100, -100);
-	mHandleMax.position = Vec2F(100, 100);
+	mHandleMin.position = o2::Vec2F(-100, -100);
+	mHandleMax.position = o2::Vec2F(100, 100);
 }
 
 void TextTestScreen::Unload()
@@ -46,28 +46,28 @@ void TextTestScreen::Unload()
 void TextTestScreen::Update(float dt)
 {
 	if (o2Input.IsKeyPressed('Q'))
-		mText.horAlign = HorAlign::Left;
+		mText.horAlign = o2::HorAlign::Left;
 
 	if (o2Input.IsKeyPressed('W'))
-		mText.horAlign = HorAlign::Middle;
+		mText.horAlign = o2::HorAlign::Middle;
 
 	if (o2Input.IsKeyPressed('E'))
-		mText.horAlign = HorAlign::Right;
+		mText.horAlign = o2::HorAlign::Right;
 
 	if (o2Input.IsKeyPressed('R'))
-		mText.horAlign = HorAlign::Both;
+		mText.horAlign = o2::HorAlign::Both;
 
 	if (o2Input.IsKeyPressed('A'))
-		mText.verAlign = VerAlign::Top;
+		mText.verAlign = o2::VerAlign::Top;
 
 	if (o2Input.IsKeyPressed('S'))
-		mText.verAlign = VerAlign::Middle;
+		mText.verAlign = o2::VerAlign::Middle;
 
 	if (o2Input.IsKeyPressed('D'))
-		mText.verAlign = VerAlign::Bottom;
+		mText.verAlign = o2::VerAlign::Bottom;
 
 	if (o2Input.IsKeyPressed('F'))
-		mText.verAlign = VerAlign::Both;
+		mText.verAlign = o2::VerAlign::Both;
 
 	if (o2Input.IsKeyPressed('G'))
 		mText.wordWrap = !mText.wordWrap;
@@ -83,16 +83,16 @@ void TextTestScreen::Draw()
 	mText.Draw();
 	mHandleMin.Draw();
 	mHandleMax.Draw();
-	o2Render.DrawLine(Vec2F(), Vec2F(1000, 0));
+	o2Render.DrawLine(o2::Vec2F(), o2::Vec2F(1000, 0));
 	o2Render.DrawRectFrame(mHandleMin.position, mHandleMax.position);
 }
 
-String TextTestScreen::GetId() const
+o2::String TextTestScreen::GetId() const
 {
 	return "TextTestScreen";
 }
 
-void TextTestScreen::OnHandleMoved(const Vec2F& pos)
+void TextTestScreen::OnHandleMoved(const o2::Vec2F& pos)
 {
-	mText.SetRect(RectF(mHandleMin.position, mHandleMax.position));
+	mText.SetRect(o2::RectF(mHandleMin.position, mHandleMax.position));
 }

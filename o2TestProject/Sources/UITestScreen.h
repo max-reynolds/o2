@@ -14,9 +14,9 @@ public:
 
 	void Update(float dt);
 	void Draw();
-	String GetId() const;
+	o2::String GetId() const;
 
 protected:
-	Sprite mBackground;
+	o2::Sprite mBackground;
 };
 

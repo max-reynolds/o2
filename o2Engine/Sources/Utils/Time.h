@@ -6,7 +6,7 @@
 #include "Utils/TimeStamp.h"
 
 // Time stuff access macros
-#define o2Time Time::Instance()
+#define o2Time o2::Time::Instance()
 
 namespace o2
 {

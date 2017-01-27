@@ -86,7 +86,8 @@ namespace o2
 				char t = str[ii1];
 				str[ii1] = '\0';
 				long x = strtol(str + ii, &pp, 16);
-				*(long*)(data + i) = x;
+                memcpy(data + i, &x, 4);
+				//*(long*)(data + i) = x;
 				str[ii1] = t;
 			}
 		}

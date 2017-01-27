@@ -15,7 +15,7 @@
 #endif
 
 // Application access macros
-#define o2Application Application::Instance()
+#define o2Application o2::Application::Instance()
 
 namespace o2
 {
@@ -71,7 +71,10 @@ namespace o2
 		virtual Time* GetTime() const;
 
 		// Launching application cycle
-		virtual void Launch();
+        virtual void Launch();
+        
+        // Processing frame update, drawing and input messages
+        virtual void ProcessFrame();
 
 		// Shutting down application
 		virtual void Shutdown();
@@ -143,23 +146,23 @@ namespace o2
 		static bool IsReady();
 
 	protected:
-		Assets*        mAssets;        // Assets
-		EventSystem*   mEventSystem;   // Events processing system
-		FileSystem*    mFileSystem;    // File system
-		Input*         mInput;         // While application user input message
-		LogStream*     mLog;           // Log stream with id "app", using only for application messages
-		ProjectConfig* mProjectConfig; // Project config
-		Render*        mRender;        // Graphics render
-		Scene*         mScene;         // Scene
-		TaskManager*   mTaskManager;   // Tasks manager
-		Time*          mTime;          // Time utilities
-		Timer*         mTimer;         // Timer for detecting delta time for update
-		UIManager*     mUIManager;     // UI manager
+		Assets*        mAssets = nullptr;          // Assets
+		EventSystem*   mEventSystem = nullptr;     // Events processing system
+		FileSystem*    mFileSystem = nullptr;      // File system
+		Input*         mInput = nullptr;           // While application user input message
+		LogStream*     mLog = nullptr;             // Log stream with id "app", using only for application messages
+		ProjectConfig* mProjectConfig = nullptr;   // Project config
+		Render*        mRender = nullptr;          // Graphics render
+		Scene*         mScene = nullptr;           // Scene
+		TaskManager*   mTaskManager = nullptr;     // Tasks manager
+		Time*          mTime = nullptr;            // Time utilities
+		Timer*         mTimer = nullptr;           // Timer for detecting delta time for update
+		UIManager*     mUIManager;                 // UI manager
 
-		bool           mReady;         // Is all systems is ready
+		bool           mReady = false;             // Is all systems is ready
 
-		bool           mCursorInfiniteModeEnabled; // Is cursor infinite mode enabled
-		bool           mCursorPositionCorrecting;  // True if cursor position corrected and delta will not apply
+		bool           mCursorInfiniteModeEnabled = false; // Is cursor infinite mode enabled
+		bool           mCursorPositionCorrecting = false;  // True if cursor position corrected and delta will not apply
 
 	protected:
 		// Calling on updating
@@ -192,15 +195,16 @@ namespace o2
 		// Deinitializing systems
 		void DeinitializeSystems();
 
-		// Processing frame update, drawing and input messages
-		virtual void ProcessFrame();
-
 		// Checks that cursor is near border and moves to opposite border if needs
 		void CheckCursorInfiniteMode();
 
 		// Initializes properties
 		void InitializeProperties();
 
-		friend class WndProcFunc;
+        friend class WndProcFunc;
+        
+#ifdef OSX
+        friend class IApplicationOSXBridge;
+#endif
 	};
 }

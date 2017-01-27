@@ -16,14 +16,14 @@ public:
 
 	void Update(float dt);
 	void Draw();
-	String GetId() const;
+	o2::String GetId() const;
 
 protected:
-	Sprite mBackground;
-	Sprite mFakeWindow;
-	DragHandle mHandleMin;
-	DragHandle mHandleMax;
-	Text mText;
+	o2::Sprite mBackground;
+	o2::Sprite mFakeWindow;
+	o2::DragHandle mHandleMin;
+	o2::DragHandle mHandleMax;
+	o2::Text mText;
 
-	void OnHandleMoved(const Vec2F& pos);
+	void OnHandleMoved(const o2::Vec2F& pos);
 };

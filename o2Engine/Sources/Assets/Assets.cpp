@@ -27,7 +27,7 @@ namespace o2
 
 		LoadAssetTypes();
 
-		if (ASSETS_PREBUILDING_ENABLE && false)
+		if (ASSETS_PREBUILDING_ENABLE)
 			RebuildAssets();
 		else
 			LoadAssetsTree();

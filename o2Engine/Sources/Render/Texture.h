@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Render/Windows/TextureBase.h"
+#include "Render/OpenGL.h"
 #include "Utils/Math/Vector2.h"
 #include "Utils/Property.h"
 #include "Utils/String.h"
@@ -14,7 +14,7 @@ namespace o2
 	// -------
 	// Texture
 	// -------
-	class Texture: public TextureBase
+	class Texture
 	{
 	public:
 		// Texture format
@@ -94,12 +94,15 @@ namespace o2
 
 	protected:
 		typedef Vector<TextureRef*> TextureRefsVec;
-
+        
+        GLuint         mHandle;       // Texture handle
+        GLuint         mFrameBuffer;  // Frame buffer for rendering into texture
+        
 		Vec2I          mSize;         // Size of texture
 		Format         mFormat;       // Texture format
 		Usage          mUsage;        // Texture usage
 		String         mFileName;     // Source file name
-		UID        mAtlasAssetId; // Atlas asset id. Equals 0 if it isn't atlas texture
+		UID            mAtlasAssetId; // Atlas asset id. Equals 0 if it isn't atlas texture
 		int            mAtlasPage;    // Atlas page
 		bool           mReady;        // Is texture ready to use
 		TextureRefsVec mRefs;         // Texture references
@@ -110,5 +113,6 @@ namespace o2
 
 		friend class Render;
 		friend class TextureRef;
+        friend class VectorFont;
 	};
 }
