@@ -37,8 +37,11 @@ void UITestScreen::Load()
 
 	mBackground.LoadFromImage("ui/UI_Background.png");
 	mBackground.size = (o2::Vec2I)o2Render.resolution + o2::Vec2I(30, 30);
+    mBackground.size = o2::Vec2F(100, 100);
 	o2Application.onResizingEvent += [&]() { mBackground.size = (o2::Vec2I)o2Render.resolution + o2::Vec2I(30, 30); };
 
+    return;
+    
 	auto window = o2UI.CreateWindow("UI elements samples");
 	o2UI.AddWidget(window);
 	window->layout.size = o2::Vec2F(300, 300);
@@ -252,6 +255,7 @@ void UITestScreen::Update(float dt)
 void UITestScreen::Draw()
 {
 	mBackground.Draw();
+    //o2Render.DrawRectFrame(o2::Vec2F(-100, -100), o2::Vec2F(100, 100));
 }
 
 o2::String UITestScreen::GetId() const

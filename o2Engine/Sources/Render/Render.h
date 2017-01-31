@@ -203,6 +203,8 @@ namespace o2
 
 		// Returns scissor infos at current frame
 		const ScissorInfosVec& GetScissorInfos() const;
+        
+        GLuint            mDefaultBuffer;
 
 	protected:
 		typedef Vector<Texture*> TexturesVec;
@@ -211,6 +213,9 @@ namespace o2
         
         GLuint            mStdShader;                      // Standard shader program
         GLint             mStdShaderMvpUniformIdx;         // Standard shader matrix input parameter
+        GLuint            mVertexArrayObject;              // Batch vertex array object
+        GLuint            mVertexBufferObject;             // Batch vercities buffer
+        GLuint            mIndexBufferObject;              // Batch polygons indexes buffer
         
         UInt8*            mVertexData = nullptr;           // Vertex data buffer
         UInt16*           mVertexIndexData = nullptr;      // Index data buffer

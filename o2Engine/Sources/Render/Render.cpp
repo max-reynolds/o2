@@ -16,35 +16,64 @@ namespace o2
     
     void Render::Initialize()
     {
-        mVertexBufferSize = USHRT_MAX;
-        mIndexBufferSize = USHRT_MAX;
-        
         InitializeProperties();
         
-        // Create log stream
         mLog = mnew LogStream("Render");
         o2Debug.GetLog()->BindStream(mLog);
         
-        // Initialize OpenGL
-        mLog->Out("Initializing OpenGL render..");
+        mVertexBufferSize = USHRT_MAX;
+        mIndexBufferSize = USHRT_MAX;
         
         mResolution = o2Application.GetContentSize();
         
-        // Check compatibles
-        CheckCompatibles();
-        
-        // Initialize buffers
         mVertexData = new UInt8[mVertexBufferSize*sizeof(Vertex2)];
-        
         mVertexIndexData = new UInt16[mIndexBufferSize];
         mLastDrawVertex = 0;
         mTrianglesCount = 0;
         mCurrentPrimitiveType = GL_TRIANGLES;
         
+        Vertex2 vtx[] = {
+            Vertex2(0, 100, 1, 0xffffffff, 0, 0),
+            Vertex2(100, 100, -1, 0xffffffff, 0, 0),
+            Vertex2(0, 0, 1, 0xffffffff, 0, 0)
+        };
+        
+        memcpy(mVertexData, vtx, 3*sizeof(Vertex2));
+        
+        UInt16 idx[] = { 0, 2, 1 };
+        memcpy(mVertexIndexData, idx, 3*sizeof(UInt16));
+        
+        mDefaultBuffer = 0;
+        
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-                
+        
         glLineWidth(1.0f);
+        
+        glDisable(GL_DEPTH_TEST);
+        glDisable(GL_CULL_FACE);
+        
+        glGenVertexArrays(1, &mVertexArrayObject);
+        glBindVertexArray(mVertexArrayObject);
+        
+        glGenBuffers(1, &mVertexBufferObject);
+        glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferObject);
+        glBufferData(GL_ARRAY_BUFFER, mVertexBufferSize * sizeof(Vertex2), &mVertexData, GL_STREAM_DRAW);
+        
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex2), (char*)NULL);
+        
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 1, GL_UNSIGNED_INT, GL_FALSE, sizeof(Vertex2), (char*)NULL + 12);
+        
+        glEnableVertexAttribArray(2);
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2), (char*)NULL + 16);
+        
+        glGenBuffers(1, &mIndexBufferObject);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferObject);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferSize * sizeof(unsigned short), &mVertexIndexData, GL_STREAM_DRAW);
+        
+        InitializeStdShader();
         
         GL_CHECK_ERROR(mLog);
         
@@ -61,14 +90,12 @@ namespace o2
         
         GL_CHECK_ERROR(mLog);
         
-        InitializeStdShader();
-        
         mReady = true;
     }
     
     void Render::InitializeStdShader()
     {
-        const char* fragShader = "                                              \n \
+        const char* fragShader = "                                         \n \
         #if __VERSION__ >= 140                                             \n \
         in vec2      varTexcoord;                                          \n \
         out vec4     fragColor;                                            \n \
@@ -82,13 +109,15 @@ namespace o2
         void main (void)                                                   \n \
         {                                                                  \n \
         #if __VERSION__ >= 140                                             \n \
-            fragColor = texture(diffuseTexture, varTexcoord.st, 0.0);      \n \
+            fragColor = vec4(1, 1, 1, 1);                                  \n \
         #else                                                              \n \
             gl_FragColor = texture2D(diffuseTexture, varTexcoord.st, 0.0); \n \
         #endif                                                             \n \
         }";
         
-        const char* vtxShader = "                                      \n \
+        //  fragColor = texture(diffuseTexture, varTexcoord.st, 0.0);      \n
+        
+        const char* vtxShader = "                                 \n \
         uniform mat4 modelViewProjectionMatrix;                   \n \
                                                                   \n \
         #if __VERSION__ >= 140                                    \n \
@@ -115,6 +144,7 @@ namespace o2
 	void Render::OnFrameResized()
 	{
 		mResolution = o2Application.GetContentSize();
+        mCurrentResolution = mResolution;
 	}
 
 	void Render::InitializeFreeType()
@@ -167,7 +197,34 @@ namespace o2
 		glGetIntegerv(GL_MAX_TEXTURE_SIZE, &mMaxTextureSize.x);
 		mMaxTextureSize.y = mMaxTextureSize.x;
 	}
-
+    
+    void mtxMultiply(float* ret, const float* lhs, const float* rhs)
+    {
+        // [ 0 4  8 12 ]   [ 0 4  8 12 ]
+        // [ 1 5  9 13 ] x [ 1 5  9 13 ]
+        // [ 2 6 10 14 ]   [ 2 6 10 14 ]
+        // [ 3 7 11 15 ]   [ 3 7 11 15 ]
+        ret[ 0] = lhs[ 0]*rhs[ 0] + lhs[ 4]*rhs[ 1] + lhs[ 8]*rhs[ 2] + lhs[12]*rhs[ 3];
+        ret[ 1] = lhs[ 1]*rhs[ 0] + lhs[ 5]*rhs[ 1] + lhs[ 9]*rhs[ 2] + lhs[13]*rhs[ 3];
+        ret[ 2] = lhs[ 2]*rhs[ 0] + lhs[ 6]*rhs[ 1] + lhs[10]*rhs[ 2] + lhs[14]*rhs[ 3];
+        ret[ 3] = lhs[ 3]*rhs[ 0] + lhs[ 7]*rhs[ 1] + lhs[11]*rhs[ 2] + lhs[15]*rhs[ 3];
+        
+        ret[ 4] = lhs[ 0]*rhs[ 4] + lhs[ 4]*rhs[ 5] + lhs[ 8]*rhs[ 6] + lhs[12]*rhs[ 7];
+        ret[ 5] = lhs[ 1]*rhs[ 4] + lhs[ 5]*rhs[ 5] + lhs[ 9]*rhs[ 6] + lhs[13]*rhs[ 7];
+        ret[ 6] = lhs[ 2]*rhs[ 4] + lhs[ 6]*rhs[ 5] + lhs[10]*rhs[ 6] + lhs[14]*rhs[ 7];
+        ret[ 7] = lhs[ 3]*rhs[ 4] + lhs[ 7]*rhs[ 5] + lhs[11]*rhs[ 6] + lhs[15]*rhs[ 7];
+        
+        ret[ 8] = lhs[ 0]*rhs[ 8] + lhs[ 4]*rhs[ 9] + lhs[ 8]*rhs[10] + lhs[12]*rhs[11];
+        ret[ 9] = lhs[ 1]*rhs[ 8] + lhs[ 5]*rhs[ 9] + lhs[ 9]*rhs[10] + lhs[13]*rhs[11];
+        ret[10] = lhs[ 2]*rhs[ 8] + lhs[ 6]*rhs[ 9] + lhs[10]*rhs[10] + lhs[14]*rhs[11];
+        ret[11] = lhs[ 3]*rhs[ 8] + lhs[ 7]*rhs[ 9] + lhs[11]*rhs[10] + lhs[15]*rhs[11];
+        
+        ret[12] = lhs[ 0]*rhs[12] + lhs[ 4]*rhs[13] + lhs[ 8]*rhs[14] + lhs[12]*rhs[15];
+        ret[13] = lhs[ 1]*rhs[12] + lhs[ 5]*rhs[13] + lhs[ 9]*rhs[14] + lhs[13]*rhs[15];
+        ret[14] = lhs[ 2]*rhs[12] + lhs[ 6]*rhs[13] + lhs[10]*rhs[14] + lhs[14]*rhs[15];
+        ret[15] = lhs[ 3]*rhs[12] + lhs[ 7]*rhs[13] + lhs[11]*rhs[14] + lhs[15]*rhs[15];
+    }
+    
 	void Render::Begin()
 	{
 		if (!mReady)
@@ -191,20 +248,38 @@ namespace o2
         
         glUseProgram(mStdShader);
 
-		// Reset view matrices
 		SetupViewMatrix(mResolution);
-
 		UpdateCameraTransforms();
         
         GL_CHECK_ERROR(mLog);
+        
+        Clear(Color4::Red());
 	}
 
 	void Render::DrawPrimitives()
 	{
 		if (mLastDrawVertex < 1)
-			return;
-
-		glDrawElements(mCurrentPrimitiveType, mLastDrawIdx, GL_UNSIGNED_SHORT, mVertexIndexData);
+            return;
+        
+        Vertex2* x = 0;
+        
+        /*glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferObject);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, mLastDrawIdx * sizeof(unsigned short), &mVertexIndexData, GL_STATIC_DRAW);
+        
+        glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferObject);
+        glBufferData(GL_ARRAY_BUFFER, mLastDrawVertex * sizeof(Vertex2), &mVertexData, GL_STATIC_DRAW);*/
+        
+        
+        // Index buffer
+        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferObject);
+        
+        glBindVertexArray(mVertexArrayObject);
+        
+        // Draw the triangles !
+        glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, 0);
+        
+        //
+        //glDrawElements(mCurrentPrimitiveType, mLastDrawIdx, GL_UNSIGNED_SHORT, mVertexIndexData);
 
 		GL_CHECK_ERROR(mLog);
 
@@ -282,39 +357,14 @@ namespace o2
 	{
 		return mCamera;
 	}
-    
-    void mtxMultiply(float* ret, const float* lhs, const float* rhs)
-    {
-        // [ 0 4  8 12 ]   [ 0 4  8 12 ]
-        // [ 1 5  9 13 ] x [ 1 5  9 13 ]
-        // [ 2 6 10 14 ]   [ 2 6 10 14 ]
-        // [ 3 7 11 15 ]   [ 3 7 11 15 ]
-        ret[ 0] = lhs[ 0]*rhs[ 0] + lhs[ 4]*rhs[ 1] + lhs[ 8]*rhs[ 2] + lhs[12]*rhs[ 3];
-        ret[ 1] = lhs[ 1]*rhs[ 0] + lhs[ 5]*rhs[ 1] + lhs[ 9]*rhs[ 2] + lhs[13]*rhs[ 3];
-        ret[ 2] = lhs[ 2]*rhs[ 0] + lhs[ 6]*rhs[ 1] + lhs[10]*rhs[ 2] + lhs[14]*rhs[ 3];
-        ret[ 3] = lhs[ 3]*rhs[ 0] + lhs[ 7]*rhs[ 1] + lhs[11]*rhs[ 2] + lhs[15]*rhs[ 3];
-        
-        ret[ 4] = lhs[ 0]*rhs[ 4] + lhs[ 4]*rhs[ 5] + lhs[ 8]*rhs[ 6] + lhs[12]*rhs[ 7];
-        ret[ 5] = lhs[ 1]*rhs[ 4] + lhs[ 5]*rhs[ 5] + lhs[ 9]*rhs[ 6] + lhs[13]*rhs[ 7];
-        ret[ 6] = lhs[ 2]*rhs[ 4] + lhs[ 6]*rhs[ 5] + lhs[10]*rhs[ 6] + lhs[14]*rhs[ 7];
-        ret[ 7] = lhs[ 3]*rhs[ 4] + lhs[ 7]*rhs[ 5] + lhs[11]*rhs[ 6] + lhs[15]*rhs[ 7];
-        
-        ret[ 8] = lhs[ 0]*rhs[ 8] + lhs[ 4]*rhs[ 9] + lhs[ 8]*rhs[10] + lhs[12]*rhs[11];
-        ret[ 9] = lhs[ 1]*rhs[ 8] + lhs[ 5]*rhs[ 9] + lhs[ 9]*rhs[10] + lhs[13]*rhs[11];
-        ret[10] = lhs[ 2]*rhs[ 8] + lhs[ 6]*rhs[ 9] + lhs[10]*rhs[10] + lhs[14]*rhs[11];
-        ret[11] = lhs[ 3]*rhs[ 8] + lhs[ 7]*rhs[ 9] + lhs[11]*rhs[10] + lhs[15]*rhs[11];
-        
-        ret[12] = lhs[ 0]*rhs[12] + lhs[ 4]*rhs[13] + lhs[ 8]*rhs[14] + lhs[12]*rhs[15];
-        ret[13] = lhs[ 1]*rhs[12] + lhs[ 5]*rhs[13] + lhs[ 9]*rhs[14] + lhs[13]*rhs[15];
-        ret[14] = lhs[ 2]*rhs[12] + lhs[ 6]*rhs[13] + lhs[10]*rhs[14] + lhs[14]*rhs[15];
-        ret[15] = lhs[ 3]*rhs[12] + lhs[ 7]*rhs[13] + lhs[11]*rhs[14] + lhs[15]*rhs[15];
-    }
 
 	void Render::UpdateCameraTransforms()
 	{
 		DrawPrimitives();
-
+        
+        mCurrentResolution.Set(100, 100);
 		Vec2F resf = (Vec2F)mCurrentResolution;
+        
         
         mCurrentResolution = resf;
         float projMat[16];
@@ -728,15 +778,16 @@ namespace o2
 			mCurrentPrimitiveType = GL_TRIANGLES;
 
 			if (mLastDrawTexture)
-			{
-				glEnable(GL_TEXTURE_2D);
+            {
+                glActiveTexture(GL_TEXTURE0);
 				glBindTexture(GL_TEXTURE_2D, mLastDrawTexture->mHandle);
 
 				GL_CHECK_ERROR(mLog);
 			}
 			else
 			{
-				glDisable(GL_TEXTURE_2D);
+                //glActiveTexture(0);
+				//glDisable(GL_TEXTURE_2D);
 			}
 		}
 
