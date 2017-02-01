@@ -2,6 +2,7 @@
 
 #import "TestApplication.h"
 #import "Application/OSX/ApplicationBridge.h"
+#include "Utils/Bitmap.h"
 #import <OpenGL/gl3.h>
 
 @interface ViewController ()
@@ -168,6 +169,8 @@ GLuint programID;
 GLuint vertexbuffer;
 GLuint VertexArrayID;
 GLuint MatrixID;
+GLuint textureID;
+GLuint TextureIDs;
 - (void) initGL
 {
     [[self openGLContext] makeCurrentContext];
@@ -198,17 +201,26 @@ GLuint MatrixID;
     {
         float x, y, z;
         unsigned int clr;
+        //char r, g, b, a;
         float u, v;
         
         vtx() {}
         vtx(float x, float y, float z, unsigned int clr, float u, float v):x(x), y(y), z(z), clr(clr), u(u), v(v) {}
+        //vtx(float x, float y, float z, char r, char g, char b, char a, float u, float v):x(x), y(y), z(z), r(r), g(g), b(b), a(a), u(u), v(v) {}
     };
     
     static const vtx g_vertex_buffer_data2[] = {
-        vtx(0.0f, 0.0f, 0.0f, 0xff0000ff, 0, 0),
-        vtx(100.0f, 0.0f, 0.0f, 0x000000ff, 1, 0),
-        vtx(0.0f,  100.0f, 0.0f, 0x000000ff, 0, 1)
+//        vtx(0.0f, 0.0f, 0.0f, 0, 0, 0, 150, 0, 0),
+//        vtx(100.0f, 0.0f, 0.0f, 0, 0, 0, 150, 1, 0),
+//        vtx(0.0f,  100.0f, 0.0f, 0, 0, 0, 150, 0, 1)
+        
+        vtx(0.0f, 0.0f, 0.0f, 0xffffffff, 0, 0),
+        vtx(100.0f, 0.0f, 0.0f, 0x33ffffff, 1, 0),
+        vtx(0.0f,  100.0f, 0.0f, 0xffffffff, 0, 1)
     };
+    
+    o2::Bitmap bitmap;
+    bitmap.Load("../../../Assets/ui/UI_Background.png");
     
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -236,6 +248,7 @@ GLuint MatrixID;
                           );
     
     glEnableVertexAttribArray(1);
+    
     glVertexAttribPointer(
                           1,                  // Атрибут 0. Подробнее об этом будет рассказано в части, посвященной шейдерам.
                           4,                  // Размер
@@ -244,6 +257,14 @@ GLuint MatrixID;
                           sizeof(vtx),                  // Шаг
                           (void*)12            // Смещение массива в буфере
                           );
+//    glVertexAttribPointer(
+//                          1,                  // Атрибут 0. Подробнее об этом будет рассказано в части, посвященной шейдерам.
+//                          4,                  // Размер
+//                          GL_UNSIGNED_BYTE,           // Тип
+//                          GL_TRUE,           // Указывает, что значения не нормализованы
+//                          sizeof(vtx),                  // Шаг
+//                          (void*)12            // Смещение массива в буфере
+//                          );
     
     glEnableVertexAttribArray(2);
     glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
@@ -260,7 +281,18 @@ GLuint MatrixID;
     glUseProgram(programID);
     MatrixID = glGetUniformLocation(programID, "MVP");
     
+    glGenTextures(1, &textureID);
     
+    // "Bind" the newly created texture : all future texture functions will modify this texture
+    glBindTexture(GL_TEXTURE_2D, textureID);
+    
+    // Give the image to OpenGL
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bitmap.GetSize().x, bitmap.GetSize().y, 0, GL_RGBA, GL_UNSIGNED_BYTE, bitmap.GetData());
+    
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    
+    TextureIDs  = glGetUniformLocation(programID, "myTextureSampler");
 }
 
 - (void)reshape
@@ -320,7 +352,7 @@ void mtxMultiply(float* ret, const float* lhs, const float* rhs)
     
     //application->ProcessFrame();
     
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     
@@ -403,6 +435,11 @@ void mtxMultiply(float* ret, const float* lhs, const float* rhs)
     mtxMultiply(mvp, projMat, pp);
     
     glUniformMatrix4fv(MatrixID, 1, GL_FALSE, mvp);
+    
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, textureID);
+    // Set our "myTextureSampler" sampler to user Texture Unit 0
+    glUniform1i(TextureIDs, 0);
     
     glDrawArrays(GL_TRIANGLES, 0, 3);
     
