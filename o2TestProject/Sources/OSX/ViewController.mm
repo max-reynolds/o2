@@ -168,6 +168,7 @@ GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path
 GLuint programID;
 GLuint vertexbuffer;
 GLuint VertexArrayID;
+GLuint indexBufferID;
 GLuint MatrixID;
 GLuint textureID;
 GLuint TextureIDs;
@@ -215,9 +216,12 @@ GLuint TextureIDs;
 //        vtx(0.0f,  100.0f, 0.0f, 0, 0, 0, 150, 0, 1)
         
         vtx(0.0f, 0.0f, 0.0f, 0xffffffff, 0, 0),
-        vtx(100.0f, 0.0f, 0.0f, 0x33ffffff, 1, 0),
-        vtx(0.0f,  100.0f, 0.0f, 0xffffffff, 0, 1)
+        vtx(100.0f, 0.0f, 0.0f, 0xffffffff, 1, 0),
+        vtx(0.0f,  100.0f, 0.0f, 0xffffffff, 0, 1),
+        vtx(100.0f,  100.0f, 0.0f, 0xffffffff, 0, 1)
     };
+    
+    unsigned short indexes[] = { 0, 2, 1, 1, 3, 2 };
     
     o2::Bitmap bitmap;
     bitmap.Load("../../../Assets/ui/UI_Background.png");
@@ -234,10 +238,10 @@ GLuint TextureIDs;
     glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
     
     // Передадим информацию о вершинах в OpenGL
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vtx)*3, g_vertex_buffer_data2, GL_STREAM_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vtx)*4, g_vertex_buffer_data2, GL_STREAM_DRAW);
     
     glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+    //glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
     glVertexAttribPointer(
                           0,                  // Атрибут 0. Подробнее об этом будет рассказано в части, посвященной шейдерам.
                           3,                  // Размер
@@ -293,6 +297,12 @@ GLuint TextureIDs;
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     
     TextureIDs  = glGetUniformLocation(programID, "myTextureSampler");
+    
+    glGenBuffers(1, &indexBufferID);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned short), &indexes[0], GL_STREAM_DRAW);
+    
+    
 }
 
 - (void)reshape
@@ -441,7 +451,15 @@ void mtxMultiply(float* ret, const float* lhs, const float* rhs)
     // Set our "myTextureSampler" sampler to user Texture Unit 0
     glUniform1i(TextureIDs, 0);
     
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    //glDrawArrays(GL_TRIANGLES, 0, 3);
+    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
+    
+    glDrawElements(
+                   GL_TRIANGLES,      // mode
+                   6,    // count
+                   GL_UNSIGNED_SHORT,   // type
+                   (void*)0           // element array buffer offset
+                   );
     
     CGLFlushDrawable([[self openGLContext] CGLContextObj]);
     CGLUnlockContext([[self openGLContext] CGLContextObj]);

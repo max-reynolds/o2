@@ -28,22 +28,10 @@ namespace o2
         
         mVertexData = new UInt8[mVertexBufferSize*sizeof(Vertex2)];
         mVertexIndexData = new UInt16[mIndexBufferSize];
+        
         mLastDrawVertex = 0;
         mTrianglesCount = 0;
         mCurrentPrimitiveType = GL_TRIANGLES;
-        
-        Vertex2 vtx[] = {
-            Vertex2(0, 100, 1, 0xffffffff, 0, 0),
-            Vertex2(100, 100, -1, 0xffffffff, 0, 0),
-            Vertex2(0, 0, 1, 0xffffffff, 0, 0)
-        };
-        
-        memcpy(mVertexData, vtx, 3*sizeof(Vertex2));
-        
-        UInt16 idx[] = { 0, 2, 1 };
-        memcpy(mVertexIndexData, idx, 3*sizeof(UInt16));
-        
-        mDefaultBuffer = 0;
         
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -61,17 +49,20 @@ namespace o2
         glBufferData(GL_ARRAY_BUFFER, mVertexBufferSize * sizeof(Vertex2), &mVertexData, GL_STREAM_DRAW);
         
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex2), (char*)NULL);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex2), &((Vertex2*)0)->x);
         
         glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 1, GL_UNSIGNED_INT, GL_FALSE, sizeof(Vertex2), (char*)NULL + 12);
+        glVertexAttribPointer(1, 1, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex2), &((Vertex2*)0)->color);
         
         glEnableVertexAttribArray(2);
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2), (char*)NULL + 16);
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2), &((Vertex2*)0)->tu);
         
         glGenBuffers(1, &mIndexBufferObject);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferObject);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferSize * sizeof(unsigned short), &mVertexIndexData, GL_STREAM_DRAW);
+        
+        delete[] mVertexData;
+        delete[] mVertexIndexData;
         
         InitializeStdShader();
         
@@ -95,50 +86,42 @@ namespace o2
     
     void Render::InitializeStdShader()
     {
-        const char* fragShader = "                                         \n \
-        #if __VERSION__ >= 140                                             \n \
-        in vec2      varTexcoord;                                          \n \
-        out vec4     fragColor;                                            \n \
-        #else                                                              \n \
-        varying vec2 varTexcoord;                                          \n \
-        #endif                                                             \n \
-                                                                           \n \
-        uniform sampler2D diffuseTexture;                                  \n \
-                                                                           \n \
-                                                                           \n \
-        void main (void)                                                   \n \
-        {                                                                  \n \
-        #if __VERSION__ >= 140                                             \n \
-            fragColor = vec4(1, 1, 1, 1);                                  \n \
-        #else                                                              \n \
-            gl_FragColor = texture2D(diffuseTexture, varTexcoord.st, 0.0); \n \
-        #endif                                                             \n \
+        const char* fragShader = "                                 \n \
+        out vec4 color;                                            \n \
+                                                                   \n \
+        in vec4 fragmentColor;                                     \n \
+        in vec2 UV;                                                \n \
+                                                                   \n \
+        uniform sampler2D textureSampler;                          \n \
+                                                                   \n \
+        void main()                                                \n \
+        {                                                          \n \
+            color = fragmentColor*texture( textureSampler, UV );   \n \
         }";
         
-        //  fragColor = texture(diffuseTexture, varTexcoord.st, 0.0);      \n
-        
-        const char* vtxShader = "                                 \n \
-        uniform mat4 modelViewProjectionMatrix;                   \n \
-                                                                  \n \
-        #if __VERSION__ >= 140                                    \n \
-        in vec4  inPosition;                                      \n \
-        in vec2  inTexcoord;                                      \n \
-        out vec2 varTexcoord;                                     \n \
-        #else                                                     \n \
-        attribute vec4 inPosition;                                \n \
-        attribute vec2 inTexcoord;                                \n \
-        varying vec2 varTexcoord;                                 \n \
-        #endif                                                    \n \
-                                                                  \n \
-        void main (void)                                          \n \
-        {                                                         \n \
-            gl_Position	= modelViewProjectionMatrix * inPosition; \n \
-            varTexcoord = inTexcoord;                             \n \
-        }                                                         \n \
-        ";
+        const char* vtxShader = "                                  \n \
+        uniform mat4 modelViewProjectionMatrix;                    \n \
+                                                                   \n \
+        layout(location = 0) in vec3 vertexPosition_modelspace;    \n \
+        layout(location = 1) in vec4 vertexColor;                  \n \
+        layout(location = 2) in vec2 vertexUV;                     \n \
+                                                                   \n \
+        out vec4 fragmentColor;                                    \n \
+        out vec2 UV;                                               \n \
+                                                                   \n \
+        uniform mat4 MVP;                                          \n \
+                                                                   \n \
+        void main(){                                               \n \
+            gl_Position = MVP * vec4(vertexPosition_modelspace,1); \n \
+            fragmentColor = vertexColor;                           \n \
+            UV = vertexUV;                                         \n \
+        }";
         
         mStdShader = BuildShaderProgram(vtxShader, fragShader);
-        mStdShaderMvpUniformIdx = glGetUniformLocation(mStdShader, "modelViewProjectionMatrix");
+        mStdShaderMvpUniform = glGetUniformLocation(mStdShader, "MVP");
+        mStdShaderTextureSample  = glGetUniformLocation(mStdShader, "textureSampler");
+        
+        glUseProgram(mStdShader);
     }
 
 	void Render::OnFrameResized()
@@ -182,17 +165,6 @@ namespace o2
 
 	void Render::CheckCompatibles()
 	{
-		//check render targets available
-		const char* extensions[] = { "GL_ARB_framebuffer_object", "GL_EXT_framebuffer_object", "GL_EXT_framebuffer_blit",
-			"GL_EXT_packed_depth_stencil" };
-
-		mRenderTargetsAvailable = true;
-		for (int i = 0; i < 4; i++)
-		{
-			if (!IsGLExtensionSupported(extensions[i]))
-				mRenderTargetsAvailable = false;
-		}
-
 		//get max texture size
 		glGetIntegerv(GL_MAX_TEXTURE_SIZE, &mMaxTextureSize.x);
 		mMaxTextureSize.y = mMaxTextureSize.x;
@@ -245,8 +217,6 @@ namespace o2
 		mStackScissors.Clear();
 
 		mClippingEverything = false;
-        
-        glUseProgram(mStdShader);
 
 		SetupViewMatrix(mResolution);
 		UpdateCameraTransforms();
@@ -261,25 +231,7 @@ namespace o2
 		if (mLastDrawVertex < 1)
             return;
         
-        Vertex2* x = 0;
-        
-        /*glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferObject);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, mLastDrawIdx * sizeof(unsigned short), &mVertexIndexData, GL_STATIC_DRAW);
-        
-        glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferObject);
-        glBufferData(GL_ARRAY_BUFFER, mLastDrawVertex * sizeof(Vertex2), &mVertexData, GL_STATIC_DRAW);*/
-        
-        
-        // Index buffer
-        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferObject);
-        
-        glBindVertexArray(mVertexArrayObject);
-        
-        // Draw the triangles !
-        glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, 0);
-        
-        //
-        //glDrawElements(mCurrentPrimitiveType, mLastDrawIdx, GL_UNSIGNED_SHORT, mVertexIndexData);
+        glDrawElements(GL_TRIANGLES, mLastDrawIdx, GL_UNSIGNED_SHORT, (void*)0);
 
 		GL_CHECK_ERROR(mLog);
 
@@ -291,14 +243,7 @@ namespace o2
 
 	void Render::SetupViewMatrix(const Vec2I& viewSize)
 	{
-//		mCurrentResolution = viewSize;
-//		float projMat[16];
-//		Math::OrthoProjMatrix(projMat, 0.0f, (float)viewSize.x, (float)viewSize.y, 0.0f, 0.0f, 10.0f);
-//		//glMatrixMode(GL_PROJECTION);
-//		//glLoadIdentity();
-//		glViewport(0, 0, viewSize.x, viewSize.y);
-//		//glLoadMatrixf(projMat);
-        
+		mCurrentResolution = viewSize;
 		UpdateCameraTransforms();
 	}
 
@@ -362,24 +307,19 @@ namespace o2
 	{
 		DrawPrimitives();
         
-        mCurrentResolution.Set(100, 100);
-		Vec2F resf = (Vec2F)mCurrentResolution;
-        
-        
-        mCurrentResolution = resf;
         float projMat[16];
-        Math::OrthoProjMatrix(projMat, 0.0f, (float)resf.x, (float)resf.y, 0.0f, 0.0f, 10.0f);
-        glViewport(0, 0, resf.x, resf.y);
+        Math::OrthoProjMatrix(projMat, 0.0f, (float)mCurrentResolution.x, (float)mCurrentResolution.y, 0.0f, 0.0f, 10.0f);
+        glViewport(0, 0, mCurrentResolution.x, mCurrentResolution.y);
 
 		float modelMatrix[16] =
 		{
 			1,           0,            0, 0,
 			0,          -1,            0, 0,
 			0,           0,            1, 0,
-			Math::Round(resf.x*0.5f), Math::Round(resf.y*0.5f), -1, 1
+			Math::Round(mCurrentResolution.x*0.5f), Math::Round(mCurrentResolution.y*0.5f), -1, 1
 		};
 
-		Basis defaultCameraBasis((Vec2F)mCurrentResolution*-0.5f, Vec2F::Right()*resf.x, Vec2F().Up()*resf.y);
+		Basis defaultCameraBasis((Vec2F)mCurrentResolution*-0.5f, Vec2F::Right()*mCurrentResolution.x, Vec2F().Up()*mCurrentResolution.y);
 		Basis camTransf = mCamera.GetBasis().Inverted()*defaultCameraBasis;
 
 		float camTransfMatr[16] =
@@ -391,11 +331,11 @@ namespace o2
 		};
 
         float mvp[16];
-        float pp[16];
-        mtxMultiply(pp, modelMatrix, camTransfMatr);
-        mtxMultiply(mvp, projMat, pp);
+        float finalCamMtx[16];
+        mtxMultiply(finalCamMtx, modelMatrix, camTransfMatr);
+        mtxMultiply(mvp, projMat, finalCamMtx);
         
-        glUniformMatrix4fv(mStdShaderMvpUniformIdx, 1, GL_FALSE, mvp);
+        glUniformMatrix4fv(mStdShaderMvpUniform, 1, GL_FALSE, mvp);
         
         GL_CHECK_ERROR(mLog);
 	}
@@ -780,14 +720,18 @@ namespace o2
 			if (mLastDrawTexture)
             {
                 glActiveTexture(GL_TEXTURE0);
-				glBindTexture(GL_TEXTURE_2D, mLastDrawTexture->mHandle);
+                glBindTexture(GL_TEXTURE_2D, mLastDrawTexture->mHandle);
+                glUniform1i(mStdShaderTextureSample, 0);
 
 				GL_CHECK_ERROR(mLog);
 			}
 			else
-			{
-                //glActiveTexture(0);
-				//glDisable(GL_TEXTURE_2D);
+            {
+                glActiveTexture(GL_TEXTURE0);
+                glBindTexture(GL_TEXTURE_2D, 0);
+                glUniform1i(mStdShaderTextureSample, 0);
+                
+                GL_CHECK_ERROR(mLog);
 			}
 		}
 
