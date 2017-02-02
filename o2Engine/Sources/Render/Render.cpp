@@ -52,7 +52,7 @@ namespace o2
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex2), &((Vertex2*)0)->x);
         
         glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 1, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex2), &((Vertex2*)0)->color);
+        glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex2), &((Vertex2*)0)->color);
         
         glEnableVertexAttribArray(2);
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2), &((Vertex2*)0)->tu);
@@ -93,7 +93,7 @@ namespace o2
                                                                    \n \
         void main()                                                \n \
         {                                                          \n \
-            color = texture( textureSampler, UV );   \n \
+            color = fragmentColor*texture( textureSampler, UV );   \n \
         }";
         
         const char* vtxShader = "#version 330 core                 \n \
