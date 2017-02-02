@@ -40,7 +40,7 @@ void UITestScreen::Load()
     mBackground.size = o2::Vec2F(100, 100);
 	o2Application.onResizingEvent += [&]() { mBackground.size = (o2::Vec2I)o2Render.resolution + o2::Vec2I(30, 30); };
 
-    return;
+    //return;
     
 	auto window = o2UI.CreateWindow("UI elements samples");
 	o2UI.AddWidget(window);

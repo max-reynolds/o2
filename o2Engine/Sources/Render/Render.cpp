@@ -61,9 +61,6 @@ namespace o2
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferObject);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferSize * sizeof(unsigned short), &mVertexIndexData, GL_STREAM_DRAW);
         
-        delete[] mVertexData;
-        delete[] mVertexIndexData;
-        
         InitializeStdShader();
         
         GL_CHECK_ERROR(mLog);
@@ -86,7 +83,7 @@ namespace o2
     
     void Render::InitializeStdShader()
     {
-        const char* fragShader = "                                 \n \
+        const char* fragShader = "#version 330 core                \n \
         out vec4 color;                                            \n \
                                                                    \n \
         in vec4 fragmentColor;                                     \n \
@@ -96,10 +93,10 @@ namespace o2
                                                                    \n \
         void main()                                                \n \
         {                                                          \n \
-            color = fragmentColor*texture( textureSampler, UV );   \n \
+            color = texture( textureSampler, UV );   \n \
         }";
         
-        const char* vtxShader = "                                  \n \
+        const char* vtxShader = "#version 330 core                 \n \
         uniform mat4 modelViewProjectionMatrix;                    \n \
                                                                    \n \
         layout(location = 0) in vec3 vertexPosition_modelspace;    \n \
@@ -231,7 +228,25 @@ namespace o2
 		if (mLastDrawVertex < 1)
             return;
         
-        glDrawElements(GL_TRIANGLES, mLastDrawIdx, GL_UNSIGNED_SHORT, (void*)0);
+        GLfloat* mapVertexBuffer = (GLfloat*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_WRITE);
+        
+        if (mapVertexBuffer)
+        {
+            memcpy(mapVertexBuffer, mVertexData, sizeof(Vertex2)*mLastDrawVertex);
+            glUnmapBuffer(GL_ARRAY_BUFFER);
+        }
+        else GL_CHECK_ERROR(mLog);
+        
+        GLfloat* mapIndexBuffer = (GLfloat*)glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_READ_WRITE);
+        
+        if (mapIndexBuffer)
+        {
+            memcpy(mapIndexBuffer, mVertexIndexData, sizeof(UInt16)*mLastDrawIdx);
+            glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
+        }
+        else GL_CHECK_ERROR(mLog);
+        
+        glDrawElements(mCurrentPrimitiveType, mLastDrawIdx, GL_UNSIGNED_SHORT, (void*)0);
 
 		GL_CHECK_ERROR(mLog);
 
@@ -880,122 +895,52 @@ namespace o2
 
     GLuint Render::BuildShaderProgram(const char* vertexSource, const char* fragmentSource)
     {
-        GLuint prgName;
-        GLint logLength, status;
-        GLchar* sourceString = NULL;
+        GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
+        GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
         
-        float  glLanguageVersion;
-        sscanf((char *)glGetString(GL_SHADING_LANGUAGE_VERSION), "%f", &glLanguageVersion);
+        GLint Result = GL_FALSE;
+        int InfoLogLength;
         
-        GLuint version = 100 * glLanguageVersion;
-        const GLsizei versionStringSize = sizeof("#version 123\n");
+        glShaderSource(VertexShaderID, 1, &vertexSource , NULL);
+        glCompileShader(VertexShaderID);
         
-        prgName = glCreateProgram();
-        
-        glBindAttribLocation(prgName, 0, "inPosition");
-        glBindAttribLocation(prgName, 1, "inTexcoord");
-        
-        sourceString = (GLchar*)malloc(strlen(vertexSource) + versionStringSize);
-        
-        sprintf(sourceString, "#version %d\n%s", version, vertexSource);
-        
-        GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vertexShader, 1, (const GLchar **)&(sourceString), NULL);
-        glCompileShader(vertexShader);
-        glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &logLength);
-        
-        if (logLength > 0)
-        {
-            GLchar *log = (GLchar*) malloc(logLength);
-            glGetShaderInfoLog(vertexShader, logLength, &logLength, log);
-            mLog->Out((String)"Vtx Shader compile log:\n" + log);
-            free(log);
+        // Выполняем проверку Вершинного шейдера
+        glGetShaderiv(VertexShaderID, GL_COMPILE_STATUS, &Result);
+        glGetShaderiv(VertexShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+        if ( InfoLogLength > 0 ){
+            std::vector<char> VertexShaderErrorMessage(InfoLogLength+1);
+            glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
+            fprintf(stdout, "%s \n", &VertexShaderErrorMessage[0]);
         }
         
-        glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &status);
-        if (status == 0)
-        {
-            mLog->Error((String)"Failed to compile vtx shader:\n" + sourceString);
-            return 0;
+        glShaderSource(FragmentShaderID, 1, &fragmentSource , NULL);
+        glCompileShader(FragmentShaderID);
+        
+        glGetShaderiv(FragmentShaderID, GL_COMPILE_STATUS, &Result);
+        glGetShaderiv(FragmentShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+        if ( InfoLogLength > 0 ){
+            std::vector<char> FragmentShaderErrorMessage(InfoLogLength+1);
+            glGetShaderInfoLog(FragmentShaderID, InfoLogLength, NULL, &FragmentShaderErrorMessage[0]);
+            fprintf(stdout, "%s \n", &FragmentShaderErrorMessage[0]);
         }
         
-        free(sourceString);
-        sourceString = NULL;
+        GLuint ProgramID = glCreateProgram();
+        glAttachShader(ProgramID, VertexShaderID);
+        glAttachShader(ProgramID, FragmentShaderID);
+        glLinkProgram(ProgramID);
         
-        glAttachShader(prgName, vertexShader);
-        glDeleteShader(vertexShader);
-        
-        // fragment
-        sourceString = (GLchar*)malloc(strlen(fragmentSource) + versionStringSize);
-        sprintf(sourceString, "#version %d\n%s", version, fragmentSource);
-        
-        GLuint fragShader = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fragShader, 1, (const GLchar **)&(sourceString), NULL);
-        glCompileShader(fragShader);
-        glGetShaderiv(fragShader, GL_INFO_LOG_LENGTH, &logLength);
-        if (logLength > 0)
-        {
-            GLchar *log = (GLchar*)malloc(logLength);
-            glGetShaderInfoLog(fragShader, logLength, &logLength, log);
-            mLog->Out((String)"Frag Shader compile log:\n" + log);
-            free(log);
+        glGetProgramiv(ProgramID, GL_LINK_STATUS, &Result);
+        glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+        if ( InfoLogLength > 0 ){
+            std::vector<char> ProgramErrorMessage(InfoLogLength+1);
+            glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
+            fprintf(stdout, "%s \n", &ProgramErrorMessage[0]);
         }
         
-        glGetShaderiv(fragShader, GL_COMPILE_STATUS, &status);
-        if (status == 0)
-        {
-            mLog->Error((String)"Failed to compile frag shader:\n" + sourceString);
-            return 0;
-        }
+        glDeleteShader(VertexShaderID);
+        glDeleteShader(FragmentShaderID);
         
-        free(sourceString);
-        sourceString = NULL;
-        
-        glAttachShader(prgName, fragShader);
-        glDeleteShader(fragShader);
-        
-        glLinkProgram(prgName);
-        glGetProgramiv(prgName, GL_INFO_LOG_LENGTH, &logLength);
-        if (logLength > 0)
-        {
-            GLchar *log = (GLchar*)malloc(logLength);
-            glGetProgramInfoLog(prgName, logLength, &logLength, log);
-            mLog->Out((String)"Program link log:\n" + log);
-            free(log);
-        }
-        
-        glGetProgramiv(prgName, GL_LINK_STATUS, &status);
-        if (status == 0)
-        {
-            mLog->Error("Failed to link program");
-            return 0;
-        }
-        
-        glValidateProgram(prgName);
-        
-        glGetProgramiv(prgName, GL_VALIDATE_STATUS, &status);
-        if (status == 0)
-            mLog->Error("Program cannot run with current OpenGL State");
-        
-        glGetProgramiv(prgName, GL_INFO_LOG_LENGTH, &logLength);
-        if (logLength > 0)
-        {
-            GLchar *log = (GLchar*)malloc(logLength);
-            glGetProgramInfoLog(prgName, logLength, &logLength, log);
-            mLog->Out((String)"Program validate log:\n" + log);
-            free(log);
-        }
-        
-        glUseProgram(prgName);
-        
-        GLint samplerLoc = glGetUniformLocation(prgName, "diffuseTexture");
-        
-        GLint unit = 0;
-        glUniform1i(samplerLoc, unit);
-        
-        GL_CHECK_ERROR(mLog);
-        
-        return prgName;
+        return ProgramID;
     }
 
 	TextureRef Render::GetRenderTexture() const
