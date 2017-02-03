@@ -28,8 +28,7 @@ void TestApplication::OnStarted()
 
 void TestApplication::OnUpdate(float dt)
 {
-	o2Application.windowCaption = o2::String::Format("FPS: %i dt: %f (%vi) DC: %i", (int)o2Time.GetFPS(), o2Time.GetDeltaTime(),
-												     (o2::Vec2I)o2Input.GetCursorPos(), o2Render.GetDrawCallsCount());
+	o2Application.windowCaption = o2::String::Format("FPS: %i DC: %i", (int)o2Time.GetFPS(), o2Render.GetDrawCallsCount());
 
 	/*if (o2Input.IsKeyPressed('Z'))
 	{

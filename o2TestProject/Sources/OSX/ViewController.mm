@@ -97,17 +97,19 @@ static CVReturn DisplayLinkCallback(CVDisplayLinkRef displayLink,
     application->Launch();
     
     applicationBridge->OnViewDidLayout();
+    
+    [[self window] setAcceptsMouseMovedEvents:YES];
 }
 
 - (void)reshape
 {
     [super reshape];
     
-    CGLLockContext([[self openGLContext] CGLContextObj]);
+    //CGLLockContext([[self openGLContext] CGLContextObj]);
     
     applicationBridge->OnViewDidLayout();
     
-    CGLUnlockContext([[self openGLContext] CGLContextObj]);
+    //CGLUnlockContext([[self openGLContext] CGLContextObj]);
 }
 
 
@@ -127,10 +129,48 @@ static CVReturn DisplayLinkCallback(CVDisplayLinkRef displayLink,
     [[self openGLContext] makeCurrentContext];
     CGLLockContext([[self openGLContext] CGLContextObj]);
     
+    applicationBridge->ApplyInputMessages();
     application->ProcessFrame();
     
     CGLFlushDrawable([[self openGLContext] CGLContextObj]);
     CGLUnlockContext([[self openGLContext] CGLContextObj]);
+}
+
+- (void)mouseDown:(NSEvent *)event
+{
+    NSPoint pt = [self convertPoint:[event locationInWindow] fromView:nil];
+    NSRect viewRectPoints = [self bounds];
+    NSRect viewRectPixels = [self convertRectToBacking:viewRectPoints];
+    applicationBridge->CursorPressed(o2::Vec2F(o2::Math::Floor(pt.x - viewRectPixels.size.width/2),
+                                               o2::Math::Floor(pt.y - viewRectPixels.size.height/2)));
+}
+
+- (void)mouseDragged:(NSEvent *)event {
+    
+    NSPoint pt = [self convertPoint:[event locationInWindow] fromView:nil];
+    NSRect viewRectPoints = [self bounds];
+    NSRect viewRectPixels = [self convertRectToBacking:viewRectPoints];
+    applicationBridge->SetCursorPos(o2::Vec2F(o2::Math::Floor(pt.x - viewRectPixels.size.width/2),
+                                              o2::Math::Floor(pt.y - viewRectPixels.size.height/2)));
+}
+
+- (void)mouseMoved:(NSEvent *)event
+{
+    NSPoint pt = [self convertPoint:[event locationInWindow] fromView:nil];
+    NSRect viewRectPoints = [self bounds];
+    NSRect viewRectPixels = [self convertRectToBacking:viewRectPoints];
+    applicationBridge->SetCursorPos(o2::Vec2F(o2::Math::Floor(pt.x - viewRectPixels.size.width/2),
+                                              o2::Math::Floor(pt.y - viewRectPixels.size.height/2)));
+}
+
+- (void)mouseUp:(NSEvent *)event
+{
+    applicationBridge->CursorReleased();
+}
+
+- (BOOL)acceptsFirstResponder {
+    
+    return YES;
 }
 
 - (void) dealloc

@@ -176,7 +176,7 @@ namespace o2
     void Application::SetWindowCaption(const String& caption)
     {
         mWndCaption = caption;
-        //SetWindowText(mHWnd, mWndCaption.Data());
+        mOSXBridge->SetWindowCaption(caption);
     }
     
     String Application::GetWindowCaption() const

@@ -204,11 +204,11 @@ namespace o2
 				UInt dstIdx = (mSize.y - 1 - (y + position.y))*mSize.x + x + position.x;
 
 				Color4 srcColor, src1Color;
-				srcColor.SetABGR(*(ULong*)(mData + dstIdx*pixelSize));
-				src1Color.SetABGR(*(ULong*)(img->mData + srcIdx*pixelSize));
+				srcColor.SetABGR(*(UInt*)(mData + dstIdx*pixelSize));
+				src1Color.SetABGR(*(UInt*)(img->mData + srcIdx*pixelSize));
 
 				Color4 resColor = srcColor.BlendByAlpha(src1Color);
-				ULong uresColor = resColor.ABGR();
+				UInt uresColor = resColor.ABGR();
 
 				memcpy(mData + dstIdx*pixelSize, &uresColor, pixelSize);
 			}
@@ -223,9 +223,9 @@ namespace o2
 		for (int x = 0; x < mSize.x*mSize.y; x++)
 		{
 			Color4 c;
-			c.SetABGR(*(ULong*)(mData + x*curbpp));
+			c.SetABGR(*(UInt*)(mData + x*curbpp));
 			c *= color;
-			*(ULong*)(mData + x*curbpp) = c.ABGR();
+			*(UInt*)(mData + x*curbpp) = c.ABGR();
 		}
 	}
 
@@ -250,12 +250,12 @@ namespace o2
 				Vec2F p = Vec2F((float)x, (float)y) - pxorigin;
 				float proj = p.Dot(dir);
 				float coef = Math::Clamp01(proj*invSize);
-				ULong offs = (y*mSize.x + x)*curbpp;
+				UInt offs = (y*mSize.x + x)*curbpp;
 
 				Color4 c;
-				c.SetABGR(*(ULong*)(mData + offs));
+				c.SetABGR(*(UInt*)(mData + offs));
 				c *= Math::Lerp(color1, color4, coef);
-				*(ULong*)(mData + offs) = c.ABGR();
+				*(UInt*)(mData + offs) = c.ABGR();
 			}
 		}
 	}
@@ -310,7 +310,7 @@ namespace o2
 						if (cx < 0 || cx >= mSize.x || cy < 0 || cy >= mSize.y)
 							continue;
 
-						c.SetARGB(*(ULong*)&srcData[(cy*mSize.x + cx)*curbpp]);
+						c.SetARGB(*(UInt*)&srcData[(cy*mSize.x + cx)*curbpp]);
 						float w = weightMap[ox][oy];
 						csum += c*w;
 						wSum += w;
@@ -318,7 +318,7 @@ namespace o2
 				}
 
 				csum /= wSum;
-				ULong ucsum = csum.ARGB();
+				UInt ucsum = csum.ARGB();
 				memcpy(&mData[(y*mSize.x + x)*curbpp], &ucsum, curbpp);
 			}
 		}
@@ -351,7 +351,7 @@ namespace o2
 				int count = 0;
 				Color4 pc;
 				UInt offs = (y*mSize.x + x)*curbpp;
-				pc.SetABGR(*(ULong*)&srcData[offs]);
+				pc.SetABGR(*(UInt*)&srcData[offs]);
 
 				for (int ox = 0; ox < fullmapSize; ox++)
 				{
@@ -364,7 +364,7 @@ namespace o2
 							continue;
 
 						Color4 c;
-						c.SetABGR(*(ULong*)&srcData[(cy*mSize.x + cx)*curbpp]);
+						c.SetABGR(*(UInt*)&srcData[(cy*mSize.x + cx)*curbpp]);
 						if (c.a > alphaThreshold)
 						{
 							int dst = fx*fx + fy*fy;
@@ -381,7 +381,7 @@ namespace o2
 				if (sqrDist < radiusSquare - 2 && false)
 				{
 					Color4 newColor = pc.BlendByAlpha(color);
-					ULong unewColor = newColor.ABGR();
+					UInt unewColor = newColor.ABGR();
 					memcpy(&mData[offs], &unewColor, curbpp);
 
 				}
@@ -396,7 +396,7 @@ namespace o2
 						Color4 newColor = color;
 						newColor.a = (int)((float)newColor.a*alpha);
 						newColor = pc.BlendByAlpha(color);
-						ULong unewColor = newColor.ABGR();
+						UInt unewColor = newColor.ABGR();
 						memcpy(&mData[offs], &unewColor, curbpp);
 					}
 				}

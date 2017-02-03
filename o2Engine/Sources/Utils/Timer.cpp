@@ -44,16 +44,30 @@ namespace o2
 #ifdef OSX
     void Timer::Reset()
     {
+        gettimeofday(&mStartTime, NULL);
+        gettimeofday(&mLastElapsedTime, NULL);
     }
     
     float Timer::GetTime()
     {
-        return 0;
+        struct timeval now;
+        gettimeofday(&now, NULL);
+        float deltaTime = (now.tv_sec - mStartTime.tv_sec)*1000 + (now.tv_usec - mStartTime.tv_usec)/1000.0f;
+        deltaTime /= 1000.0f;
+        mLastElapsedTime = now;
+        
+        return deltaTime;
     }
     
     float Timer::GetDeltaTime()
     {
-        return 0;
+        struct timeval now;
+        gettimeofday(&now, NULL);
+        float deltaTime = (now.tv_sec - mLastElapsedTime.tv_sec)*1000 + (now.tv_usec - mLastElapsedTime.tv_usec)/1000.0f;
+        deltaTime /= 1000.0f;
+        mLastElapsedTime = now;
+        
+        return deltaTime;
     }
 #endif
 }

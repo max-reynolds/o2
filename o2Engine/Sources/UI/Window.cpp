@@ -13,6 +13,7 @@ namespace o2
 	UIWindow::UIWindow():
 		UIScrollArea(), DrawableCursorEventsListener(this)
 	{
+        layout = UIWidgetLayout::Based(BaseCorner::Center, Vec2F(200, 200));
 		InitializeHandles();
 		InitializeProperties();
 	}

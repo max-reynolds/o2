@@ -23,6 +23,57 @@ namespace o2
         //[NSApp terminate:self];
     }
     
+    void ApplicationOSXBridge::ApplyInputMessages()
+    {
+        for (auto msg : mInputMessages)
+        {
+            msg->Apply();
+            delete msg;
+        }
+        
+        mInputMessages.Clear();
+    }
+    
+    void ApplicationOSXBridge::CursorPressed(const Vec2F& pos)
+    {
+        InputCursorPressedMsg* msg = new InputCursorPressedMsg();
+        msg->position = pos;
+        mInputMessages.Add(msg);
+    }
+    
+    void ApplicationOSXBridge::SetCursorPos(const Vec2F& pos)
+    {
+        InputCursorMovedMsg* msg = new InputCursorMovedMsg();
+        msg->position = pos;
+        mInputMessages.Add(msg);
+    }
+
+    void ApplicationOSXBridge::CursorReleased()
+    {
+        InputCursorReleasedMsg* msg = new InputCursorReleasedMsg();
+        mInputMessages.Add(msg);
+    }
+    
+    void ApplicationOSXBridge::SetWindowCaption(const String& caption)
+    {
+        [[mViewController window] setTitle:[NSString stringWithUTF8String:caption.Data()]];
+    }
+    
+    void ApplicationOSXBridge::InputCursorPressedMsg::Apply()
+    {
+        o2Input.CursorPressed(position);
+    }
+    
+    void ApplicationOSXBridge::InputCursorMovedMsg::Apply()
+    {
+        o2Input.SetCursorPos(position);
+    }
+    
+    void ApplicationOSXBridge::InputCursorReleasedMsg::Apply()
+    {
+        o2Input.CursorReleased();
+    }
+    
     void IApplicationOSXBridge::OnViewDidLayout()
     {
         o2Application.mWindowedSize = GetContentSize();

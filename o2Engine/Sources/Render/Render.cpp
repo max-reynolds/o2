@@ -21,8 +21,8 @@ namespace o2
         mLog = mnew LogStream("Render");
         o2Debug.GetLog()->BindStream(mLog);
         
-        mVertexBufferSize = USHRT_MAX;
-        mIndexBufferSize = USHRT_MAX;
+        mVertexBufferSize = 2000;
+        mIndexBufferSize = 2000*3;
         
         mResolution = o2Application.GetContentSize();
         
@@ -46,7 +46,7 @@ namespace o2
         
         glGenBuffers(1, &mVertexBufferObject);
         glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferObject);
-        glBufferData(GL_ARRAY_BUFFER, mVertexBufferSize * sizeof(Vertex2), &mVertexData, GL_STREAM_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, mVertexBufferSize * sizeof(Vertex2), &mVertexData, GL_DYNAMIC_DRAW);
         
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex2), &((Vertex2*)0)->x);
@@ -59,7 +59,9 @@ namespace o2
         
         glGenBuffers(1, &mIndexBufferObject);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferObject);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferSize * sizeof(unsigned short), &mVertexIndexData, GL_STREAM_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferSize * sizeof(unsigned short), &mVertexIndexData, GL_DYNAMIC_DRAW);
+        
+        //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
         
         InitializeStdShader();
         
@@ -213,7 +215,10 @@ namespace o2
 		mScissorInfos.Clear();
 		mStackScissors.Clear();
 
-		mClippingEverything = false;
+        mClippingEverything = false;
+        
+        mMapVertexData = (Vertex2*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+        mMapVertexIndexData = (UInt16*)glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY);
 
 		SetupViewMatrix(mResolution);
 		UpdateCameraTransforms();
@@ -228,7 +233,7 @@ namespace o2
 		if (mLastDrawVertex < 1)
             return;
         
-        GLfloat* mapVertexBuffer = (GLfloat*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_WRITE);
+        /*GLfloat* mapVertexBuffer = (GLfloat*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
         
         if (mapVertexBuffer)
         {
@@ -237,16 +242,33 @@ namespace o2
         }
         else GL_CHECK_ERROR(mLog);
         
-        GLfloat* mapIndexBuffer = (GLfloat*)glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_READ_WRITE);
+        GLfloat* mapIndexBuffer = (GLfloat*)glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY);
         
         if (mapIndexBuffer)
         {
             memcpy(mapIndexBuffer, mVertexIndexData, sizeof(UInt16)*mLastDrawIdx);
             glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
         }
-        else GL_CHECK_ERROR(mLog);
+        else GL_CHECK_ERROR(mLog);*/
+        
+        /*glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferObject);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, mLastDrawVertex * sizeof(Vertex2), &mVertexData);
+        GL_CHECK_ERROR(mLog);
+        
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferObject);
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, mLastDrawIdx * sizeof(unsigned short), &mVertexIndexData);
+        GL_CHECK_ERROR(mLog);*/
+        
+        //memcpy(mMapVertexData, mVertexData, sizeof(Vertex2)*mLastDrawVertex);
+        //memcpy(mMapVertexIndexData, mVertexIndexData, sizeof(UInt16)*mLastDrawIdx);
+        
+        glUnmapBuffer(GL_ARRAY_BUFFER);
+        glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
         
         glDrawElements(mCurrentPrimitiveType, mLastDrawIdx, GL_UNSIGNED_SHORT, (void*)0);
+        
+        mMapVertexData = (Vertex2*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+        mMapVertexIndexData = (UInt16*)glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY);
 
 		GL_CHECK_ERROR(mLog);
 
@@ -276,7 +298,10 @@ namespace o2
 		GL_CHECK_ERROR(mLog);
 
 		CheckTexturesUnloading();
-		CheckFontsUnloading();
+        CheckFontsUnloading();
+        
+        glUnmapBuffer(GL_ARRAY_BUFFER);
+        glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
 	}
 
 	void Render::Clear(const Color4& color /*= Color4::Blur()*/)
@@ -751,11 +776,11 @@ namespace o2
 		}
 
 		// Copy data
-		memcpy(&mVertexData[mLastDrawVertex*sizeof(Vertex2)], mesh->vertices, sizeof(Vertex2)*mesh->vertexCount);
+		memcpy(&mMapVertexData[mLastDrawVertex], mesh->vertices, sizeof(Vertex2)*mesh->vertexCount);
 
 		for (UInt i = mLastDrawIdx, j = 0; j < mesh->polyCount * 3; i++, j++)
 		{
-			mVertexIndexData[i] = mLastDrawVertex + mesh->indexes[j];
+			mMapVertexIndexData[i] = mLastDrawVertex + mesh->indexes[j];
 		}
 
 		mTrianglesCount += mesh->polyCount;
@@ -803,15 +828,15 @@ namespace o2
 
 			mLastDrawTexture = NULL;
 			mCurrentPrimitiveType = GL_LINES;
-			glDisable(GL_TEXTURE_2D);
+			//glDisable(GL_TEXTURE_2D);
 		}
 
 		// Copy data
-		memcpy(&mVertexData[mLastDrawVertex*sizeof(Vertex2)], verticies, sizeof(Vertex2)*count * 2);
+		memcpy(&mMapVertexData[mLastDrawVertex], verticies, sizeof(Vertex2)*count * 2);
 
 		for (UInt i = mLastDrawIdx, j = 0; j < (UInt)count * 2; i++, j++)
 		{
-			mVertexIndexData[i] = mLastDrawVertex + j;
+			mMapVertexIndexData[i] = mLastDrawVertex + j;
 		}
 
 		mTrianglesCount += count;

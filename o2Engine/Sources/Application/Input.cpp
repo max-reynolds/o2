@@ -2,6 +2,7 @@
 
 #include "Utils/Time.h"
 #include "Config/ProjectConfig.h"
+#include "Utils/Debug.h"
 
 namespace o2
 {
@@ -31,6 +32,8 @@ namespace o2
 
 	bool Input::IsKeyDown(KeyboardKey key) const
 	{
+        return key == VK_F1;
+        
 		for (auto ikey : mDownKeys)
 		{
 			if (ikey.keyCode == key)

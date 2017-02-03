@@ -91,7 +91,8 @@ namespace o2
 
 		OnUpdate(dt);
 
-		mUIManager->Update(dt);
+        mUIManager->Update(dt);
+        mEventSystem->PostUpdate();
 
 		mRender->Begin();
 		OnDraw();

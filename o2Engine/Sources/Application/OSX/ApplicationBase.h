@@ -10,6 +10,13 @@ namespace o2 {
     public:
         virtual Vec2I GetContentSize() const = 0;
         virtual void Shutdown() const = 0;
+        
+        virtual void CursorPressed(const Vec2F& pos) = 0;
+        virtual void SetCursorPos(const Vec2F& pos) = 0;
+        virtual void CursorReleased() = 0;
+        virtual void SetWindowCaption(const String& caption) = 0;
+
+        
         virtual void OnViewDidLayout();
         virtual void OnViewUnload();
     };

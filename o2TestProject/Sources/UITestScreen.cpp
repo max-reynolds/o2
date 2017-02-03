@@ -234,8 +234,8 @@ void UITestScreen::Load()
 	o2UI.AddWidget(labelTestWindow);
 	labelTestWindow->layout.size = o2::Vec2F(300, 300);
 
-	auto treeWnd = o2UI.AddWindow("Tree");
-	treeWnd->layout.size = o2::Vec2F(300, 300);
+//	auto treeWnd = o2UI.AddWindow("Tree");
+//	treeWnd->layout.size = o2::Vec2F(300, 300);
 }
 
 void UITestScreen::Unload()

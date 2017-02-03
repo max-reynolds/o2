@@ -218,6 +218,8 @@ namespace o2
         
         UInt8*            mVertexData = nullptr;           // Vertex data buffer
         UInt16*           mVertexIndexData = nullptr;      // Index data buffer
+        Vertex2*            mMapVertexData = nullptr;           // Vertex data buffer
+        UInt16*           mMapVertexIndexData = nullptr;      // Index data buffer
         UInt              mVertexBufferSize;               // Maximum size of vertex buffer
         UInt              mIndexBufferSize;                // Maximum size of index buffer
         GLenum            mCurrentPrimitiveType;           // Type of drawing primitives for next DIP

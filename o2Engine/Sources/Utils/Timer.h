@@ -4,6 +4,10 @@
 #include <Windows.h>
 #endif
 
+#ifdef OSX
+#include <sys/time.h>
+#endif
+
 namespace o2
 {
 	// ------------------------------------
@@ -33,6 +37,11 @@ namespace o2
 		LONGLONG      mLastElapsedTime;
 		LARGE_INTEGER mFrequency;
 		LARGE_INTEGER mStartTime;
+#endif
+        
+#ifdef OSX
+        struct timeval mLastElapsedTime;
+        struct timeval mStartTime;
 #endif
 	};
 }

@@ -51,13 +51,13 @@ namespace o2
 		inline void   Normalize();
 		inline Color4 Normalized() const;
 
-		inline ULong ARGB() const;
-		inline ULong ABGR() const;
-		inline ULong RGBA() const;
+		inline UInt ARGB() const;
+		inline UInt ABGR() const;
+		inline UInt RGBA() const;
 
-		inline void SetARGB(ULong color);
-		inline void SetABGR(ULong color);
-		inline void SetRGBA(ULong color);
+		inline void SetARGB(UInt color);
+		inline void SetABGR(UInt color);
+		inline void SetRGBA(UInt color);
 
 		inline Color4 BlendByAlpha(const Color4& other);
 
@@ -233,22 +233,22 @@ namespace o2
 					  Math::Clamp(a, 0, 255));
 	}
 
-	ULong Color4::ARGB() const
+	UInt Color4::ARGB() const
 	{
-		return (ULong)((a << 24) | (r << 16) | (g << 8) | b);
+		return (UInt)((a << 24) | (r << 16) | (g << 8) | b);
 	}
 
-	ULong Color4::ABGR() const
+	UInt Color4::ABGR() const
 	{
-		return (ULong)((a << 24) | (b << 16) | (g << 8) | r);
+		return (UInt)((a << 24) | (b << 16) | (g << 8) | r);
 	}
 
-	ULong Color4::RGBA() const
+	UInt Color4::RGBA() const
 	{
-		return (ULong)((r << 24) | (g << 16) | (b << 8) | a);
+		return (UInt)((r << 24) | (g << 16) | (b << 8) | a);
 	}
 
-	void Color4::SetARGB(ULong color)
+	void Color4::SetARGB(UInt color)
 	{
 		a = (int)(color >> 24);
 		r = (int)((color << 8) >> 24);
@@ -256,7 +256,7 @@ namespace o2
 		b = (int)((color << 24) >> 24);
 	}
 
-	void Color4::SetABGR(ULong color)
+	void Color4::SetABGR(UInt color)
 	{
 		a = (int)(color >> 24);
 		b = (int)((color << 8) >> 24);
@@ -264,7 +264,7 @@ namespace o2
 		r = (int)((color << 24) >> 24);
 	}
 
-	void Color4::SetRGBA(ULong color)
+	void Color4::SetRGBA(UInt color)
 	{
 		r = (int)(color >> 24);
 		g = (int)((color << 8) >> 24);

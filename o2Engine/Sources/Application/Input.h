@@ -229,6 +229,7 @@ namespace o2
 		void InitializeProperties();
 
 		friend class Application;
-		friend class WndProcFunc;
-	};
+        friend class WndProcFunc;
+        friend class ApplicationOSXBridge;
+    };
 }

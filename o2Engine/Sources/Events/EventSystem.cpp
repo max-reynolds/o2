@@ -221,7 +221,9 @@ namespace o2
 	void EventSystem::ProcessCursorPressed(const Input::Cursor& cursor)
 	{
 		for (auto listener : mCursorListeners)
+        {
 			listener->OnCursorPressed(cursor);
+        }
 
 		for (auto listener : mAreaCursorListeners)
 			if (!listener->IsUnderPoint(cursor.position))
@@ -237,7 +239,7 @@ namespace o2
 			listener->OnCursorDblClicked(cursor);
 		else
 		{
-			mPressedListeners.Add(cursor.id, listener);
+            mPressedListeners.Add(cursor.id, listener);
 			listener->OnCursorPressed(cursor);
 			listener->mIsPressed = true;
 			listener->mLastPressedTime = time;
