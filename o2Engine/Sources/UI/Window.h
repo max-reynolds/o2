@@ -47,9 +47,6 @@ namespace o2
 		// Removes window element widget
 		void RemoveWindowElement(UIWidget* widget);
 
-		// Removes all window elements widgets
-		void RemoveAllWindowElements();
-
 		// Sets icon sprite
 		virtual void SetIcon(Sprite* icon);
 
@@ -96,8 +93,6 @@ namespace o2
 	protected:
 		const char* mIconLayerPath = "icon";
 		const char* mCaptionLayerPath = "caption";
-
-		WidgetsVec           mWindowElements;            // Windows elements widgets @SERIALIZABLE
 
 		UIContextMenu*       mOptionsMenu;               // Window options context menu
 
@@ -190,7 +185,6 @@ CLASS_FIELDS_META(o2::UIWindow)
 	PUBLIC_FIELD(icon);
 	PROTECTED_FIELD(mIconLayerPath);
 	PROTECTED_FIELD(mCaptionLayerPath);
-	PROTECTED_FIELD(mWindowElements).SERIALIZABLE_ATTRIBUTE();
 	PROTECTED_FIELD(mOptionsMenu);
 	PROTECTED_FIELD(mBackCursorArea);
 	PROTECTED_FIELD(mHeadDragHandle);
@@ -230,7 +224,6 @@ CLASS_METHODS_META(o2::UIWindow)
 	PUBLIC_FUNCTION(void, ShowModal);
 	PUBLIC_FUNCTION(UIWidget*, AddWindowElement, UIWidget*);
 	PUBLIC_FUNCTION(void, RemoveWindowElement, UIWidget*);
-	PUBLIC_FUNCTION(void, RemoveAllWindowElements);
 	PUBLIC_FUNCTION(void, SetIcon, Sprite*);
 	PUBLIC_FUNCTION(Sprite*, GetIcon);
 	PUBLIC_FUNCTION(void, SetIconLayout, const Layout&);

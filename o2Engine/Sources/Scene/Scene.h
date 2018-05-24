@@ -177,6 +177,7 @@ namespace o2
 		friend class Actor;
 		friend class Application;
 		friend class DrawableComponent;
+		friend class UIWidget;
 	};
 
 	// -------------------------

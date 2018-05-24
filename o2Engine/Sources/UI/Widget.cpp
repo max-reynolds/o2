@@ -966,6 +966,8 @@ namespace o2
 		{
 			child->mParent = this;
 			child->mParentWidget = this;
+
+			o2Scene.mRootActors.Remove(child);
 		}
 
 		RetargetStatesAnimations();

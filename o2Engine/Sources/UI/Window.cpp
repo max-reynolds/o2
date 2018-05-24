@@ -29,13 +29,6 @@ namespace o2
 		mLeftBottomDragAreaLayout(other.mLeftBottomDragAreaLayout), mRightBottomDragAreaLayout(other.mRightBottomDragAreaLayout),
 		caption(this), icon(this)
 	{
-		for (auto elem : other.mWindowElements)
-		{
-			auto newElem = dynamic_cast<UIWidget*>(elem->Clone());
-			newElem->SetInternalParent(this, false);
-			mWindowElements.Add(newElem);
-		}
-
 		RestoreControls();
 		RetargetStatesAnimations();
 		SetLayoutDirty();
@@ -57,9 +50,6 @@ namespace o2
 			return;
 
 		UIScrollArea::Update(dt);
-
-		for (auto elem : mWindowElements)
-			elem->Update(dt);
 	}
 
 	void UIWindow::Draw()
@@ -80,20 +70,6 @@ namespace o2
 		mRightTopDragHandle.OnDrawn();
 		mLeftBottomDragHandle.OnDrawn();
 		mRightBottomDragHandle.OnDrawn();
-
-		for (auto elem : mWindowElements)
-			elem->Draw();
-
-//  		int clr = 0;
-//  		o2Render.DrawRectFrame(mHeadDragAreaRect, Color4::SomeColor(clr++));
-//  		o2Render.DrawRectFrame(mTopDragAreaRect, Color4::SomeColor(clr++));
-//  		o2Render.DrawRectFrame(mBottomDragAreaRect, Color4::SomeColor(clr++));
-//  		o2Render.DrawRectFrame(mLeftDragAreaRect, Color4::SomeColor(clr++));
-//  		o2Render.DrawRectFrame(mRightDragAreaRect, Color4::SomeColor(clr++));
-//  		o2Render.DrawRectFrame(mLeftTopDragAreaRect, Color4::SomeColor(clr++));
-//  		o2Render.DrawRectFrame(mRightTopDragAreaRect, Color4::SomeColor(clr++));
-//  		o2Render.DrawRectFrame(mLeftBottomDragAreaRect, Color4::SomeColor(clr++));
-//  		o2Render.DrawRectFrame(mRightBottomDragAreaRect, Color4::SomeColor(clr++));
 	}
 
 	void UIWindow::ShowModal()
@@ -104,26 +80,13 @@ namespace o2
 
 	UIWidget* UIWindow::AddWindowElement(UIWidget* widget)
 	{
-		widget->SetInternalParent(this, false);
-		mWindowElements.Add(widget);
-		SetLayoutDirty();
-
+		widget->SetInternalParent(this);
 		return widget;
 	}
 
 	void UIWindow::RemoveWindowElement(UIWidget* widget)
 	{
-		mWindowElements.Remove(widget);
 		delete widget;
-		SetLayoutDirty();
-	}
-
-	void UIWindow::RemoveAllWindowElements()
-	{
-		for (auto elem : mWindowElements)
-			delete elem;
-
-		SetLayoutDirty();
 	}
 
 	void UIWindow::SetIcon(Sprite* icon)
@@ -250,13 +213,6 @@ namespace o2
 		const UIWindow& other = dynamic_cast<const UIWindow&>(otherActor);
 
 		UIScrollArea::CopyData(other);
-
-		for (auto elem : other.mWindowElements)
-		{
-			auto newElem = dynamic_cast<UIWidget*>(elem->Clone());
-			newElem->SetInternalParent(this, false);
-			mWindowElements.Add(newElem);
-		}
 
 		mHeadDragAreaLayout        = other.mHeadDragAreaLayout;
 		mTopDragAreaLayout         = other.mTopDragAreaLayout;
@@ -390,9 +346,9 @@ namespace o2
 
 		mOptionsMenu->name = "options context";
 		InitializeContextItems();
-		AddWindowElement(mOptionsMenu);
+		mOptionsMenu->SetInternalParent(this, false);
 
-		UIButton* optionsBtn = dynamic_cast<UIButton*>(mWindowElements.FindMatch(
+		UIButton* optionsBtn = dynamic_cast<UIButton*>(mInternalWidgets.FindMatch(
 			[](UIWidget* x) { return x->GetName() == "optionsButton" && x->GetType() == TypeOf(UIButton); }));
 
 		if (optionsBtn)
@@ -406,18 +362,18 @@ namespace o2
 
 	void UIWindow::RestoreControls()
 	{
-		UIButton* closeBtn = dynamic_cast<UIButton*>(mWindowElements.FindMatch(
+		UIButton* closeBtn = dynamic_cast<UIButton*>(mInternalWidgets.FindMatch(
 			[](UIWidget* x) { return x->GetName() == "closeButton" && x->GetType() == TypeOf(UIButton); }));
 
 		if (closeBtn)
 			closeBtn->onClick += [&]() { Hide(); };
 
-		for (auto element : mWindowElements)
+		for (auto widget : mInternalWidgets)
 		{
-			if (element->GetName() == "options context" && element->GetType() == TypeOf(UIContextMenu))
+			if (widget->GetName() == "options context" && widget->GetType() == TypeOf(UIContextMenu))
 			{
-				mWindowElements.Remove(element);
-				delete element;
+				mInternalWidgets.Remove(widget);
+				delete widget;
 				break;
 			}
 		}
