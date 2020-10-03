@@ -3,53 +3,12 @@
 
 #include "o2/Utils/Types/Containers/Map.h"
 #include "o2/Utils/Serialization/DataValue.h"
-#include "o2/Utils/Basic/IObject.h"
-#include "o2/Utils/Reflection/Reflection.h"
-#include "o2/Utils/Types/String.h"
 #include "o2/Utils/Singleton.h"
+
+#include "o2/Utils/Serialization/ISerializable.h"
 
 namespace o2
 {
-	// -----------------------------
-	// Serializable object interface
-	// -----------------------------
-	class ISerializable: public IObject
-	{
-	public:
-		// Serializing object into data node
-		virtual void Serialize(DataValue& node) const {}
-
-		// Deserializing object from data node
-		virtual void Deserialize(const DataValue& node) {};
-
-		// Serializes data to string
-		String SerializeToString() const;
-
-		// Deserializes data from string
-		void DeserializeFromString(const String& str);
-
-		// Assign operator from data node
-		ISerializable& operator=(const DataValue& node) { return *this; };
-
-		// DataDocument converting operator
-		operator DataDocument() const { return DataDocument(); }
-
-		// Beginning serialization callback
-		virtual void OnSerialize(DataValue& node) const {}
-
-		// Completion deserialization callback
-		virtual void OnDeserialized(const DataValue& node) {}
-
-		IOBJECT(ISerializable);
-
-	protected:
-		// Serializing object into data node
-		void SerializeBasic(const IObject& thisObject, DataValue& node) const;
-
-		// Deserializing object from data node
-		void DeserializeBasic(IObject& thisObject, const DataValue& node);
-	};
-
 	// ----------------------------
 	// Serializable field attribute
 	// ----------------------------

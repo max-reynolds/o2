@@ -26,6 +26,9 @@ namespace o2
 	{
 		node.Get(thisObject);
 	}
+
+    ISerializable::operator DataDocument() const { return DataDocument(); }
+
 }
 
 DECLARE_CLASS(o2::ISerializable);
