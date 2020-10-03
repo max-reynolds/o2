@@ -10,6 +10,16 @@
 namespace o2
 {
 void
+Application::InitializePlatform()
+{
+}
+
+void
+Application::CheckCursorInfiniteMode()
+{
+}
+
+void
 Application::Initialize()
 {
 }
@@ -17,6 +27,7 @@ Application::Initialize()
 void
 Application::Launch()
 {
+    mLog->Out("Application launched!");
 }
 
 void

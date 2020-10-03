@@ -2,6 +2,21 @@ cmake_minimum_required(VERSION 3.17)
 project(Framework)
 
 find_package(PNG REQUIRED)
+find_package(Freetype REQUIRED)
+
+
+file(GLOB_RECURSE PUGI_SOURCES
+    ${CMAKE_CURRENT_LIST_DIR}/../../3rdPartyLibs/pugixml/*.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/../../3rdPartyLibs/pugixml/*.h
+)
+
+add_library(pugi STATIC
+    ${PUGI_SOURCES}
+)
+
+set_property(TARGET pugi PROPERTY POSITION_INDEPENDENT_CODE ON)
+
+
 
 file(GLOB_RECURSE Framework_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/../../Sources/*.cpp
@@ -19,11 +34,12 @@ target_include_directories(Framework
         $<BUILD_INTERFACE:${FrameworkRoot}/Sources>
         $<BUILD_INTERFACE:${FrameworkRoot}/3rdPartyLibs>
         $<BUILD_INTERFACE:${FrameworkRoot}/3rdPartyLibs/rapidjson/include>
-        $<BUILD_INTERFACE:${FrameworkRoot}/3rdPartyLibs/FreeType/include>
         $<BUILD_INTERFACE:${FrameworkRoot}>
+        $<BUILD_INTERFACE:${FREETYPE_INCLUDE_DIRS}>
 )
 
 target_link_libraries(Framework
     PUBLIC
-        png
+        png ${FREETYPE_LIBRARIES}
+        Box2D pugi
 )

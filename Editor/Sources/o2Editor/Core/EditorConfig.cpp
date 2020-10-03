@@ -12,6 +12,9 @@
 #include "o2Editor/Core/WindowsSystem/IEditorWindow.h"
 #include "o2Editor/Core/WindowsSystem/WindowsManager.h"
 
+namespace o2 {
+    DECLARE_SINGLETON(Editor::EditorConfig);
+}
 
 namespace Editor
 {

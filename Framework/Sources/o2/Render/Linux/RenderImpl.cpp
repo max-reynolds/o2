@@ -19,6 +19,14 @@
 
 namespace o2
 {
+Render::Render()
+{
+}
+
+Render::~Render()
+{
+}
+
 void
 Render::EnableStencilTest()
 {
@@ -41,6 +49,47 @@ Render::EnableScissorTest(const RectI &rect)
 
 void
 Render::DisableScissorTest(bool forcible /*= false*/)
+{
+}
+
+void
+Render::BindRenderTexture(TextureRef renderTarget)
+{
+}
+
+void
+Render::DrawBuffer(
+    PrimitiveType primitiveType,
+    Vertex2 *vertices,
+    UInt verticesCount,
+    UInt16 *indexes,
+    UInt elementsCount,
+    const TextureRef &texture)
+{
+}
+
+void
+Render::Begin()
+{
+}
+
+void
+Render::End()
+{
+}
+
+void
+Render::UpdateCameraTransforms()
+{
+}
+
+void
+Render::UnbindRenderTexture()
+{
+}
+
+void
+Render::Clear(const Color4 &color)
 {
 }
 }

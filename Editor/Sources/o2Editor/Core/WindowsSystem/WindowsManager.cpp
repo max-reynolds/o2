@@ -16,6 +16,10 @@
 #include "o2Editor/Core/WindowsSystem/DockableWindow.h"
 #include "o2Editor/Core/WindowsSystem/IEditorWindow.h"
 
+namespace o2 {
+    DECLARE_SINGLETON(Editor::WindowsManager);
+}
+
 namespace Editor
 {
 	WindowsManager::WindowsManager()

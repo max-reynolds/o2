@@ -1,7 +1,15 @@
 #pragma once
 
-#include "3rdPartyLibs/FreeType/include/ft2build.h"
+#if defined(PLATFORM_LINUX)
+extern "C"
+{
+    #include "ft2build.h"
+    #include FT_FREETYPE_H
+}
+#else
+#include "ft2build.h"
 #include FT_FREETYPE_H
+#endif
 
 #include "o2/Render/TextureRef.h"
 #include "o2/Utils/Types/CommonTypes.h"

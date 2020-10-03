@@ -1,7 +1,15 @@
 #pragma once
 
+#if defined(PLATFORM_LINUX)
+extern "C"
+{
+    #include "ft2build.h"
+    #include FT_FREETYPE_H
+}
+#else
 #include "ft2build.h"
 #include FT_FREETYPE_H
+#endif
 
 #if defined(PLATFORM_WINDOWS)
 #include "o2/Render/Windows/RenderBase.h"

@@ -20,6 +20,9 @@
 #include "o2Editor/SceneWindow/SceneEditScreen.h"
 #include "EditorApplication.h"
 
+namespace o2 {
+    DECLARE_SINGLETON(Editor::ToolsPanel);
+}
 
 namespace Editor
 {
