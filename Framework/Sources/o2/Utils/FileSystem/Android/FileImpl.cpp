@@ -1,11 +1,11 @@
-#include "stdafx.h"
+#include "o2/stdafx.h"
 
-#if defined PLATFORM_ANDROID || true
+#if defined PLATFORM_ANDROID
 
-#include "Utils/FileSystem/File.h"
+#include "o2/Utils/FileSystem/File.h"
 
-#include "Utils/Reflection/Reflection.h"
-#include "Utils/FileSystem/FileSystem.h"
+#include "o2/Utils/Reflection/Reflection.h"
+#include "o2/Utils/FileSystem/FileSystem.h"
 
 namespace o2
 {
