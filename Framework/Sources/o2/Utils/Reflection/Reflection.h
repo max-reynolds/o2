@@ -23,7 +23,13 @@ namespace o2
 
 	class ReflectionInitializationTypeProcessor;
 	class FieldInfo;
-	class FunctionInfo;
+    class FunctionInfo;
+    class StaticFunctionInfo;
+
+    template<typename _type>
+    class FundamentalTypeContainer;
+    template<typename _type>
+    class EnumTypeContainer;
 
 	class IObject;
 

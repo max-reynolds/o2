@@ -111,6 +111,12 @@ namespace o2
 		std::is_same<T, WString>::value ||
 		std::is_same<T, UID>::value ||
 		std::is_same<T, DataValue>::value, std::true_type, std::false_type>::type {};
+
+    // --------------------
+    // Dummy type container
+    // --------------------
+    struct DummyType { static Type* type; };
+
 }
 
 #include "o2/Utils/Reflection/Type.h"
@@ -156,7 +162,7 @@ namespace o2
 		}
 		else
 		{
-			return *Type::Dummy::type;
+            return *DummyType::type;
 		}
 	}
 }

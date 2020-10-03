@@ -35,10 +35,10 @@ namespace o2
                                                                                                                                                                       \
 		NAME##_PROPERTY& operator=(const NAME##_PROPERTY& value) { _this->SETTER(value.Get()); return *this; }	                                                      \
 																										                                                              \
-		template<typename X = typename std::enable_if<SupportsEqualOperator<valueType>::value>::type>                                                                        \
+        template<typename X = typename std::enable_if<o2::SupportsEqualOperator<valueType>::value>::type>                                                                        \
 		bool operator==(const valueType& value) const { return Math::Equals(_this->GETTER(), value); }                                                                \
 																										                                                              \
-		template<typename X = typename std::enable_if<SupportsEqualOperator<valueType>::value>::type>                                                                        \
+        template<typename X = typename std::enable_if<o2::SupportsEqualOperator<valueType>::value>::type>                                                                        \
 		bool operator!=(const valueType& value) const { return !Math::Equals(_this->GETTER(), value); }                                                               \
 																										                                                              \
 		template<typename T, typename X = typename std::enable_if<o2::SupportsPlus<T>::value && std::is_same<T, valueType>::value>::type>                             \

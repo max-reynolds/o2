@@ -4,8 +4,9 @@
 
 #include "o2/Utils/Delegates.h"
 #include "o2/Utils/Reflection/Attributes.h"
-#include "o2/Utils/Reflection/TypeSerializer.h"
 #include "o2/Utils/Reflection/TypeTraits.h"
+#include "o2/Utils/Serialization/DataValue.h"
+#include "o2/Utils/Reflection/TypeSerializer.h"
 #include "o2/Utils/Types/CommonTypes.h"
 #include "o2/Utils/Types/Containers/Map.h"
 #include "o2/Utils/Types/Containers/Vector.h"
@@ -157,7 +158,8 @@ namespace o2
 		// --------------------
 		// Dummy type container
 		// --------------------
-		struct Dummy { static Type* type; };
+//		struct Dummy { static Type* type; };
+        using Dummy = DummyType;
 
 		template<class T, class = void_t<>>
 		struct IsConstructible: std::false_type {};
@@ -237,25 +239,25 @@ namespace o2
 		void*(*mCastToFunc)(void*); // Dynamic cast function from IObject
 	};
 
-	// -----------------------
-	// Specialized object type
-	// -----------------------
-	template<typename _type>
-	class TObjectType: public ObjectType
-	{
-	public:
-		// Default constructor
-		TObjectType(const String& name, int size, void*(*castFromFunc)(void*), void*(*castToFunc)(void*));
+    // -----------------------
+    // Specialized object type
+    // -----------------------
+    template<typename _type>
+    class TObjectType: public ObjectType
+    {
+    public:
+        // Default constructor
+        TObjectType(const String& name, int size, void*(*castFromFunc)(void*), void*(*castToFunc)(void*));
 
-		// Creates sample copy and returns him
-		void* CreateSample() const override;
+        // Creates sample copy and returns him
+        void* CreateSample() const override;
 
-		// Returns abstract value proxy for object value
-		IAbstractValueProxy* GetValueProxy(void* object) const override;
+        // Returns abstract value proxy for object value
+        IAbstractValueProxy* GetValueProxy(void* object) const override;
 
-		// Returns pointer of type (type -> type*)
-		const Type* GetPointerType() const override;
-	};
+        // Returns pointer of type (type -> type*)
+        const Type* GetPointerType() const override;
+    };
 
 	// ----------------
 	// Fundamental type
@@ -701,23 +703,27 @@ namespace o2
 		void BaseType(_object_type* object, Type* type, const char* name) {}
 
 		template<typename _object_type, typename _field_type>
-		FieldInfo& Field(_object_type* object, Type* type, const char* name, void*(*pointerGetter)(void*), _field_type& field, ProtectSection protection) {}
+        FieldInfo& Field(_object_type* object, Type* type, const char* name, void*(*pointerGetter)(void*), _field_type& field, ProtectSection protection)
+        {
+            static FieldInfo dummy;
+            return dummy;
+        }
 
 		template<typename _object_type, typename _res_type, typename ... _args>
-		MethodInfo* Method(_object_type* object, Type* type, const char* name, _res_type(_object_type::*pointer)(_args ...), ProtectSection protection) {}
+        MethodInfo* Method(_object_type* object, Type* type, const char* name, _res_type(_object_type::*pointer)(_args ...), ProtectSection protection) { return nullptr; }
 
 		template<typename _object_type, typename _res_type, typename ... _args>
-		MethodInfo* Method(_object_type* object, Type* type, const char* name, _res_type(_object_type::*pointer)(_args ...) const, ProtectSection protection) { }
+        MethodInfo* Method(_object_type* object, Type* type, const char* name, _res_type(_object_type::*pointer)(_args ...) const, ProtectSection protection) { return nullptr; }
 
 		template<typename _object_type, typename _res_type, typename ... _args>
-		MethodInfo* StaticMethod(_object_type* object, Type* type, const char* name, _res_type(*pointer)(_args ...), ProtectSection protection) { }
+        MethodInfo* StaticMethod(_object_type* object, Type* type, const char* name, _res_type(*pointer)(_args ...), ProtectSection protection) { return nullptr; }
 	};
 }
 
 typedef void*(*GetValuePointerFuncPtr)(void*);
 
 #define DECLARE_CLASS(CLASS)                                                                                   \
-    o2::Type* CLASS::type = o2::Reflection::InitializeType<CLASS>(#CLASS)										             
+    o2::Type* CLASS::type = o2::Reflection::InitializeType<CLASS>(#CLASS)
 																											   
 #define CLASS_BASES_META(CLASS)                                                                                \
     template<typename _type_processor> void CLASS::ProcessBaseTypes(CLASS* object, _type_processor& processor) \
@@ -741,7 +747,7 @@ typedef void*(*GetValuePointerFuncPtr)(void*);
     template<__VA_ARGS__>
 
 #define DECLARE_CLASS_MANUAL(CLASS) \
-    DECLARE_CLASS(CLASS)	
+    DECLARE_CLASS(CLASS)
 
 #define CLASS_BASES_META_MANUAL(CLASS) \
     CLASS_BASES_META(CLASS)
@@ -1118,10 +1124,10 @@ namespace o2
 		{
 			for (int i = size; i < newSize; i++)
 			{
-				if (auto elementData = elementsData->GetMember("Element" + (WString)i))
+                if (auto elementData = elementsData.GetMember("Element" + (WString)i))
 				{
 					void* elementPtr = type.GetObjectVectorElementPtr(object, i);
-					type.mElementFieldInfo->Deserialize(elementPtr, *elementData);
+                    type.mElementFieldInfo->Deserialize(elementPtr, elementData);
 				}
 			}
 		}

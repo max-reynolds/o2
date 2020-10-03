@@ -1,7 +1,8 @@
 #pragma once
 
 #include "o2/Utils/Memory/Allocators/ChunkPoolAllocator.h"
-#include "o2/Utils/Property.h"
+//#include "o2/Utils/Property.h"
+#include "o2/Utils/Serialization/ISerializable.h"
 #include "o2/Utils/Types/Containers/Map.h"
 #include "o2/Utils/Types/Containers/Vector.h"
 #include "o2/Utils/Types/String.h"
@@ -15,6 +16,8 @@ namespace o2
 {
 	class DataDocument;
 	struct DataMember;
+    class SerializableAttribute;
+    class ISerializable;
 
 	template <bool _const>
 	class BaseMemberIterator;
@@ -48,7 +51,9 @@ namespace o2
 		};
 
 	public:
-		// Default constructor
+        DataValue();
+
+        // Default constructor
 		DataValue(DataDocument& document);
 
 		// Constructor as template value
@@ -150,7 +155,7 @@ namespace o2
 		const DataValue& GetElement(int idx) const;
 
 		// Adds element to array
-		DataValue& AddElement(DataValue& value);
+        DataValue& AddElement(DataValue value);
 
 		// Adds element to array
 		DataValue& AddElement();
@@ -374,10 +379,8 @@ namespace o2
 		ValueData     mData;
 		DataDocument* mDocument;
 
-	protected:
-		// Hidden constructor without document
-		DataValue();
 
+    protected:
 		// Constructor temporary string reference
 		explicit DataValue(const char* stringRef);
 
@@ -388,7 +391,7 @@ namespace o2
 		static bool Transcode(rapidjson::GenericStringBuffer<rapidjson::UTF16<>>& target, const char* source);
 
 		friend class JsonDataDocumentParseHandler;
-		friend class TType<DataValue>;
+//		friend class TType<DataValue>;
 	};
 
 	// ------------------------------------------
@@ -460,7 +463,7 @@ namespace o2
 		DataValue value;
 
 		DataMember() = default;
-		DataMember(DataValue& name, DataValue& value);
+        DataMember(DataValue& name, const DataValue& value);
 
 		DataMember& operator=(DataMember& other);
 
@@ -495,8 +498,8 @@ namespace o2
 
 		BaseMemberIterator<_const>& operator++() { ++mPointer; return *this; }
 		BaseMemberIterator<_const>& operator--() { --mPointer; return *this; }
-		BaseMemberIterator<_const>  operator++(int) { Iterator old(*this); ++mPointer; return old; }
-		BaseMemberIterator<_const>  operator--(int) { Iterator old(*this); --mPointer; return old; }
+        BaseMemberIterator<_const>  operator++(int) { BaseMemberIterator old(*this); ++mPointer; return old; }
+        BaseMemberIterator<_const>  operator--(int) { BaseMemberIterator old(*this); --mPointer; return old; }
 
 		BaseMemberIterator<_const> operator+(int n) const { return Iterator(mPointer+n); }
 		BaseMemberIterator<_const> operator-(int n) const { return Iterator(mPointer-n); }
@@ -1186,16 +1189,16 @@ namespace o2
 	struct DataValue::Converter<T, typename std::enable_if<std::is_pointer<T>::value && !std::is_const<T>::value &&
 		!std::is_base_of<o2::IObject, typename std::remove_pointer<T>::type>::value && !std::is_same<void*, T>::value>::type>
 	{
-		static constexpr bool isSupported = DataValue::Converter<std::remove_pointer<T>::type>::isSupported;
+        static constexpr bool isSupported = DataValue::Converter<typename std::remove_pointer<T>::type>::isSupported;
 
 		static void Write(const T& value, DataValue& data)
 		{
-			DataValue::Converter<std::remove_pointer<T>::type>::Write(*value, data);
+            DataValue::Converter<typename std::remove_pointer<T>::type>::Write(*value, data);
 		}
 
 		static void Read(T& value, const DataValue& data)
 		{
-			DataValue::Converter<std::remove_pointer<T>::type>::Read(*value, data);
+            DataValue::Converter<typename std::remove_pointer<T>::type>::Read(*value, data);
 		}
 	};
 
@@ -1211,7 +1214,7 @@ namespace o2
 			data.mData.arrayData.count = 0;
 			data.mData.arrayData.capacity = 0;
 
-			for (auto& v : value)
+            for (auto& v : value)
 				data.AddElement(DataValue(v, *data.mDocument));
 		}
 
@@ -1294,7 +1297,7 @@ namespace o2
 	template<typename T>
 	struct DataValue::Converter<T, typename std::enable_if<IsProperty<T>::value>::type>
 	{
-		static constexpr bool isSupported = DataValue::IsSupports<T::valueType>::value;
+        static constexpr bool isSupported = DataValue::IsSupports<typename T::valueType>::value;
 		using TValueType = typename T::valueType;
 
 		static void Write(const T& value, DataValue& data)
@@ -1349,7 +1352,7 @@ namespace o2
 			helper::WriteObject(objectPtr, type, data);
 		}
 
-		static void Read(T& value, const DataValue& data)
+        static void Read(T& value, const DataValue& data)
 		{
 			struct helper
 			{

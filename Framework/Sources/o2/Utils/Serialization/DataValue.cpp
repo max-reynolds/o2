@@ -553,7 +553,7 @@ namespace o2
 		return mData.arrayData.elements[idx];
 	}
 
-	DataValue& DataValue::AddElement(DataValue& value)
+    DataValue& DataValue::AddElement(DataValue value)
 	{
 		DataValue& newElement = AddElement();
 		newElement = std::move(value);
@@ -887,9 +887,9 @@ namespace o2
 			static_cast<std::underlying_type<DataValue::Flags>::type>(b));
 	}
 
-	DataMember::DataMember(DataValue& name, DataValue& value):
-		name(name), value(value)
-	{}
+    DataMember::DataMember(DataValue& name, const DataValue& value):
+        name(name), value(value)
+    {}
 
 	DataMember& DataMember::operator=(DataMember& other)
 	{
@@ -906,20 +906,19 @@ namespace o2
 	bool DataMember::operator!=(const DataMember& other) const
 	{
 		return !(*this == other);
-	}
-
+    }
 }
 
 ENUM_META(o2::DataValue::Flags)
 {
-	ENUM_ENTRY(Bool);
+    ENUM_ENTRY(Bool);
 }
 END_ENUM_META;
 
 ENUM_META(o2::DataDocument::Format)
 {
-	ENUM_ENTRY(Binary);
-	ENUM_ENTRY(JSON);
-	ENUM_ENTRY(Xml);
+    ENUM_ENTRY(Binary);
+    ENUM_ENTRY(JSON);
+    ENUM_ENTRY(Xml);
 }
 END_ENUM_META;
