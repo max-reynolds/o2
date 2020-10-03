@@ -2,6 +2,8 @@
 
 #if defined PLATFORM_WINDOWS
 #include "o2/Render/Windows/TextureBase.h"
+#elif defined PLATFORM_LINUX
+#include "o2/Render/Linux/TextureBase.h"
 #elif defined PLATFORM_ANDROID
 #include "o2/Render/Android/TextureBase.h"
 #endif

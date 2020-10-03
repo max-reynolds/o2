@@ -6,9 +6,11 @@
 #include "o2/Utils/Singleton.h"
 #include "o2/Utils/Types/String.h"
 
-#if defined PLATFORM_WINDOWS
+#if defined(PLATFORM_WINDOWS)
 #include "o2/Application/Windows/ApplicationBase.h"
-#elif defined PLATFORM_ANDROID
+#elif defined(PLATFORM_LINUX)
+#include "o2/Application/Linux/ApplicationBase.h"
+#elif defined(PLATFORM_ANDROID)
 #include "o2/Application/Android/ApplicationBase.h"
 #include <jni.h>
 #include <android/asset_manager.h>

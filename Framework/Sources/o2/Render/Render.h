@@ -3,9 +3,11 @@
 #include "ft2build.h"
 #include FT_FREETYPE_H
 
-#if defined PLATFORM_WINDOWS
+#if defined(PLATFORM_WINDOWS)
 #include "o2/Render/Windows/RenderBase.h"
-#elif defined PLATFORM_ANDROID
+#elif defined(PLATFORM_LINUX)
+#include "o2/Render/Linux/RenderBase.h"
+#elif defined(PLATFORM_ANDROID)
 #include "o2/Render/Android/RenderBase.h"
 #endif
 

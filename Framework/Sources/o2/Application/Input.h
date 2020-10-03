@@ -8,6 +8,8 @@
 
 #ifdef PLATFORM_ANDROID
 #include "o2/Application/Android/VKCodes.h"
+#elif PLATFORM_LINUX
+#include "o2/Application/Linux/VKCodes.h"
 #elif PLATFORM_WINDOWS
 #include <windows.h>
 #endif
