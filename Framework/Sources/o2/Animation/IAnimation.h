@@ -137,7 +137,7 @@ namespace o2
 		virtual Loop GetLoop() const;
 
 		// Adds event on time line
-		virtual void AddTimeEvent(float time, const Function<void()> eventFunc);
+        virtual void AddTimeEvent(float time, const Function<void()> &eventFunc);
 
 		// Removes event by time
 		virtual void RemoveTimeEvent(float time);
@@ -238,11 +238,7 @@ CLASS_METHODS_META(o2::IAnimation)
 	PUBLIC_FUNCTION(float, GetSpeed);
 	PUBLIC_FUNCTION(void, SetLoop, Loop);
 	PUBLIC_FUNCTION(Loop, GetLoop);
-//    PUBLIC_FUNCTION(void, AddTimeEvent, float, const Function<void()>);
-
-//    processor.template Method<thisclass, void, ##__VA_ARGS__>(object, type, #NAME, &thisclass::NAME, ProtectSection::Public)
-
-
+    PUBLIC_FUNCTION(void, AddTimeEvent, float, const Function<void()>&);
 	PUBLIC_FUNCTION(void, RemoveTimeEvent, float);
 	PUBLIC_FUNCTION(void, RemoveTimeEvent, const Function<void()>&);
 	PUBLIC_FUNCTION(void, RemoveAllTimeEvents);
