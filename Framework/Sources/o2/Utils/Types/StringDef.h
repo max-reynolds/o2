@@ -40,6 +40,8 @@ namespace o2
 	template<typename T>
 	class TString: public std::basic_string<T>
 	{
+        using super = std::basic_string<T>;
+
 	public:
 		// Default constructor
 		TString();
@@ -336,8 +338,8 @@ namespace o2
 		static TString empty;
 	};
 
-	template<typename T>
-	__declspec(selectany) TString<T> TString<T>::empty;
+//	template<typename T>
+//	__declspec(selectany) TString<T> TString<T>::empty;
 
 	// ---------------------------
 	// String with wide characters

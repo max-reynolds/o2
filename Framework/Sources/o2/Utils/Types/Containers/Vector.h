@@ -2,6 +2,8 @@
 
 #include "o2/Utils/Debug/Assert.h"
 #include "o2/Utils/Memory/MemoryManager.h"
+#include "o2/Utils/Math/Math.h"
+
 #include <vector>
 #include <algorithm>
 
@@ -13,6 +15,8 @@ namespace o2
 	template<typename _type>
 	class Vector : public std::vector<_type>
 	{
+        using super = std::vector<_type>;
+
 	public:
 		typedef typename std::vector<_type>::iterator Iterator;
 		typedef typename std::vector<_type>::const_iterator ConstIterator;
@@ -436,7 +440,7 @@ namespace o2
 	template<typename _type>
 	void Vector<_type>::ShrinkToFit()
 	{
-		shrink_to_fit();
+        super::shrink_to_fit();
 	}
 
 	template<typename _type>
@@ -467,7 +471,7 @@ namespace o2
 	template<typename _type>
 	void Vector<_type>::Add(const Vector<_type>& arr)
 	{
-		insert(end(), arr.begin(), arr.end());
+        super::insert(super::end(), arr.begin(), arr.end());
 	}
 
 	template<typename _type>
@@ -481,72 +485,72 @@ namespace o2
 	template<typename _type>
 	_type& Vector<_type>::Insert(const _type& value, int position)
 	{
-		insert(begin() + position, value);
-		return at(position);
+        super::insert(super::begin() + position, value);
+        return super::at(position);
 	}
 
 	template<typename _type>
 	void Vector<_type>::Insert(const Vector<_type>& arr, int position)
 	{
-		insert(begin() + position, arr.begin(), arr.end());
+        super::insert(super::begin() + position, arr.begin(), arr.end());
 	}
 
 	template<typename _type>
 	int Vector<_type>::IndexOf(const _type& value) const
 	{
-		auto fnd = std::find(begin(), end(), value);
-		if (fnd == end())
+        auto fnd = std::find(super::begin(), super::end(), value);
+        if (fnd == super::end())
 			return -1;
 
-		return fnd - begin();
+        return fnd - super::begin();
 	}
 
 	template<typename _type>
 	bool Vector<_type>::Contains(const _type& value) const
 	{
-		return std::find(begin(), end(), value) != end();
+        return std::find(super::begin(), super::end(), value) != super::end();
 	}
 
 	template<typename _type>
 	void Vector<_type>::RemoveAt(int idx)
 	{
-		erase(begin() + idx);
+        super::erase(super::begin() + idx);
 	}
 
 	template<typename _type>
 	void Vector<_type>::RemoveRange(int first, int last)
 	{
-		erase(begin() + first, begin() + last);
+        super::erase(super::begin() + first, super::begin() + last);
 	}
 
 	template<typename _type>
 	void Vector<_type>::Remove(const _type& value)
 	{
-		auto fnd = std::find(begin(), end(), value);
-		if (fnd != end())
-			erase(fnd);
+        auto fnd = std::find(super::begin(), super::end(), value);
+        if (fnd != super::end())
+            super::erase(fnd);
 	}
 
 	template<typename _type>
 	typename Vector<_type>::Iterator Vector<_type>::Remove(const Iterator& first, const Iterator& last)
 	{
-		return erase(first, last);
+        return super::erase(first, last);
 	}
 
 	template<typename _type>
 	typename Vector<_type>::Iterator Vector<_type>::Remove(const Iterator& it)
 	{
-		return erase(it);
+        return super::erase(it);
 	}
 
 	template<typename _type>
 	void Vector<_type>::RemoveFirst(const Function<bool(const _type&)>& match)
 	{
-		for (auto it = begin(); it != end(); ++it)
+        for (auto it = super::begin(); it != super::end(); ++it)
 		{
 			if (match(*it))
 			{
-				erase(it);
+                super::erase(it);
 				return;
 			}
 		}
@@ -555,43 +559,43 @@ namespace o2
 	template<typename _type>
 	void Vector<_type>::Clear()
 	{
-		clear();
+        super::clear();
 	}
 
 	template<typename _type>
 	bool Vector<_type>::IsEmpty() const
 	{
-		return empty();
+        return super::empty();
 	}
 
 	template<typename _type>
 	_type& Vector<_type>::First()
 	{
-		return front();
+        return super::front();
 	}
 
 	template<typename _type>
 	const _type& Vector<_type>::First() const
 	{
-		return front();
+        return super::front();
 	}
 
 	template<typename _type>
 	const _type& Vector<_type>::Last() const
 	{
-		return back();
+        return super::back();
 	}
 
 	template<typename _type>
 	_type& Vector<_type>::Last()
 	{
-		return back();
+        return super::back();
 	}
 
 	template<typename _type>
 	void Vector<_type>::Sort(const Function<bool(const _type&, const _type&)>& pred /*= Math::Fewer*/)
 	{
-		std::sort(begin(), end(), pred);
+        std::sort(super::begin(), super::end(), pred);
 	}
 
 	template<typename _type>
@@ -605,25 +609,25 @@ namespace o2
 	template<typename _type>
 	typename Vector<_type>::Iterator Vector<_type>::Begin()
 	{
-		return begin();
+        return super::begin();
 	}
 
 	template<typename _type>
 	typename Vector<_type>::Iterator Vector<_type>::End()
 	{
-		return end();
+        return super::end();
 	}
 
 	template<typename _type>
 	typename Vector<_type>::ConstIterator Vector<_type>::Begin() const
 	{
-		return cbegin();
+        return super::cbegin();
 	}
 
 	template<typename _type>
 	typename Vector<_type>::ConstIterator Vector<_type>::End() const
 	{
-		return cend();
+        return super::cend();
 	}
 
 	template<typename _type>
@@ -705,7 +709,7 @@ namespace o2
 	Vector<_type> Vector<_type>::Take(int begin, int end) const
 	{
 		Vector<_type> res;
-		for (int i = begin; i < end && i < (int)size(); i++)
+        for (int i = begin; i < end && i < (int)super::size(); i++)
 			res.Add(Get(i));
 
 		return res;
@@ -728,10 +732,10 @@ namespace o2
 	template<typename _type>
 	void Vector<_type>::RemoveAll(const Function<bool(const _type&)>& match)
 	{
-		for (auto it = begin(); it != end();)
+        for (auto it = super::begin(); it != super::end();)
 		{
 			if (match(*it))
-				it = erase(it);
+                it = super::erase(it);
 			else
 				++it;
 		}
@@ -842,10 +846,10 @@ namespace o2
 	template<typename _type>
 	int Vector<_type>::LastIndexOf(const Function<bool(const _type&)>& match) const
 	{
-		for (auto it = rbegin(); it != rend(); it--)
+        for (auto it = super::rbegin(); it != super::rend(); it--)
 		{
 			if (match(*it))
-				return it - begin();
+                return it - super::begin();
 		}
 
 		return -1;
