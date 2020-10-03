@@ -42,6 +42,8 @@ namespace o2
 		}
 
 		return res;
+#elif PLATFORM_LINUX
+        return WString();
 #elif PLATFORM_ANDROID
         return WString();
 #endif

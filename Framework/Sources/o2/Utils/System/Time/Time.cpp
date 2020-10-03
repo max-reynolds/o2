@@ -85,6 +85,8 @@ namespace o2
 		GetSystemTime(&tm);
 
 		return TimeStamp(tm.wSecond, tm.wMinute, tm.wHour, tm.wDay, tm.wMonth, tm.wYear);
+#elif defined PLATFORM_LINUX
+        return TimeStamp();
 #elif defined PLATFORM_ANDROID
         return TimeStamp();
 #endif
