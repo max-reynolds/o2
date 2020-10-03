@@ -105,6 +105,11 @@ namespace o2
 
 		SERIALIZABLE(AnimationClip);
 
+        bool operator==(const AnimationClip &other) const
+        {
+            return mTracks == other.mTracks && mDuration == other.mDuration && mLoop == other.mLoop;
+        }
+
 	protected:
 		Vector<IAnimationTrack*> mTracks; // Animation track @SERIALIZABLE
 
@@ -144,7 +149,7 @@ namespace o2
 		for (auto track : mTracks)
 		{
 			if (track->path == path)
-				return dynamic_cast<AnimationTrack<_type>*>(val.animatedValue);
+                return track;
 		}
 
 		return nullptr;
