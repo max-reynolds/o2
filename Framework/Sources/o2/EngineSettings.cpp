@@ -5,8 +5,10 @@ o2::Platform GetEnginePlatform()
 {
 #ifdef PLATFORM_WINDOWS
 	return o2::Platform::Windows;
+#elif defined PLATFORM_LINUX
+    return o2::Platform::Linux;
 #elif defined PLATFORM_ANDROID
-	return o2::Platform::Android;
+    return o2::Platform::Android;
 #endif
 }
 
@@ -65,6 +67,8 @@ const char* GetBuiltAssetsPath()
 {
 #if defined PLATFORM_WINDOWS
 	return "BuiltAssets/Windows/Data/";
+#elif defined PLATFORM_LINUX
+    return "BuiltAssets/Windows/Data/";
 #elif defined PLATFORM_ANDROID
 	return "AndroidAssets/BuiltAssets/";
 #endif
@@ -79,6 +83,8 @@ const char* GetBuiltAssetsTreePath()
 {
 #if defined PLATFORM_WINDOWS
 	return "BuiltAssets/Windows/Data.json";
+#elif defined PLATFORM_LINUX
+    return "BuiltAssets/Windows/Data.json";
 #elif defined PLATFORM_ANDROID
 	return "AndroidAssets/AssetsTree.json";
 #endif
