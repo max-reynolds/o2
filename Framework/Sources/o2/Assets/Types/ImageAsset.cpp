@@ -172,7 +172,10 @@ namespace o2
 	}
 }
 
+template<>
 DECLARE_CLASS_MANUAL(o2::DefaultAssetMeta<o2::ImageAsset>);
+
+template<>
 DECLARE_CLASS_MANUAL(o2::Ref<o2::ImageAsset>);
 
 DECLARE_CLASS(o2::ImageAsset);

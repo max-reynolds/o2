@@ -24,8 +24,6 @@ namespace o2
 	protected:
 		bool mEnabledListeningEvents = true;
 
-#if IS_EDITOR
 		bool mIsEditorMode = false;
-#endif
 	};
 }

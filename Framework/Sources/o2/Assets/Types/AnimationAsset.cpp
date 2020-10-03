@@ -27,8 +27,13 @@ namespace o2
 	}
 }
 
+template<>
 DECLARE_CLASS_MANUAL(o2::AssetWithDefaultMeta<o2::AnimationAsset>);
+
+template<>
 DECLARE_CLASS_MANUAL(o2::DefaultAssetMeta<o2::AnimationAsset>);
+
+template<>
 DECLARE_CLASS_MANUAL(o2::Ref<o2::AnimationAsset>);
 
 DECLARE_CLASS(o2::AnimationAsset);

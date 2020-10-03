@@ -262,7 +262,7 @@ namespace o2
 	void AnimationComponent::TrackMixer<_type>::Update()
 	{
 		AnimationState* firstValueState = tracks[0].first;
-		AnimationTrack<_type>::Player* firstValue = tracks[0].second;
+        auto firstValue = tracks[0].second;
 
 		float weightsSum = firstValueState->mWeight*firstValueState->blend*firstValueState->mask.GetNodeWeight(path);
 		_type valueSum = firstValue->GetValue();
@@ -270,7 +270,7 @@ namespace o2
 		for (int i = 1; i < tracks.Count(); i++)
 		{
 			AnimationState* valueState = tracks[i].first;
-			AnimationTrack<_type>::Player* value = tracks[i].second;
+            auto value = tracks[i].second;
 
 			weightsSum += valueState->mWeight*valueState->blend*valueState->mask.GetNodeWeight(path);
 			valueSum += value->GetValue();

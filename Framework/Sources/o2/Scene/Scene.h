@@ -300,7 +300,6 @@ namespace o2
 		Vector<SceneEditableObject*> mDrawnObjects;           // List of drawn on last frame editable objects
 		bool                         mIsDrawingScene = false; // Sets true when started drawing scene, and false when not
 
-		friend class Scene;
 		friend class SceneEditableObject;
 #endif
 	};
