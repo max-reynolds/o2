@@ -14,7 +14,7 @@ file(GLOB_RECURSE Framework_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/../../Sources/*.h
 )
 
-add_library(Framework STATIC
+add_library(Framework SHARED
     ${Framework_SOURCES}
 )
 
@@ -31,5 +31,5 @@ target_include_directories(Framework
 
 target_link_libraries(Framework
     PUBLIC
-        libpng
+        png
 )

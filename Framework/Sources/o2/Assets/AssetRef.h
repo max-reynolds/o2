@@ -1,7 +1,7 @@
 #pragma once
 
 #include "o2/Assets/Asset.h"
-#include "o2/Assets/Assets.h"
+//#include "o2/Assets/Assets.h"
 #include "o2/Utils/Types/Ref.h"
 
 namespace o2
@@ -105,6 +105,9 @@ namespace o2
 		friend class Assets;
 	};
 
+    template<typename T>
+    T CreateAsset();
+
 	template<typename T>
 	class Ref<T, typename std::enable_if<std::is_base_of<Asset, T>::value>::type>: public AssetRef
 	{
@@ -160,7 +163,7 @@ namespace o2
 		static const Type* GetAssetTypeStatic() { return &TypeOf(T); }
 
 		// Creates asset and returns reference
-		static Ref<T> CreateAsset() { return o2Assets.CreateAsset<T>(); }
+        static Ref<T> CreateAsset() { return o2::CreateAsset<Ref<T>>(); }
 
 	public:
 		typedef Ref<T, typename std::enable_if<std::is_base_of<Asset, T>::value>::type> _thisType;

@@ -139,17 +139,18 @@ namespace o2
 	template<typename _type /*= CursorAreaEventsListener*/>
 	_type* EventSystem::GetCursorListenerUnderCursor(CursorId cursorId) const
 	{
-		if (mUnderCursorListeners.ContainsKey(cursorId))
-		{
-			for (auto listener : mUnderCursorListeners.Get(cursorId))
-			{
-				if (auto tListener = dynamic_cast<_type*>(listener))
-					return tListener;
+        assert(false && "Not implemented");
+//		if (mUnderCursorListeners.ContainsKey(cursorId))
+//		{
+//			for (auto listener : mUnderCursorListeners.Get(cursorId))
+//			{
+//				if (auto tListener = dynamic_cast<_type*>(listener))
+//					return tListener;
 
-				if (!listener->IsInputTransparent())
-					break;
-			}
-		}
+//				if (!listener->IsInputTransparent())
+//					break;
+//			}
+//		}
 
 		return nullptr;
 	}

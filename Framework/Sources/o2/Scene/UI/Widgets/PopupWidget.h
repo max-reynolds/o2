@@ -8,7 +8,7 @@ namespace o2
 	// ----------------------------------------------------------------------------------------
 	// Popup widget. Draws on top of all UI, can be opened only one. Closes other automatically
 	// ----------------------------------------------------------------------------------------
-	class PopupWidget: public ScrollArea, public KeyboardEventsListener
+    class PopupWidget: public ScrollArea, public KeyboardEventsListener
 	{
 	public:
 		bool fitByChildren = true; // Fit size when opening by children @SERIALIZABLE

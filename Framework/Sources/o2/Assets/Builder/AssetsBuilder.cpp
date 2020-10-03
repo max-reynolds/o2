@@ -112,7 +112,7 @@ namespace o2
 
 		if (!o2FileSystem.IsFileExist(basicAtlasFullPath))
 		{
-			AtlasAssetRef basicAtlas = AtlasAssetRef::CreateAsset();
+            AtlasAssetRef basicAtlas = o2::CreateAsset<AtlasAssetRef>();
 			basicAtlas->Save(basicAtlasFullPath, false);
 		}
 	}
