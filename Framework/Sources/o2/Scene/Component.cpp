@@ -157,6 +157,42 @@ namespace o2
 	void Component::FixedUpdate(float dt)
 	{}
 
+    template<typename _type>
+    Vector<_type*> Component::GetComponentsInChildren() const
+    {
+        if (mOwner)
+            return mOwner->GetComponentsInChildren<_type>();
+
+        return Vector<_type*>();
+    }
+
+    template<typename _type>
+    Vector<_type*> Component::GetComponents() const
+    {
+        if (mOwner)
+            return mOwner->GetComponents();
+
+        return Vector<_type*>();
+    }
+
+    template<typename _type>
+    _type* Component::GetComponentInChildren() const
+    {
+        if (mOwner)
+            return mOwner->GetComponentInChildren<_type>();
+
+        return nullptr;
+    }
+
+    template<typename _type>
+    _type* Component::GetComponent() const
+    {
+        if (mOwner)
+            return mOwner->GetComponent<_type>();
+
+        return nullptr;
+    }
+
 // 	void ComponentDataValueConverter::ToData(void* object, DataValue& data)
 // 	{
 // 		Component* value = *(Component**)object;
