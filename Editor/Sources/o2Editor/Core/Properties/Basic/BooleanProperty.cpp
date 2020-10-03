@@ -47,6 +47,7 @@ namespace Editor
 			mToggle->SetValueUnknown();
 	}
 }
+template<>
 DECLARE_CLASS_MANUAL(Editor::TPropertyField<bool>);
 
 DECLARE_CLASS(Editor::BooleanProperty);

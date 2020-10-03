@@ -41,7 +41,7 @@ namespace Editor
 		void SetTarget(IObject* target);
 
 		// Sets target objects
-		void SetTargets(const Vector<IObject*> targets, const Function<void()>& targetsChangedDelegate = Function<void()>());
+        void SetTargets(const Vector<IObject *> &targets, const Function<void()>& targetsChangedDelegate = Function<void()>());
 
 		// Returns target object
 		Vector<IObject*> GetTargets() const;
@@ -111,7 +111,7 @@ CLASS_METHODS_META(Editor::PropertiesWindow)
 
 	PUBLIC_FUNCTION(void, ResetTargets);
 	PUBLIC_FUNCTION(void, SetTarget, IObject*);
-	PUBLIC_FUNCTION(void, SetTargets, const Vector<IObject*>, const Function<void()>&);
+    PUBLIC_FUNCTION(void, SetTargets, const Vector<IObject*>&, const Function<void()>&);
 	PUBLIC_FUNCTION(Vector<IObject*>, GetTargets);
 	PUBLIC_FUNCTION(void, Update, float);
 	PUBLIC_FUNCTION(void, Draw);

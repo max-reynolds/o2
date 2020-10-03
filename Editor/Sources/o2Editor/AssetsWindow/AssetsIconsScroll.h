@@ -165,6 +165,8 @@ namespace Editor
 		// Updates visible items
 		void UpdateVisibleItems() override;
 
+        void OnDrawn();
+
 		// It is called when widget was selected
 		void OnFocused() override;
 

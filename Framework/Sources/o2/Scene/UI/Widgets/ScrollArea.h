@@ -9,7 +9,7 @@ namespace o2
 	// -----------------------------------------------------
 	// Scrolling area with scrollbars and clipping rectangle
 	// -----------------------------------------------------
-	class ScrollArea: public Widget, virtual public CursorAreaEventsListener
+    class ScrollArea: public Widget, virtual public CursorAreaEventsListener
 	{
 	public:
 		PROPERTIES(ScrollArea);
@@ -179,6 +179,8 @@ namespace o2
 
 		// It is called when scrolling
 		void OnScrolled(float scroll) override;
+
+        void OnDrawn();
 
 		// Moves scroll position and updates children widgets clipping and layout
 		virtual void MoveScrollPosition(const Vec2F& delta);

@@ -1,5 +1,5 @@
 #include "o2Editor/stdafx.h"
-#include "Vector2intProperty.h"
+#include "Vector2IntProperty.h"
 
 #include "o2Editor/Core/Properties/Basic/IntegerProperty.h"
 
@@ -172,6 +172,8 @@ namespace Editor
 		return proxyValue.y;
 	}
 }
+
+template<>
 DECLARE_CLASS_MANUAL(Editor::TPropertyField<o2::Vec2I>);
 
 DECLARE_CLASS(Editor::Vec2IProperty);

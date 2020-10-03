@@ -1,6 +1,7 @@
 #pragma once
 
 #include "o2Editor/PropertiesWindow/IPropertiesViewer.h"
+#include "o2/Utils/Editor/SceneEditableObject.h"
 
 using namespace o2;
 
@@ -82,16 +83,16 @@ namespace Editor
 		void OnSceneObjectsChanged(const Vector<SceneEditableObject*>& objects);
 
 		// Sets target objects
-		void SetTargets(const Vector<IObject*> targets) override;
+        void SetTargets(const Vector<IObject*> &targets) override;
 
 		// Sets target actor properties
-		void SetTargetsActorProperties(const Vector<IObject*> targets, Vector<Widget*>& viewersWidgets);
+        void SetTargetsActorProperties(const Vector<IObject *> &targets, Vector<Widget*>& viewersWidgets);
 
 		// Sets target components: gets common components and initializes them
-		void SetTargetsComponents(const Vector<IObject*> targets, Vector<Widget*>& viewersWidgets);
+        void SetTargetsComponents(const Vector<IObject *> &targets, Vector<Widget*>& viewersWidgets);
 
 		// Returns list of common components types for targets
-		Vector<const Type*> GetCommonComponentsTypes(const Vector<IObject*> targets) const;
+        Vector<const Type*> GetCommonComponentsTypes(const Vector<IObject *> &targets) const;
 
 		// Enable viewer event function
 		void OnEnabled() override;
@@ -137,10 +138,10 @@ CLASS_METHODS_META(Editor::ActorViewer)
 	PUBLIC_FUNCTION(void, AddActorPropertiesViewerType, IActorPropertiesViewer*);
 	PUBLIC_FUNCTION(void, Refresh);
 	PROTECTED_FUNCTION(void, OnSceneObjectsChanged, const Vector<SceneEditableObject*>&);
-	PROTECTED_FUNCTION(void, SetTargets, const Vector<IObject*>);
-	PROTECTED_FUNCTION(void, SetTargetsActorProperties, const Vector<IObject*>, Vector<Widget*>&);
-	PROTECTED_FUNCTION(void, SetTargetsComponents, const Vector<IObject*>, Vector<Widget*>&);
-	PROTECTED_FUNCTION(Vector<const Type*>, GetCommonComponentsTypes, const Vector<IObject*>);
+    PROTECTED_FUNCTION(void, SetTargets, const Vector<IObject*>&);
+    PROTECTED_FUNCTION(void, SetTargetsActorProperties, const Vector<IObject*>&, Vector<Widget*>&);
+    PROTECTED_FUNCTION(void, SetTargetsComponents, const Vector<IObject*>&, Vector<Widget*>&);
+    PROTECTED_FUNCTION(Vector<const Type*>, GetCommonComponentsTypes, const Vector<IObject*>&);
 	PROTECTED_FUNCTION(void, OnEnabled);
 	PROTECTED_FUNCTION(void, OnDisabled);
 }

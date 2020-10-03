@@ -1,6 +1,7 @@
 #pragma once
 
 #include "o2Editor/PropertiesWindow/IPropertiesViewer.h"
+#include "o2/Utils/Basic/IObject.h"
 
 using namespace o2;
 
@@ -31,7 +32,7 @@ namespace Editor
 
 	protected:
 		// Sets target objects
-		void SetTargets(const Vector<IObject*> targets) override;
+        void SetTargets(const Vector<IObject*> &targets) override;
 	};
 
 }
@@ -51,6 +52,6 @@ CLASS_METHODS_META(Editor::DefaultPropertiesViewer)
 {
 
 	PUBLIC_FUNCTION(void, Refresh);
-	PROTECTED_FUNCTION(void, SetTargets, const Vector<IObject*>);
+    PROTECTED_FUNCTION(void, SetTargets, const Vector<IObject*>&);
 }
 END_META;

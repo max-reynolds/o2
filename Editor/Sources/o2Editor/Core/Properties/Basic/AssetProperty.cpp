@@ -44,7 +44,7 @@ namespace Editor
 		if (mBox)
 		{
 			mBox->SetFocusable(true);
-			mBox->onDraw += MakeFunction<DragDropArea, void>(this, &DragDropArea::OnDrawn);
+            mBox->onDraw += [this](){ DragDropArea::OnDrawn(); };
 
 			mNameText = mBox->GetLayerDrawable<Text>("caption");
 			if (mNameText)
@@ -361,6 +361,7 @@ namespace Editor
 	}
 }
 
+template<>
 DECLARE_CLASS_MANUAL(Editor::TPropertyField<AssetRef>);
 
 DECLARE_CLASS(Editor::AssetProperty);

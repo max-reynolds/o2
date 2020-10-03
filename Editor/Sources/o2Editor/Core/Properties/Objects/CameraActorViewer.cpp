@@ -66,6 +66,7 @@ namespace Editor
 	}
 }
 
+template<>
 DECLARE_CLASS_MANUAL(Editor::TObjectPropertiesViewer<o2::CameraActor>);
 
 DECLARE_CLASS(Editor::CameraActorViewer);

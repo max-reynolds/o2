@@ -64,6 +64,8 @@ namespace Editor
 		CurveEditorDlg::AddEditingCurve("property", &mCommonValue, Color4(44, 62, 80));
 	}
 }
+
+template<>
 DECLARE_CLASS_MANUAL(Editor::TPropertyField<o2::Curve>);
 
 DECLARE_CLASS(Editor::CurveProperty);

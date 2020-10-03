@@ -157,6 +157,14 @@ namespace o2
 		// Launching application cycle
 		virtual void Launch();
 
+#elif defined PLATFORM_LINUX
+
+        // Initializes engine application
+        virtual void Initialize();
+
+        // Launching application cycle
+        virtual void Launch();
+
 #elif defined PLATFORM_ANDROID
 
 		// Launching application

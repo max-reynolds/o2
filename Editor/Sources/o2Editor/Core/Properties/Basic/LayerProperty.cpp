@@ -104,6 +104,8 @@ namespace Editor
 	}
 
 }
+
+template<>
 DECLARE_CLASS_MANUAL(Editor::TPropertyField<o2::SceneLayer*>);
 
 DECLARE_CLASS(Editor::LayerProperty);

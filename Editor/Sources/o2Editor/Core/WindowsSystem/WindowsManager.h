@@ -3,6 +3,7 @@
 #include "o2/Utils/Singleton.h"
 #include "o2/Utils/Types/Containers/Vector.h"
 #include "o2Editor/Core/WindowsSystem/WindowsLayout.h"
+#include "o2Editor/Core/WindowsSystem/IEditorWindow.h"
 
 using namespace o2;
 

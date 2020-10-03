@@ -745,8 +745,14 @@ namespace o2
 		{
 			mHorScrollBar->OnScrolled(o2Input.GetMouseWheelDelta());
 			mHasScrolled = !Math::Equals(mHorScrollBar->GetMinValue(), mHorScrollBar->GetMaxValue());
-		}
-	}
+        }
+    }
+
+    void ScrollArea::OnDrawn()
+    {
+        Widget::OnDrawn();
+        CursorAreaEventsListener::OnDrawn();
+    }
 
 	String ScrollArea::GetCreateMenuGroup()
 	{

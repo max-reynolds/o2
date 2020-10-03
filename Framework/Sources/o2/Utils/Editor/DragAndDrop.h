@@ -10,7 +10,7 @@ namespace o2
 	// --------------------------------
 	// Drag objects drop area interface
 	// --------------------------------
-	class DragDropArea: virtual public CursorAreaEventsListener
+    class DragDropArea: virtual public CursorAreaEventsListener
 	{
 	protected:
 		// It is called when some DragEventsListener was dropped to this

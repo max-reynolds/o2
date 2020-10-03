@@ -35,7 +35,7 @@ namespace Editor
 
 	protected:
 		// Sets target objects
-		virtual void SetTargets(const Vector<IObject*> targets) {}
+        virtual void SetTargets(const Vector<IObject*> &targets) {}
 
 		// Enable viewer event function
 		virtual void OnEnabled() {}
@@ -68,7 +68,7 @@ CLASS_METHODS_META(Editor::IPropertiesViewer)
 
 	PUBLIC_FUNCTION(const Type*, GetViewingObjectType);
 	PUBLIC_FUNCTION(void, Refresh);
-	PROTECTED_FUNCTION(void, SetTargets, const Vector<IObject*>);
+    PROTECTED_FUNCTION(void, SetTargets, const Vector<IObject*>&);
 	PROTECTED_FUNCTION(void, OnEnabled);
 	PROTECTED_FUNCTION(void, OnDisabled);
 	PROTECTED_FUNCTION(void, Update, float);

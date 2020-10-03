@@ -247,7 +247,7 @@ namespace Editor
 	{
 		mTreeControls = mnew Widget();
 
-		auto fieldProto = o2EditorProperties.GetFieldPropertyType(&TypeOf(AnimationTrackType::ValueType));
+        auto fieldProto = o2EditorProperties.GetFieldPropertyType(&TypeOf(typename AnimationTrackType::ValueType));
 		mPropertyField = dynamic_cast<IPropertyField*>(o2UI.CreateWidget(*fieldProto, "standard"));
 		mPropertyValueProxy = PointerValueProxy<TrackValueType>(&mPropertyValue);
 		mPropertyField->SetValueProxy({ dynamic_cast<IAbstractValueProxy*>(&mPropertyValueProxy) });
@@ -465,7 +465,7 @@ namespace Editor
 	UInt64 KeyFramesTrackControl<AnimationTrackType>::DeserializeKey(const DataValue& data, float relativeTime,
 																	bool generateNewUid /*= true*/)
 	{
-		AnimationTrackType::Key key;
+        typename AnimationTrackType::Key key;
 		data.Get(key);
 		key.position += relativeTime;
 

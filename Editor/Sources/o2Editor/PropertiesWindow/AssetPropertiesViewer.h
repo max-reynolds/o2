@@ -21,7 +21,7 @@ namespace Editor
 
 	protected:
 		// Sets target objects
-		void SetTargets(const Vector<IObject*> targets) override;
+        void SetTargets(const Vector<IObject*> &targets) override;
 	};
 
 }
@@ -39,6 +39,6 @@ CLASS_METHODS_META(Editor::AssetPropertiesViewer)
 {
 
 	PUBLIC_FUNCTION(const Type*, GetViewingObjectType);
-	PROTECTED_FUNCTION(void, SetTargets, const Vector<IObject*>);
+    PROTECTED_FUNCTION(void, SetTargets, const Vector<IObject*>&);
 }
 END_META;

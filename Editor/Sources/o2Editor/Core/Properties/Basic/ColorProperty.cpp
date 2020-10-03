@@ -77,6 +77,8 @@ namespace Editor
 							 MakeFunction<TPropertyField<Color4>, void>(this, &ColorProperty::CheckValueChangeCompleted));
 	}
 }
+
+template<>
 DECLARE_CLASS_MANUAL(Editor::TPropertyField<o2::Color4>);
 
 DECLARE_CLASS(Editor::ColorProperty);

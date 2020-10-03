@@ -210,4 +210,11 @@ namespace o2
 		return AssetRef(newAset, &cached->referencesCount);
 	}
 
+    template<typename T>
+    Ref<T> CreateAsset()
+    {
+        return o2Assets.CreateAsset<T>();
+    }
+
+
 }

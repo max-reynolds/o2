@@ -106,7 +106,7 @@ namespace o2
 	};
 
     template<typename T>
-    T CreateAsset();
+    Ref<T> CreateAsset();
 
 	template<typename T>
 	class Ref<T, typename std::enable_if<std::is_base_of<Asset, T>::value>::type>: public AssetRef
@@ -163,7 +163,7 @@ namespace o2
 		static const Type* GetAssetTypeStatic() { return &TypeOf(T); }
 
 		// Creates asset and returns reference
-        static Ref<T> CreateAsset() { return o2::CreateAsset<Ref<T>>(); }
+        static Ref<T> CreateAsset() { return o2::CreateAsset<T>(); }
 
 	public:
 		typedef Ref<T, typename std::enable_if<std::is_base_of<Asset, T>::value>::type> _thisType;

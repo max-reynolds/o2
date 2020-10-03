@@ -441,8 +441,14 @@ namespace Editor
 		PushEditorScopeOnStack scope;
 		GridLayoutScrollArea::UpdateVisibleItems();
 
-		mVisibleAssetIcons = mChildWidgets.DynamicCast<AssetIcon*>();
-	}
+        mVisibleAssetIcons = mChildWidgets.DynamicCast<AssetIcon*>();
+    }
+
+    void AssetsIconsScrollArea::OnDrawn()
+    {
+        ScrollArea::OnDrawn();
+        DragDropArea::OnDrawn();
+    }
 
 	void AssetsIconsScrollArea::OnFocused()
 	{
@@ -528,8 +534,7 @@ namespace Editor
 		if (dragIcon)
 		{
 			*mDragIcon = *dragIcon;
-			mDragIcon->DragDropArea::SetInteractable(false);
-			mDragIcon->CursorAreaEventsListener::SetInteractable(false);
+            mDragIcon->SetInteractable(false);
 			mDragIcon->SetEnabled(true);
 			mDragIcon->RemoveFromScene();
 			mDragOffset = icon->layout->worldCenter - o2Input.GetCursorPos();

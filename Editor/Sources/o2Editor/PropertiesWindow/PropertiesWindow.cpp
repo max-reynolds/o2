@@ -88,7 +88,7 @@ namespace Editor
 			SetTargets({ target });
 	}
 
-	void PropertiesWindow::SetTargets(const Vector<IObject*> targets, const Function<void()>& targetsChangedDelegate /*= Function<void()>()*/)
+    void PropertiesWindow::SetTargets(const Vector<IObject*> &targets, const Function<void()>& targetsChangedDelegate /*= Function<void()>()*/)
 	{
 		if (mTargetsChanged)
 			mOnTargetsChangedDelegate();

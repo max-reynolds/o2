@@ -118,6 +118,7 @@ namespace Editor
 
 }
 
+template<>
 DECLARE_CLASS_MANUAL(Editor::TObjectPropertiesViewer<o2::Sprite>);
 
 DECLARE_CLASS(Editor::SpriteViewer);

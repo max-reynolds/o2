@@ -254,6 +254,8 @@ namespace Editor
 	}
 
 }
+
+template<>
 DECLARE_CLASS_MANUAL(Editor::TPropertyField<o2::RectI>);
 
 DECLARE_CLASS(Editor::RectIProperty);

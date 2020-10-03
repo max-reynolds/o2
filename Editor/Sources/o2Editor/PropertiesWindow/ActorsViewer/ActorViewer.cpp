@@ -174,7 +174,7 @@ namespace Editor
 		Refresh();
 	}
 
-	void ActorViewer::SetTargets(const Vector<IObject*> targets)
+    void ActorViewer::SetTargets(const Vector<IObject *> &targets)
 	{
 		PushEditorScopeOnStack scope;
 
@@ -202,7 +202,7 @@ namespace Editor
 		mViewersLayout->AddChildren(viewersWidgets.Cast<Actor*>());
 	}
 
-	void ActorViewer::SetTargetsActorProperties(const Vector<IObject*> targets, Vector<Widget*>& viewersWidgets)
+    void ActorViewer::SetTargetsActorProperties(const Vector<IObject*> &targets, Vector<Widget*>& viewersWidgets)
 	{
 		PushEditorScopeOnStack scope;
 
@@ -245,7 +245,7 @@ namespace Editor
 		mActorPropertiesViewer = propertiesViewer;
 	}
 
-	Vector<const Type*> ActorViewer::GetCommonComponentsTypes(const Vector<IObject*> targets) const
+    Vector<const Type*> ActorViewer::GetCommonComponentsTypes(const Vector<IObject*> &targets) const
 	{
 		auto commonComponentsTypes = mTargetActors[0]->GetComponents().Convert<const Type*>([](auto x) {
 			return &x->GetType(); });
@@ -266,7 +266,7 @@ namespace Editor
 		return commonComponentsTypes;
 	}
 
-	void ActorViewer::SetTargetsComponents(const Vector<IObject*> targets, Vector<Widget*>& viewersWidgets)
+    void ActorViewer::SetTargetsComponents(const Vector<IObject*> &targets, Vector<Widget*>& viewersWidgets)
 	{
 		PushEditorScopeOnStack scope;
 

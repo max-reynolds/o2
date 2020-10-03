@@ -228,7 +228,8 @@ namespace Editor
 	void AssetsWindow::OpenAsset(const String& path)
 	{
 		String fullPath = o2FileSystem.GetParentPath(o2Application.GetBinPath() + "/" + o2Assets.GetAssetsPath() + path);
-		ShellExecute(NULL, "explore", fullPath, NULL, NULL, SW_SHOWNORMAL);
+        assert(false && "Not implemented");
+//		ShellExecute(NULL, "explore", fullPath, NULL, NULL, SW_SHOWNORMAL);
 	}
 
 	void AssetsWindow::OpenAndEditAsset(const UID& id)
@@ -239,7 +240,8 @@ namespace Editor
 	void AssetsWindow::OpenAndEditAsset(const String& path)
 	{
 		String fullPath = o2Application.GetBinPath() + "/" + o2Assets.GetAssetsPath() + path;
-		ShellExecute(NULL, "edit", fullPath, NULL, NULL, SW_SHOWNORMAL);
+        assert(false && "Not implemented");
+//		ShellExecute(NULL, "edit", fullPath, NULL, NULL, SW_SHOWNORMAL);
 	}
 
 	void AssetsWindow::DeselectAssets()

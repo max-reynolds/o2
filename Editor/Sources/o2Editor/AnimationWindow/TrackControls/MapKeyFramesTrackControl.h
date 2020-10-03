@@ -171,7 +171,7 @@ namespace Editor
 			handle->trackControl = trackControl;
 			handle->keyUid = key.uid;
 			handle->isMapping = true;
-			handle->SetSelectionGroup(trackControl->mHandlesSheet);
+            handle->SetSelectionGroup((ISelectableDragHandlesGroup*)trackControl->mHandlesSheet);
 
 			auto updatePosFunc = [=](KeyHandle& keyHandle) {
 				auto& keys = track->GetKeys();

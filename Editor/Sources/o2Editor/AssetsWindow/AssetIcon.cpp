@@ -12,7 +12,7 @@ namespace Editor
 	AssetIcon::AssetIcon():
 		Widget(), mNameText(nullptr)
 	{
-		onDraw += [&]() { CursorAreaEventsListener::OnDrawn(); };
+        onDraw += [&]() { SelectableDragableObject::OnDrawn(); DragDropArea::OnDrawn(); };
 		RetargetStatesAnimations();
 	}
 
@@ -21,7 +21,7 @@ namespace Editor
 	{
 		mNameText = FindChildByType<Label>();
 
-		onDraw += [&]() { CursorAreaEventsListener::OnDrawn(); };
+        onDraw += [&]() { SelectableDragableObject::OnDrawn(); DragDropArea::OnDrawn(); };
 		RetargetStatesAnimations();
 		SetLayoutDirty();
 	}
@@ -69,8 +69,14 @@ namespace Editor
 
 	bool AssetIcon::IsInputTransparent() const
 	{
-		return false;
-	}
+        return false;
+    }
+
+    void AssetIcon::SetInteractable(bool interactable)
+    {
+        SelectableDragableObject::SetInteractable(interactable);
+        DragDropArea::SetInteractable(interactable);
+    }
 
 	String AssetIcon::GetCreateMenuCategory()
 	{

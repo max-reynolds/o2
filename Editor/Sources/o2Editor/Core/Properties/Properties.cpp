@@ -17,6 +17,7 @@
 #include "o2Editor/Core/Properties/Basic/VectorProperty.h"
 #include "o2Editor/Core/Properties/IObjectPropertiesViewer.h"
 #include "o2Editor/Core/Properties/Objects/DefaultObjectPropertiesViewer.h"
+#include "o2Editor/Core/EditorApplication.h"
 
 DECLARE_SINGLETON(Editor::Properties);
 
@@ -29,9 +30,10 @@ namespace Editor
 		InitializeAvailablePropertiesFields();
 		InitializeAvailableObjectPropertiesViewers();
 
-		mOnPropertyCompletedChangingUndoCreateDelegate = 
-			MakeFunction<EditorApplication, void, const String&, const Vector<DataDocument>&, const Vector<DataDocument>&>(
-			&o2EditorApplication, &EditorApplication::DoneActorPropertyChangeAction);
+		mOnPropertyCompletedChangingUndoCreateDelegate =
+            [](const String& path, const Vector<DataDocument>& prevValue, const Vector<DataDocument>& newValue){
+                o2EditorApplication.DoneActorPropertyChangeAction(path, prevValue, newValue);
+            };
 	}
 
 	Properties::~Properties()

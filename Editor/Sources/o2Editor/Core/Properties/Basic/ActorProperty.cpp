@@ -45,7 +45,7 @@ namespace Editor
 		if (mBox)
 		{
 			mBox->SetFocusable(true);
-			mBox->onDraw += MakeFunction<DragDropArea, void>(this, &DragDropArea::OnDrawn);
+            mBox->onDraw += [this]{ DragDropArea::OnDrawn(); };
 
 			mNameText = mBox->GetLayerDrawable<Text>("caption");
 			if (mNameText)
@@ -274,6 +274,8 @@ namespace Editor
 		mBox->SetState("focused", false);
 	}
 }
+
+template<>
 DECLARE_CLASS_MANUAL(Editor::TPropertyField<o2::Actor*>);
 
 DECLARE_CLASS(Editor::ActorProperty);

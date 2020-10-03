@@ -88,6 +88,8 @@ namespace Editor
 		SetValueByUser(mEntries->FindValue(name).first);
 	}
 }
+
+template<>
 DECLARE_CLASS_MANUAL(Editor::TPropertyField<int>);
 
 DECLARE_CLASS(Editor::EnumProperty);

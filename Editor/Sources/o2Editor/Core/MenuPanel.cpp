@@ -96,7 +96,8 @@ namespace Editor
 		
 		mMenuPanel->AddItem("Debug/RebuildEditorUIManager", [&]() {
 			EditorUIStyleBuilder builder;
-			builder.RebuildEditorUIManager(false);
+            assert(false && "Not implemented");
+//			builder.RebuildEditorUIManager(false);
 		});
 
 		mMenuPanel->AddItem("Debug/Dump memory", [&]() { o2Memory.DumpInfo(); });

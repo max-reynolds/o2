@@ -338,8 +338,8 @@ namespace o2
 		static TString empty;
 	};
 
-//	template<typename T>
-//	__declspec(selectany) TString<T> TString<T>::empty;
+    template<typename T>
+    TString<T> TString<T>::empty;
 
 	// ---------------------------
 	// String with wide characters

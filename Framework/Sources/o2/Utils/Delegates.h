@@ -717,6 +717,12 @@ namespace o2
 		return Function<_res_type(_args ...)>(object, functionPtr);
 	}
 
+    template<typename _class_type, typename _res_type>
+    Function<_res_type()> MakeFunction(_class_type* object, _res_type(_class_type::*functionPtr)())
+    {
+        return Function<_res_type()>(object, functionPtr);
+    }
+
 #define THIS_FUNC(NAME) MakeFunction(this, &thisclass::NAME)
 
 	template <typename UnusedType>

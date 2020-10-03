@@ -18,7 +18,7 @@ namespace Editor
 	// --------------------------
 	// Dragable asset icon widget
 	// --------------------------
-	class AssetIcon: public Widget, public SelectableDragableObject, public DragDropArea
+    class AssetIcon: public Widget, public SelectableDragableObject, public DragDropArea
 	{
 	public:
 		PROPERTIES(AssetIcon);
@@ -54,6 +54,8 @@ namespace Editor
 
 		// Returns true when input events can be handled by down listeners
 		bool IsInputTransparent() const override;
+
+        void SetInteractable(bool interactable);
 
 		// Returns create menu category in editor
 		static String GetCreateMenuCategory();

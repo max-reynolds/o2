@@ -59,7 +59,7 @@ namespace Editor
 		void OnSceneObjectsChanged(const Vector<SceneEditableObject*>& objects);
 
 		// Sets target objects
-		void SetTargets(const Vector<IObject*> targets);
+        void SetTargets(const Vector<IObject *> &targets);
 
 		// Enable viewer event function
 		void OnEnabled();
@@ -99,7 +99,7 @@ CLASS_METHODS_META(Editor::WidgetLayerViewer)
 	PUBLIC_FUNCTION(void, SetActorPropertiesViewer, IWidgetLayerPropertiesViewer*);
 	PUBLIC_FUNCTION(void, Refresh);
 	PROTECTED_FUNCTION(void, OnSceneObjectsChanged, const Vector<SceneEditableObject*>&);
-	PROTECTED_FUNCTION(void, SetTargets, const Vector<IObject*>);
+    PROTECTED_FUNCTION(void, SetTargets, const Vector<IObject*>&);
 	PROTECTED_FUNCTION(void, OnEnabled);
 	PROTECTED_FUNCTION(void, OnDisabled);
 	PROTECTED_FUNCTION(void, Update, float);

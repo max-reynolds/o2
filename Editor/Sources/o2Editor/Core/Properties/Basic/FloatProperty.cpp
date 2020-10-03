@@ -110,6 +110,8 @@ namespace Editor
 		CheckValueChangeCompleted();
 	}
 }
+
+template<>
 DECLARE_CLASS_MANUAL(Editor::TPropertyField<float>);
 
 DECLARE_CLASS(Editor::FloatProperty);

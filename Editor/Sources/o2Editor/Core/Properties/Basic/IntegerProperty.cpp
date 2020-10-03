@@ -105,6 +105,8 @@ namespace Editor
 		CheckValueChangeCompleted();
 	}
 }
+
+template<>
 DECLARE_CLASS_MANUAL(Editor::TPropertyField<int>);
 
 DECLARE_CLASS(Editor::IntegerProperty);

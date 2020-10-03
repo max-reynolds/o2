@@ -138,6 +138,8 @@ namespace Editor
 		SetTags(editText);
 	}
 }
+
+template<>
 DECLARE_CLASS_MANUAL(Editor::TPropertyField<o2::TagGroup>);
 
 DECLARE_CLASS(Editor::TagsProperty);

@@ -8,6 +8,7 @@
 #include "o2/Utils/Editor/DragAndDrop.h"
 #include "o2/Utils/Singleton.h"
 #include "o2Editor/Core/UI/ScrollView.h"
+#include "o2Editor/Core/Tools/IEditorTool.h"
 
 using namespace o2;
 
