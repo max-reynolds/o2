@@ -291,8 +291,10 @@ protected:
         bool inArray;       //!< true if in array, otherwise in object
     };
 
+public:
     static const size_t kDefaultLevelDepth = 32;
 
+protected:
     bool WriteNull()  {
         PutReserve(*os_, 4);
         PutUnsafe(*os_, 'n'); PutUnsafe(*os_, 'u'); PutUnsafe(*os_, 'l'); PutUnsafe(*os_, 'l'); return true;
