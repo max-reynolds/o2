@@ -9,6 +9,7 @@
 #include "o2/Scene/UI/WidgetLayer.h"
 #include "o2/Scene/UI/WidgetLayout.h"
 #include "o2/Scene/UI/WidgetState.h"
+#include "o2/Utils/System/Time/Time.h"
 
 namespace o2
 {

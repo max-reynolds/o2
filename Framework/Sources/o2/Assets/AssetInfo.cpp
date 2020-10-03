@@ -2,6 +2,7 @@
 #include "AssetInfo.h"
 
 #include "o2/Assets/Asset.h"
+#include "o2/Assets/Assets.h"
 #include "o2/Assets/AssetsTree.h"
 
 namespace o2

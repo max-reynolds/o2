@@ -4,6 +4,8 @@
 #include "o2/Application/Input.h"
 #include "o2/Scene/Actor.h"
 
+#include "o2/Utils/System/Time/Time.h"
+
 namespace o2
 {
 	ActorTransform::ActorTransform(ActorTransformData* data):
