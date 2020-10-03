@@ -1,7 +1,11 @@
 #include "o2/stdafx.h"
 #include "PngFormat.h"
 
+#if defined(PLATFORM_LINUX)
+#include <png.h>
+#else
 #include "3rdPartyLibs/libpng/png.h"
+#endif
 #include "o2/Utils/Debug/Debug.h"
 #include "o2/Utils/FileSystem/File.h"
 #include "o2/Utils/Bitmap/Bitmap.h"
