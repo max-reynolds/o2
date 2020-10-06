@@ -42,25 +42,8 @@ namespace o2
 	}
 #endif
 
-#ifdef PLATFORM_LINUX
+#if defined(PLATFORM_ANDROID) || defined(PLATFORM_LINUX)
     void Timer::Reset()
-    {
-    }
-
-    float Timer::GetTime()
-    {
-        return 0;
-    }
-
-    float Timer::GetDeltaTime()
-    {
-        return 0;
-    }
-
-#endif
-
-#ifdef PLATFORM_ANDROID
-	void Timer::Reset()
 	{
 		gettimeofday(&mStartTime, NULL);
 		gettimeofday(&mLastElapsedTime, NULL);

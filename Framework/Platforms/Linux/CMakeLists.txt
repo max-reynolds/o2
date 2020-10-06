@@ -3,7 +3,11 @@ project(Framework)
 
 find_package(PNG REQUIRED)
 find_package(Freetype REQUIRED)
+find_package(GTest REQUIRED)
 
+set(BOX2D_BUILD_STATIC ON)
+set(BOX2D_VERSION 2.3.0)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../../3rdPartyLibs/Box2D ${CMAKE_CURRENT_BINARY_DIR}/../../3rdPartyLibs/Box2D)
 
 file(GLOB_RECURSE PUGI_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/../../3rdPartyLibs/pugixml/*.cpp
@@ -42,4 +46,19 @@ target_link_libraries(Framework
     PUBLIC
         png ${FREETYPE_LIBRARIES}
         Box2D pugi
+)
+
+file(GLOB_RECURSE FrameworkTests_SOURCES
+    ${CMAKE_CURRENT_LIST_DIR}/../../Tests/*.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/../../Tests/*.h
+)
+
+add_executable(FrameworkTests
+    ${FrameworkTests_SOURCES}
+)
+
+target_link_libraries(FrameworkTests
+    PUBLIC
+        Framework
+        GTest::GTest GTest::Main
 )

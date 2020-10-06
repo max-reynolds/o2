@@ -4,7 +4,7 @@
 #include <Windows.h>
 #endif
 
-#ifdef PLATFORM_ANDROID
+#if defined(PLATFORM_ANDROID) || defined(PLATFORM_LINUX)
 #include <sys/time.h>
 #endif
 
@@ -40,7 +40,7 @@ namespace o2
 		LARGE_INTEGER mStartTime;
 #endif
 
-#ifdef PLATFORM_ANDROID
+#if defined(PLATFORM_ANDROID) || defined(PLATFORM_LINUX)
 		struct timeval mLastElapsedTime;
 		struct timeval mStartTime;
 #endif
