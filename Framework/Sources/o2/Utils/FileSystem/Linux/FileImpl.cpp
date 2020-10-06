@@ -31,6 +31,7 @@ InFile::Close()
     if (mOpened)
     {
         mIfstream.close();
+        mOpened = false;
     }
 
     return true;
@@ -58,6 +59,7 @@ InFile::ReadFullData()
     UInt len = GetDataSize();
     char *buffer = mnew char[len + 1];
 
+    SetCaretPos(0);
     ReadData(buffer, len);
     buffer[len] = '\0';
 
@@ -119,6 +121,7 @@ OutFile::Close()
     if (mOpened)
     {
         mOfstream.close();
+        mOpened = false;
     }
 
     return true;
