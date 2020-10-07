@@ -55,7 +55,6 @@ convert(std::filesystem::file_time_type value)
     auto t = to_time_t(value);
     return convert(&t);
 }
-
 }
 
 FolderInfo
@@ -137,7 +136,7 @@ FileSystem::GetFileInfo(const String &path) const
 bool
 FileSystem::SetFileEditDate(const String &path, const TimeStamp &time) const
 {
-    return false;
+    return true;
 }
 
 bool
@@ -165,13 +164,27 @@ FileSystem::FolderCreate(const String &path, bool recursive /*= true*/) const
 bool
 FileSystem::FolderCopy(const String &from, const String &to) const
 {
-    return false;
+    auto s = convert(from);
+    auto d = convert(to);
+
+    std::error_code ec;
+    std::filesystem::copy(s, d, std::filesystem::copy_options::recursive, ec);
+
+    return !ec;
 }
 
 bool
 FileSystem::FolderRemove(const String &path, bool recursive /*= true*/) const
 {
-    return false;
+    auto p = convert(path);
+
+    std::error_code ec;
+    if (!recursive)
+    {
+        return std::filesystem::remove(p, ec);
+    }
+
+    return std::filesystem::remove_all(p, ec);
 }
 
 bool
