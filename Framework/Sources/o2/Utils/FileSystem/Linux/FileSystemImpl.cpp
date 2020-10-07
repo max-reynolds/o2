@@ -11,7 +11,11 @@
     #if __GNUC__ > 7
         #include <filesystem>
     #else
-        #include <experimenta/filesystem>
+        #include <experimental/filesystem>
+
+        namespace std {
+            namespace filesystem = experimental::filesystem;
+        }
     #endif
 
 #else
