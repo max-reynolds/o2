@@ -7,8 +7,19 @@
 #include "o2/Utils/Debug/Debug.h"
 #include "o2/Utils/Debug/Log/LogStream.h"
 
+#if defined(__GNUC__) && !defined(__clang__)
+    #if __GNUC__ > 7
+        #include <filesystem>
+    #else
+        #include <experimenta/filesystem>
+    #endif
+
+#else
+    #include <filesystem>
+#endif
+
+
 #include <ctime>
-#include <filesystem>
 #include <sys/stat.h>
 #include <sys/time.h>
 
