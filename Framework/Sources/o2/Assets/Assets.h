@@ -1,7 +1,6 @@
 #pragma once
 
 #include "o2/Assets/Asset.h"
-//#include "o2/Assets/AssetInfo.h"
 #include "o2/Assets/AssetRef.h"
 #include "o2/Assets/AssetsTree.h"
 #include "o2/Utils/FileSystem/FileInfo.h"
