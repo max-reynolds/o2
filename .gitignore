@@ -10,3 +10,4 @@
 /Framework/Sources/o2/CodeToolCache.xml
 /Editor/Sources/CodeToolCache.xml
 /build/*
+*.user

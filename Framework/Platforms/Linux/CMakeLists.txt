@@ -3,7 +3,8 @@ project(Framework)
 
 find_package(PNG REQUIRED)
 find_package(Freetype REQUIRED)
-find_package(GTest REQUIRED)
+
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../../3rdPartyLibs/gtest ${CMAKE_CURRENT_BINARY_DIR}/../../3rdPartyLibs/gtest)
 
 set(BOX2D_BUILD_STATIC ON)
 set(BOX2D_VERSION 2.3.0)
@@ -60,5 +61,5 @@ add_executable(FrameworkTests
 target_link_libraries(FrameworkTests
     PUBLIC
         Framework
-        GTest::GTest GTest::Main
+        gtest gtest_main
 )
